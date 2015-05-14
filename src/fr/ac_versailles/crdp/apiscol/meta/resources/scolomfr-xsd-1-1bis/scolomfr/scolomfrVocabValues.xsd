@@ -1,0 +1,187 @@
+<xs:schema
+	targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR"
+	xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified">
+
+  <!-- 1.7 Structure -->
+  <!--structure-->
+  <xs:include schemaLocation="scolomfr-voc-007_VDEX.xml.xsd"/>
+
+  <!-- 1.8 Niveau d'agrégation -->
+  <!--aggregationLevel-->
+  <xs:include schemaLocation="scolomfr-voc-008_VDEX.xml.xsd"/>
+
+  <!-- 1.9 Type documentaire DC -->
+  <!--documentType-->
+  <xs:include schemaLocation="scolomfr-voc-004_vdex.xml.xsd"/>
+
+<!-- 1.10  Typologie générale de documents  -->
+<!--generalResourceType-->
+<xs:include schemaLocation="scolomfr-voc-005_VDEX.xml.xsd"/>
+
+<!-- 2.2 État de la ressource -->
+<!--status-->
+<xs:include schemaLocation="scolomfr-voc-002_vdex.xml.xsd"/>
+
+<!-- 2.3.1 Rôle -->
+<!--role-->
+<xs:include schemaLocation="scolomfr-voc-003_vdex.xml.xsd"/>
+
+  <!-- 3.2.1 Rôle Méta -->
+  <!--roleMeta-->
+  <xs:include schemaLocation="scolomfr-voc-013_VDEX.xml.xsd"/>
+
+  <!-- 4.4.1.1 Type -->
+  <!--type-->
+  <xs:include schemaLocation="scolomfr-voc-023_VDEX.xml.xsd"/>
+
+<!-- 5.2 Type de la ressource pédagogique -->
+<!--learningResourceType-->
+<xs:include schemaLocation="scolomfr-voc-010_VDEX.xml.xsd"/>
+
+  <!-- 5.5 Public cible -->
+  <!--intendedEndUserRole-->
+  <xs:include schemaLocation="scolomfr-voc-011_VDEX.xml.xsd"/>
+
+  <!-- 5.6 Niveau -->
+  <!--context-->
+  <xs:include schemaLocation="scolomfr-voc-012_VDEX.xml.xsd"/>
+
+  <!-- 5.8 Difficulté -->
+  <!--difficulty-->
+  <xs:include schemaLocation="scolomfr-voc-025_vdex.xml.xsd"/>
+
+<!-- 5.12 Activité induite -->
+<!--activity-->
+<xs:include schemaLocation="scolomfr-voc-019_VDEX.xml.xsd"/>
+
+<!-- 5.14  Lieux  -->
+<!--place-->
+<xs:include schemaLocation="scolomfr-voc-017_VDEX.xml.xsd"/>
+
+<!-- 5.15  Modalité pédagogique  -->
+<!--educationalMethod-->
+<xs:include schemaLocation="scolomfr-voc-018_VDEX.xml.xsd"/>
+
+<!-- ordre modifié car NB includes avant simpletype -->
+
+  <!-- 6.1 Coût -->
+  <!--cost-->
+  <xs:include schemaLocation="scolomfr-voc-026_vdex.xml.xsd"/>
+
+  <!-- 6.2 Propriété intellectuelle -->
+  <!--copyrightAndOtherRestrictions-->
+  <xs:include schemaLocation="scolomfr-voc-027_VDEX.xml.xsd"/>
+
+<!-- 7.1 Type -->
+<!--kind-->
+<xs:include schemaLocation="scolomfr-voc-009_VDEX.xml.xsd"/>
+
+<!-- 9.1 Objectif -->
+<!--purpose-->
+<xs:include schemaLocation="scolomfr-voc-028_VDEX.xml.xsd"/>
+
+<!-- NB includes avant simpletype -->
+
+
+
+
+<!-- TODO -->
+  <!-- 5.16 Tool -->  
+  <!--tool-->
+<!--
+  <xs:include schemaLocation="scolomfr-voc-???_VDEX.xml.xsd"/>
+-->
+  <xs:simpleType name="toolValues">
+    <xs:restriction base="xs:token">
+      <!-- SCOLOMFR v1.0 -->
+      <xs:enumeration value="logiciels RIP"/>
+      <xs:enumeration value="logiciel système et de programmation"/>
+      <xs:enumeration value="système d'exploitation"/>
+      <xs:enumeration value="logiciel de développement d'application"/>
+      <xs:enumeration value="navigateurs Web"/>
+      <xs:enumeration value="logiciel d'application"/>
+      <xs:enumeration value="didacticiel"/>
+      <xs:enumeration value="exerciseur"/>
+      <xs:enumeration value="suite bureautique"/>
+      <xs:enumeration value="logiciel d'aide à l'orientation"/>
+      <xs:enumeration value="logiciel d'animation 2D"/>
+      <xs:enumeration value="logiciel d'animation 3D"/>
+      <xs:enumeration value="logiciel de communication et d'échange"/>
+      <xs:enumeration value="logiciel de dessin assisté par ordinateur"/>
+      <xs:enumeration value="logiciel de gestion de contenu"/>
+      <xs:enumeration value="logiciel de gestion de projet"/>
+      <xs:enumeration value="logiciel de messagerie"/>
+      <xs:enumeration value="logiciel de montage vidéo"/>
+      <xs:enumeration value="logiciel de présentation"/>
+      <xs:enumeration value="logiciel de recherche documentaire"/>
+      <xs:enumeration value="logiciel de traitement de son"/>
+      <xs:enumeration value="logiciel de traitement de tableaux et calculs"/>
+      <xs:enumeration value="logiciel de traitement de texte"/>
+      <xs:enumeration value="logiciel de traitement d'enquête"/>
+      <xs:enumeration value="logiciel de traitement d'image fixe"/>
+      <xs:enumeration value="logiciel de traitement vidéo"/>
+      <xs:enumeration value="logiciel de travail collaboratif"/>
+      <xs:enumeration value="logiciel d'édition Web"/>
+      <xs:enumeration value="logiciel d'image de synthèse"/>
+      <xs:enumeration value="logiciel organisateur des idées"/>
+      <xs:enumeration value="logiciel ou application de lecture"/>
+      <xs:enumeration value="logiciel PAO"/>
+      <xs:enumeration value="logiciel d’édition et de gestion d’exercices"/>
+      <xs:enumeration value="logiciel text-to-speech"/>
+      <xs:enumeration value="moteur de recherche"/>
+      <xs:enumeration value="outil blogue"/>
+      <xs:enumeration value="outil de mise en ligne"/>
+      <xs:enumeration value="outil de modélisation"/>
+      <xs:enumeration value="outil d'encodage"/>
+      <xs:enumeration value="SGBD"/>
+      <xs:enumeration value="SIG"/>
+      <xs:enumeration value="matériel"/>
+      <xs:enumeration value="appareil photographique"/>
+      <xs:enumeration value="baladeur"/>
+      <xs:enumeration value="borne informatique"/>
+      <xs:enumeration value="calculatrice"/>
+      <xs:enumeration value="camescope"/>
+      <xs:enumeration value="classe mobile"/>
+      <xs:enumeration value="écran tactile"/>
+      <xs:enumeration value="machine à commande numérique"/>
+      <xs:enumeration value="matériel de lecture livre numérique"/>
+      <xs:enumeration value="ordinateur"/>
+      <xs:enumeration value="outil de microscopie"/>
+      <xs:enumeration value="PDA"/>
+      <xs:enumeration value="rétroprojecteur"/>
+      <xs:enumeration value="tablette informatique"/>
+      <xs:enumeration value="TBI"/>
+      <xs:enumeration value="vidéoprojecteur"/>
+      <xs:enumeration value="outil de compensation"/>
+      <xs:enumeration value="ressource d'information"/>
+      <xs:enumeration value="atlas"/>
+      <xs:enumeration value="base de données"/>
+      <xs:enumeration value="carte heuristique"/>
+      <xs:enumeration value="cédérom"/>
+      <xs:enumeration value="dictionnaire, glossaire"/>
+      <xs:enumeration value="documentation technique"/>
+      <xs:enumeration value="encyclopédie"/>
+      <xs:enumeration value="ENT"/>
+      <xs:enumeration value="podcast"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  
+  <!-- Source -->
+  <!--source-->
+<!--
+  <xs:include schemaLocation="scolomfr-voc-???_VDEX.xml.xsd"/>
+-->
+  <xs:simpleType name="sourceValues">
+    <xs:restriction base="xs:token">
+      <!-- SCOLOMFR v1.0 -->
+      <xs:enumeration value="SCOLOMFRv1.0"/>
+      <!-- SCOLOMFR v1.1 -->
+      <xs:enumeration value="SCOLOMFRv1.1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+</xs:schema>

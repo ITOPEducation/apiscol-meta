@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified">
+	<xs:simpleType name="Values">
+		<xs:restriction base="xs:token">
+			<!-- vocabulaire : Cadre pédagogique. -->
+			<!-- source : scolomfr-voc-040_VDEX.xml-->
+			<!--65 termes -->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-001" value="3e insertion"/>
+			<!-- critère 001-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-002" value="4e aide et soutien"/>
+			<!-- critère 002-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-003" value="accompagnement à l'orientation"/>
+			<!-- critère 003-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-004" value="accompagnement éducatif"/>
+			<!-- critère 004-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-005" value="accompagnement hors temps scolaire"/>
+			<!-- critère 005-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-007" value="accompagnement pendant le temps scolaire"/>
+			<!-- critère 007-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-006" value="accompagnement personnalisé"/>
+			<!-- critère 006-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-008" value="accueil des primo-arrivants"/>
+			<!-- critère 008-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-009" value="actions internationales"/>
+			<!-- critère 009-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-010" value="adaptation scolaire et scolarisation des élèves à besoins spécifiques"/>
+			<!-- critère 010-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-011" value="aide individualisée"/>
+			<!-- critère 011-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-012" value="CLIN classe d'initiation"/>
+			<!-- critère 012-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-013" value="CLIS classe d'intégration scolaire"/>
+			<!-- critère 013-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-015" value="culture scientifique et technique"/>
+			<!-- critère 015-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-014" value="culture scientifique et technologique"/>
+			<!-- critère 014-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-016" value="dispositif de scolarisation des élèves handicapés"/>
+			<!-- critère 016-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-017" value="dispositif ECLAIR"/>
+			<!-- critère 017-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-018" value="dispositif école ouverte"/>
+			<!-- critère 018-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-019" value="dispositifs de soutien et de remédiation scolaire"/>
+			<!-- critère 019-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-020" value="dispositifs relais"/>
+			<!-- critère 020-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-021" value="échange pédagogique de classes"/>
+			<!-- critère 021-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-023" value="éducation à la citoyenneté - valeurs républicaines"/>
+			<!-- critère 023-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-024" value="éducation à la santé"/>
+			<!-- critère 024-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-025" value="éducation à la sécurité"/>
+			<!-- critère 025-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-026" value="éducation à la sécurité routière"/>
+			<!-- critère 026-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-022" value="éducation à l'image, au cinéma et à l'audiovisuel"/>
+			<!-- critère 022-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-027" value="éducation à l'orientation et au choix"/>
+			<!-- critère 027-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-028" value="éducation artistique et culturelle"/>
+			<!-- critère 028-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-029" value="éducation au développement et à la solidarité"/>
+			<!-- critère 029-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-030" value="éducation aux médias"/>
+			<!-- critère 030-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-031" value="enseignement de la défense et de la sécurité nationale"/>
+			<!-- critère 031-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-032" value="enseignement renforcé des langues"/>
+			<!-- critère 032-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-033" value="EREA école régionale d'enseignement adapté"/>
+			<!-- critère 033-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-034" value="formation à l'information et à la communication"/>
+			<!-- critère 034-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-035" value="gestion financière et matérielle des établissements"/>
+			<!-- critère 035-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-036" value="IDD (itinéraire de découverte)"/>
+			<!-- critère 036-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-037" value="internat d'excellence"/>
+			<!-- critère 037-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-038" value="liaison collège - lycée"/>
+			<!-- critère 038-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-039" value="liaison inter-cycles et inter-degrés"/>
+			<!-- critère 039-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-040" value="liaison lycée - enseignement supérieur"/>
+			<!-- critère 040-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-041" value="liaison primaire - collège"/>
+			<!-- critère 041-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-042" value="LSF (langue des signes française)"/>
+			<!-- critère 042-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-043" value="mémoire et histoire"/>
+			<!-- critère 043-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-044" value="organisation pédagogique des établissements d'enseignement"/>
+			<!-- critère 044-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-045" value="PAC (projet artistique et culturel)"/>
+			<!-- critère 045-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-046" value="partenariat électronique inter-écoles"/>
+			<!-- critère 046-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-047" value="PDMF (parcours découverte des métiers et des formations)"/>
+			<!-- critère 047-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-048" value="pilotage et gestion du système éducatif"/>
+			<!-- critère 048-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-049" value="PPCP (projet pluridisciplinaire à caractère professionnel)"/>
+			<!-- critère 049-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-050" value="pratique sportive"/>
+			<!-- critère 050-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-051" value="prévention du décrochage scolaire"/>
+			<!-- critère 051-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-052" value="prévention et lutte contre la violence"/>
+			<!-- critère 052-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-053" value="projet inter-établissement"/>
+			<!-- critère 053-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-054" value="RAR réseau ambition réussite"/>
+			<!-- critère 054-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-055" value="relation école-entreprise"/>
+			<!-- critère 055-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-056" value="relations extérieures et partenariats"/>
+			<!-- critère 056-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-057" value="section européenne ou internationale"/>
+			<!-- critère 057-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-058" value="SEGPA section d'enseignement général et professionnel adapté"/>
+			<!-- critère 058-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-059" value="séjour et classe de découvertes"/>
+			<!-- critère 059-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-060" value="système d'évaluation"/>
+			<!-- critère 060-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-061" value="TIPE (travaux d'initiative personnelle encadrés)"/>
+			<!-- critère 061-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-062" value="TPE (travaux personnels encadrés)"/>
+			<!-- critère 062-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-063" value="ULIS unité localisée pour l'inclusion scolaire"/>
+			<!-- critère 063-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-064" value="UPI unité pédagogique d'intégration"/>
+			<!-- critère 064-->
+			<xs:enumeration xml:id="scolomfr-voc-040-num-065" value="vie scolaire"/>
+			<!-- critère 065-->
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

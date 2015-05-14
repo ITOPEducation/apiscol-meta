@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified">
+	<xs:simpleType name="Values">
+		<xs:restriction base="xs:token">
+			<!-- vocabulaire : Noeud domaine d'enseignement. -->
+			<!-- source : scolomfr-voc-015_VDEX.xml-->
+			<!--115 termes -->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-086" value="allemand"/>
+			<!-- critère 086-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-087" value="anglais"/>
+			<!-- critère 087-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-088" value="arabe"/>
+			<!-- critère 088-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-002" value="architecture et construction"/>
+			<!-- critère 002-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-005" value="arts du cirque"/>
+			<!-- critère 005-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-003" value="arts (option)"/>
+			<!-- critère 003-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-006" value="arts plastiques"/>
+			<!-- critère 006-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-079" value="arts, techniques et civilisations"/>
+			<!-- critère 079-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-009" value="biologie et physiopathologie humaines"/>
+			<!-- critère 009-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-010" value="biotechnologies"/>
+			<!-- critère 010-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-109" value="BPH"/>
+			<!-- critère 109-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-012" value="chimie"/>
+			<!-- critère 012-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-011" value="chimie, biochimie, sciences du vivant"/>
+			<!-- critère 011-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-089" value="chinois"/>
+			<!-- critère 089-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-013" value="cinéma - audiovisuel"/>
+			<!-- critère 013-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-014" value="communication et gestion des ressources humaines"/>
+			<!-- critère 014-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-015" value="comptabilité et finance d'entreprise"/>
+			<!-- critère 015-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-016" value="création et activités artistiques"/>
+			<!-- critère 016-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-017" value="création et culture design"/>
+			<!-- critère 017-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-018" value="création et innovation technologiques"/>
+			<!-- critère 018-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-096" value="culture humaniste"/>
+			<!-- critère 096-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-019" value="danse"/>
+			<!-- critère 019-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-097" value="découverte du monde"/>
+			<!-- critère 097-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-020" value="découverte professionnelle"/>
+			<!-- critère 020-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-021" value="design et arts appliqués"/>
+			<!-- critère 021-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-098" value="devenir élève"/>
+			<!-- critère 098-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-022" value="documentation"/>
+			<!-- critère 022-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-007" value="domaines d'enseignement du premier degré"/>
+			<!-- critère 007-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-008" value="domaines d'enseignement du second degré"/>
+			<!-- critère 008-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-023" value="droit"/>
+			<!-- critère 023-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-024" value="droit et grands enjeux du monde contemporain"/>
+			<!-- critère 024-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-025" value="économie"/>
+			<!-- critère 025-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-026" value="économie approfondie"/>
+			<!-- critère 026-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-112" value="économie - droit"/>
+			<!-- critère 112-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-027" value="économie et droit"/>
+			<!-- critère 027-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-029" value="éducation civique"/>
+			<!-- critère 029-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-028" value="éducation civique, juridique et sociale"/>
+			<!-- critère 028-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-030" value="éducation musicale"/>
+			<!-- critère 030-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-031" value="éducation physique et sportive"/>
+			<!-- critère 031-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-032" value="énergies et environnement"/>
+			<!-- critère 032-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-084" value="enseignement scientifique"/>
+			<!-- critère 084-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-033" value="enseignements technologiques transversaux"/>
+			<!-- critère 033-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-034" value="enseignement technologique en LV1"/>
+			<!-- critère 034-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-113" value="E.P.S."/>
+			<!-- critère 113-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-090" value="espagnol"/>
+			<!-- critère 090-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-078" value="étude de cas (arts appliqués)"/>
+			<!-- critère 078-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-080" value="expression plastique"/>
+			<!-- critère 080-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-035" value="français"/>
+			<!-- critère 035-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-036" value="géographie"/>
+			<!-- critère 036-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-037" value="gestion commerciale"/>
+			<!-- critère 037-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-038" value="gestion des systèmes d'information"/>
+			<!-- critère 038-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-111" value="gestion et finance"/>
+			<!-- critère 111-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-039" value="gestion et finances"/>
+			<!-- critère 039-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-091" value="hébreu"/>
+			<!-- critère 091-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-114" value="HIST-GEO"/>
+			<!-- critère 114-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-040" value="histoire"/>
+			<!-- critère 040-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-041" value="histoire des arts"/>
+			<!-- critère 041-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-042" value="histoire et géographie"/>
+			<!-- critère 042-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-115" value="histoire - géographie"/>
+			<!-- critère 115-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-043" value="information et communication"/>
+			<!-- critère 043-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-044" value="informatique et sciences du numérique"/>
+			<!-- critère 044-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-045" value="innovation technologique et éco-conception"/>
+			<!-- critère 045-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-102" value="instruction civique et morale"/>
+			<!-- critère 102-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-092" value="italien"/>
+			<!-- critère 092-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-093" value="japonais"/>
+			<!-- critère 093-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-001" value="langues et cultures de l'antiquité"/>
+			<!-- critère 001-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-046" value="langues et cultures de l'antiquité (grec)"/>
+			<!-- critère 046-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-047" value="langues et cultures de l'antiquité (latin)"/>
+			<!-- critère 047-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-118" value="langues et cultures régionales"/>
+			<!-- critère 118-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-048" value="langues régionales"/>
+			<!-- critère 048-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-049" value="langues vivantes"/>
+			<!-- critère 049-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-103" value="langue vivante"/>
+			<!-- critère 103-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-116" value="LCA (grec)"/>
+			<!-- critère 116-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-117" value="LCA (latin)"/>
+			<!-- critère 117-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-050" value="littérature"/>
+			<!-- critère 050-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-051" value="littérature étrangère en langue étrangère"/>
+			<!-- critère 051-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-052" value="littérature et société"/>
+			<!-- critère 052-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-053" value="management des organisations"/>
+			<!-- critère 053-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-119" value="MATH"/>
+			<!-- critère 119-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-054" value="mathématiques"/>
+			<!-- critère 054-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-055" value="mercatique"/>
+			<!-- critère 055-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-056" value="mesure et instrumentation"/>
+			<!-- critère 056-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-057" value="méthodes et pratiques scientifiques"/>
+			<!-- critère 057-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-058" value="musique"/>
+			<!-- critère 058-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-059" value="philosophie"/>
+			<!-- critère 059-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-060" value="physique"/>
+			<!-- critère 060-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-061" value="physique-chimie"/>
+			<!-- critère 061-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-094" value="portugais"/>
+			<!-- critère 094-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-105" value="pratiques artistiques"/>
+			<!-- critère 105-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-062" value="principes fondamentaux de l'économie et de la gestion"/>
+			<!-- critère 062-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-081" value="recherche appliquée (arts)"/>
+			<!-- critère 081-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-082" value="représentation conventionnelle"/>
+			<!-- critère 082-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-064" value="ressources humaines et communication"/>
+			<!-- critère 064-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-095" value="russe"/>
+			<!-- critère 095-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-065" value="santé et social"/>
+			<!-- critère 065-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-106" value="s'approprier le langage"/>
+			<!-- critère 106-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-066" value="sciences"/>
+			<!-- critère 066-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-067" value="sciences de gestion"/>
+			<!-- critère 067-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-069" value="sciences de la vie et de la Terre"/>
+			<!-- critère 069-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-068" value="sciences de l'ingénieur"/>
+			<!-- critère 068-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-070" value="sciences économiques et sociales"/>
+			<!-- critère 070-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-071" value="sciences et laboratoire"/>
+			<!-- critère 071-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-072" value="sciences et techniques sanitaires et sociales"/>
+			<!-- critère 072-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-107" value="sciences expérimentales et technologie"/>
+			<!-- critère 107-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-121" value="sciences physiques"/>
+			<!-- critère 121-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-083" value="sciences physiques appliquées"/>
+			<!-- critère 083-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-120" value="sciences physiques et chimiques"/>
+			<!-- critère 120-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-073" value="sciences physiques et chimiques en laboratoire"/>
+			<!-- critère 073-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-074" value="sciences sociales et politiques"/>
+			<!-- critère 074-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-122" value="SPC"/>
+			<!-- critère 122-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-075" value="systèmes d'information de gestion"/>
+			<!-- critère 075-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-076" value="systèmes d'information et numérique"/>
+			<!-- critère 076-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-108" value="techniques usuelles de l'information et de la communication"/>
+			<!-- critère 108-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-077" value="technologie"/>
+			<!-- critère 077-->
+			<xs:enumeration xml:id="scolomfr-voc-015-num-004" value="théâtre et expression dramatique"/>
+			<!-- critère 004-->
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

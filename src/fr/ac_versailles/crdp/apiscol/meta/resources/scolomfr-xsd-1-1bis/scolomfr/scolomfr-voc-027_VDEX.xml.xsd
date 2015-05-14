@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified">
+	<xs:simpleType name="copyrightAndOtherRestrictionsValues">
+		<xs:restriction base="xs:token">
+			<!-- vocabulaire : Droit d'auteur. -->
+			<!-- source : scolomfr-voc-027_VDEX.xml-->
+			<!--4 termes -->
+			<xs:enumeration xml:id="no" value="no"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-027-num-002" value="non"/>
+			<!-- critère 002-->
+			<xs:enumeration xml:id="scolomfr-voc-027-num-001" value="oui"/>
+			<!-- critère 001-->
+			<xs:enumeration xml:id="yes" value="yes"/>
+			<!---->
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified">
+	<xs:simpleType name="documentTypeValues">
+		<xs:restriction base="xs:token">
+			<!-- vocabulaire : Type documentaire DC. -->
+			<!-- source : scolomfr-voc-004_vdex.xml-->
+			<!--14 termes -->
+			<xs:enumeration xml:id="dc.Collection" value="collection"/>
+			<!---->
+			<xs:enumeration xml:id="ensdonnees2" value="collection de données"/>
+			<!---->
+			<xs:enumeration xml:id="dc.Dataset" value="ensemble de données"/>
+			<!---->
+			<xs:enumeration xml:id="dc.Event" value="événement"/>
+			<!---->
+			<xs:enumeration xml:id="dc.Image" value="image"/>
+			<!---->
+			<xs:enumeration xml:id="dc.MovingImage" value="image en mouvement"/>
+			<!---->
+			<xs:enumeration xml:id="dc.StillImage" value="image fixe"/>
+			<!---->
+			<xs:enumeration xml:id="ensdonnees1" value="jeu de données"/>
+			<!---->
+			<xs:enumeration xml:id="dc.Software" value="logiciel"/>
+			<!---->
+			<xs:enumeration xml:id="dc.PhysicalObject" value="objet physique"/>
+			<!---->
+			<xs:enumeration xml:id="dc.InteractiveResource" value="ressource interactive"/>
+			<!---->
+			<xs:enumeration xml:id="dc.Service" value="service"/>
+			<!---->
+			<xs:enumeration xml:id="dc.Sound" value="son"/>
+			<!---->
+			<xs:enumeration xml:id="dc.Text" value="texte"/>
+			<!---->
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
+<!--
+  <xs:simpleType name="documentTypeValues">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="collection"/>
+      <xs:enumeration value="ensemble de données"/>
+      <xs:enumeration value="évènement"/>
+      <xs:enumeration value="image"/>
+      <xs:enumeration value="image en mouvement"/>
+      <xs:enumeration value="image fixe"/>
+      <xs:enumeration value="logiciel"/>
+      <xs:enumeration value="objet physique"/>
+      <xs:enumeration value="ressource interactive"/>
+      <xs:enumeration value="service"/>
+      <xs:enumeration value="son"/>
+      <xs:enumeration value="texte"/>
+    </xs:restriction>
+  </xs:simpleType>
+-->

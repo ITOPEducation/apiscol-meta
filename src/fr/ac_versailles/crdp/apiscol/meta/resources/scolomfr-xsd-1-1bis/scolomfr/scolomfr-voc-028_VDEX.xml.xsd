@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified">
+	<xs:simpleType name="purposeValues">
+		<xs:restriction base="xs:token">
+			<!-- vocabulaire : Objectif. -->
+			<!-- source : scolomfr-voc-028_VDEX.xml-->
+			<!--24 termes -->
+			<xs:enumeration xml:id="lom-accessrestrictions" value="accessibility restrictions"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-001" value="champ disciplinaire"/>
+			<!-- critère 001-->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-002" value="compétence"/>
+			<!-- critère 002-->
+			<xs:enumeration xml:id="lom-competency" value="competency"/>
+			<!---->
+			<xs:enumeration xml:id="LOM-discipline" value="discipline"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-003" value="domaine d'enseignement"/>
+			<!-- critère 003-->
+			<xs:enumeration xml:id="lom-educlevel" value="educational level"/>
+			<!---->
+			<xs:enumeration xml:id="lom-educobjective" value="educational objective"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-004" value="enseignement"/>
+			<!-- critère 004-->
+			<xs:enumeration xml:id="lom-idea" value="idea"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-013" value="label"/>
+			<!-- critère 013-->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-005" value="niveau de compétence"/>
+			<!-- critère 005-->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-006" value="niveau de sécurité"/>
+			<!-- critère 006-->
+			<xs:enumeration xml:id="lomfr-niveaueduc" value="niveau éducatif"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-007" value="niveau éducatif détaillé"/>
+			<!-- critère 007-->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-008" value="notion"/>
+			<!-- critère 008-->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-009" value="objectif pédagogique"/>
+			<!-- critère 009-->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-010" value="pré-requis"/>
+			<!-- critère 010-->
+			<xs:enumeration xml:id="lom-prerequisite" value="prerequisite"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-011" value="public cible détaillé"/>
+			<!-- critère 011-->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-012" value="restriction d'accessibilité"/>
+			<!-- critère 012-->
+			<xs:enumeration xml:id="lom-securitylevel" value="security level"/>
+			<!---->
+			<xs:enumeration xml:id="lom-skilllevel" value="skill level"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-028-num-014" value="type de diffusion"/>
+			<!-- critère 014-->
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

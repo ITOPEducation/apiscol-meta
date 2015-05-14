@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified">
+	<xs:simpleType name="activityValues">
+		<xs:restriction base="xs:token">
+			<!-- vocabulaire : Activité. -->
+			<!-- source : scolomfr-voc-019_VDEX.xml-->
+			<!--19 termes -->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-001" value="animer"/>
+			<!-- critère 001-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-002" value="apprendre"/>
+			<!-- critère 002-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-003" value="collaborer"/>
+			<!-- critère 003-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-004" value="communiquer"/>
+			<!-- critère 004-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-005" value="coopérer"/>
+			<!-- critère 005-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-006" value="créer"/>
+			<!-- critère 006-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-007" value="échanger"/>
+			<!-- critère 007-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-019" value="expérimenter"/>
+			<!-- critère 019-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-008" value="lire"/>
+			<!-- critère 008-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-009" value="observer"/>
+			<!-- critère 009-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-010" value="organiser"/>
+			<!-- critère 010-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-011" value="produire"/>
+			<!-- critère 011-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-012" value="publier"/>
+			<!-- critère 012-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-013" value="rechercher"/>
+			<!-- critère 013-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-014" value="s'auto-former"/>
+			<!-- critère 014-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-017" value="se former"/>
+			<!-- critère 017-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-015" value="s'évaluer"/>
+			<!-- critère 015-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-016" value="s'exercer"/>
+			<!-- critère 016-->
+			<xs:enumeration xml:id="scolomfr-voc-019-num-018" value="simuler"/>
+			<!-- critère 018-->
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

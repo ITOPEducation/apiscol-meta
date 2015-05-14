@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified">
+	<xs:simpleType name="learningResourceTypeValues">
+		<xs:restriction base="xs:token">
+			<!-- vocabulaire : Type pédagogique. -->
+			<!-- source : scolomfr-voc-010_VDEX.xml-->
+			<!--77 termes -->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-001" value="animation"/>
+			<!-- critère 001-->
+			<xs:enumeration xml:id="lomfr-anim" value="animation"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-023" value="annales"/>
+			<!-- critère 023-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-002" value="autoévaluation"/>
+			<!-- critère 002-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0181" value="carnet de bord"/>
+			<!-- critère 018, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0182" value="compte rendu de lecture"/>
+			<!-- critère 018, sous-critère 2-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0091" value="corrigé d'exercice"/>
+			<!-- critère 009, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-003" value="cours / présentation"/>
+			<!-- critère 003-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-024" value="cyberquête"/>
+			<!-- critère 024-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0203" value="cycle d'activités pédagogiques"/>
+			<!-- critère 020, sous-critère 3-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-004" value="démonstration"/>
+			<!-- critère 004-->
+			<xs:enumeration xml:id="lomfr-demo" value="démonstration"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0072" value="diagnostic de rentrée scolaire"/>
+			<!-- critère 007, sous-critère 2-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0152" value="dictionnaire"/>
+			<!-- critère 015, sous-critère 2-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0221" value="didacticiel"/>
+			<!-- critère 022, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0151" value="document de référence"/>
+			<!-- critère 015, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0153" value="encyclopédie"/>
+			<!-- critère 015, sous-critère 3-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-005" value="énoncé de problème"/>
+			<!-- critère 005-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0092" value="énoncé d'exercice"/>
+			<!-- critère 009, sous-critère 2-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0051" value="énoncé d'une problématique"/>
+			<!-- critère 005, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0193" value="enquête"/>
+			<!-- critère 019, sous-critère 3-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-006" value="étude de cas"/>
+			<!-- critère 006-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-007" value="évaluation"/>
+			<!-- critère 007-->
+			<xs:enumeration xml:id="lomfr-eval" value="évaluation"/>
+			<!---->
+			<xs:enumeration xml:id="exam" value="exam"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-008" value="examen"/>
+			<!-- critère 008-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-009" value="exercice"/>
+			<!-- critère 009-->
+			<xs:enumeration xml:id="exercise" value="exercise"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-010" value="expérience"/>
+			<!-- critère 010-->
+			<xs:enumeration xml:id="experiment" value="experiment"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0101" value="expérimentation"/>
+			<!-- critère 010, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0183" value="exposé d'élève"/>
+			<!-- critère 018, sous-critère 3-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0093" value="fiche d'exercice"/>
+			<!-- critère 009, sous-critère 3-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-011" value="glossaire"/>
+			<!-- critère 011-->
+			<xs:enumeration xml:id="lomfr-glossaire" value="glossaire"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-012" value="guide"/>
+			<!-- critère 012-->
+			<xs:enumeration xml:id="lomfr-guide" value="guide"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-013" value="jeu éducatif"/>
+			<!-- critère 013-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0131" value="jeu sérieux"/>
+			<!-- critère 013, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0194" value="journal scolaire"/>
+			<!-- critère 019, sous-critère 4-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0032" value="leçon"/>
+			<!-- critère 003, sous-critère 2-->
+			<xs:enumeration xml:id="lecture" value="lecture"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0033" value="lecture / présentation"/>
+			<!-- critère 003, sous-critère 3-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-014" value="manuel d'enseignement"/>
+			<!-- critère 014-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0141" value="manuel scolaire"/>
+			<!-- critère 014, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-015" value="matériel de référence"/>
+			<!-- critère 015-->
+			<xs:enumeration xml:id="lomfr-matref" value="matériel de référence"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0161" value="méthode d'apprentissage"/>
+			<!-- critère 016, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-025" value="méthode de langues"/>
+			<!-- critère 025-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-016" value="méthodologie"/>
+			<!-- critère 016-->
+			<xs:enumeration xml:id="lomfr-methodo" value="méthodologie"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-017" value="outil"/>
+			<!-- critère 017-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0171" value="outil de production pédagogique"/>
+			<!-- critère 017, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0082" value="préparation à l'examen"/>
+			<!-- critère 008, sous-critère 2-->
+			<xs:enumeration xml:id="problemstatement" value="problem statement"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-018" value="production d'élève"/>
+			<!-- critère 018-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0191" value="QCM (question à choix multiples)"/>
+			<!-- critère 019, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0192" value="QROC (question à réponse ouverte et courte)"/>
+			<!-- critère 019, sous-critère 2-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-019" value="questionnaire"/>
+			<!-- critère 019-->
+			<xs:enumeration xml:id="questionnaire" value="questionnaire"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0094" value="recueil d'exercices"/>
+			<!-- critère 009, sous-critère 4-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-020" value="scénario pédagogique"/>
+			<!-- critère 020-->
+			<xs:enumeration xml:id="lomfr-scenar" value="scénario pédagogique"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0202" value="séance pédagogique"/>
+			<!-- critère 020, sous-critère 2-->
+			<xs:enumeration xml:id="selfassessment" value="self assessment"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0201" value="séquence pédagogique"/>
+			<!-- critère 020, sous-critère 1-->
+			<xs:enumeration xml:id="lom-seriousgame" value="serious game"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-021" value="simulation"/>
+			<!-- critère 021-->
+			<xs:enumeration xml:id="simulation" value="simulation"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0081" value="sujet d'examen et de concours"/>
+			<!-- critère 008, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0031" value="support de cours"/>
+			<!-- critère 003, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0162" value="support méthodologique"/>
+			<!-- critère 016, sous-critère 2-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-026" value="témoignage pédagogique"/>
+			<!-- critère 026-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0071" value="test de niveau"/>
+			<!-- critère 007, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-0154" value="texte officiel"/>
+			<!-- critère 015, sous-critère 4-->
+			<xs:enumeration xml:id="scolomfr-voc-010-num-022" value="tutoriel"/>
+			<!-- critère 022-->
+			<xs:enumeration xml:id="lomfr-tuto" value="tutoriel"/>
+			<!---->
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

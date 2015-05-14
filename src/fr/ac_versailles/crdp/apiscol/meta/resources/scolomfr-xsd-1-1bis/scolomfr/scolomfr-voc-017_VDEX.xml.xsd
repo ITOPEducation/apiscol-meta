@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified">
+	<xs:simpleType name="placeValues">
+		<xs:restriction base="xs:token">
+			<!-- vocabulaire : Lieu. -->
+			<!-- source : scolomfr-voc-017_VDEX.xml-->
+			<!--26 termes -->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0081" value="à l'opéra"/>
+			<!-- critère 008, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0082" value="au cinéma"/>
+			<!-- critère 008, sous-critère 2-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0083" value="au théâtre"/>
+			<!-- critère 008, sous-critère 3-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-001" value="en amphithéâtre"/>
+			<!-- critère 001-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-002" value="en atelier"/>
+			<!-- critère 002-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-003" value="en atelier de pédagogie personnalisée"/>
+			<!-- critère 003-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-009" value="en bibliothèque, médiathèque"/>
+			<!-- critère 009-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-004" value="en CDI (Centre de documentation et d'information)"/>
+			<!-- critère 004-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0018" value="en entreprise"/>
+			<!-- critère 001, sous-critère 8-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-006" value="en établissement"/>
+			<!-- critère 006-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0061" value="en établissement scolaire"/>
+			<!-- critère 006, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-008" value="en établissement socioculturel"/>
+			<!-- critère 008-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0012" value="en installation de loisirs"/>
+			<!-- critère 001, sous-critère 2-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0013" value="en installation sportive"/>
+			<!-- critère 001, sous-critère 3-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0014" value="en laboratoire"/>
+			<!-- critère 001, sous-critère 4-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0015" value="en laboratoire de langues"/>
+			<!-- critère 001, sous-critère 5-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-00141" value="en laboratoire scientifique"/>
+			<!-- critère 001, sous-critère 41-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0016" value="en milieu familial"/>
+			<!-- critère 001, sous-critère 6-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0017" value="en milieu professionnel"/>
+			<!-- critère 001, sous-critère 7-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0010" value="en musée"/>
+			<!-- critère 001, sous-critère 0-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-005" value="en salle de classe"/>
+			<!-- critère 005-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0020" value="en salle informatique"/>
+			<!-- critère 002, sous-critère 0-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0021" value="en salle multimédia"/>
+			<!-- critère 002, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-007" value="espace dédié à une pratique spécifique"/>
+			<!-- critère 007-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0011" value="hors établissement"/>
+			<!-- critère 001, sous-critère 1-->
+			<xs:enumeration xml:id="scolomfr-voc-017-num-0019" value="non précisé"/>
+			<!-- critère 001, sous-critère 9-->
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

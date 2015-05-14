@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified">
+	<xs:simpleType name="typeValues">
+		<xs:restriction base="xs:token">
+			<!-- vocabulaire : Type (technique). -->
+			<!-- source : scolomfr-voc-023_VDEX.xml-->
+			<!--4 termes -->
+			<xs:enumeration xml:id="lom-browser" value="browser"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-023-num-001" value="navigateur"/>
+			<!-- critère 001-->
+			<xs:enumeration xml:id="lom-os" value="operating system"/>
+			<!---->
+			<xs:enumeration xml:id="scolomfr-voc-023-num-002" value="système d'exploitation"/>
+			<!-- critère 002-->
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

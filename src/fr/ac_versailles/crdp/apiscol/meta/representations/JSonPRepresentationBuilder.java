@@ -30,15 +30,15 @@ public class JSonPRepresentationBuilder extends
 	}
 
 	@Override
-	public JSONWithPadding getMetadataRepresentation(String realPath,
-			UriInfo uriInfo, String apiscolInstanceName, String resourceId,
+	public JSONWithPadding getMetadataRepresentation(UriInfo uriInfo,
+			String apiscolInstanceName, String resourceId,
 			boolean includeDescription, Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
 
 		Document xmlRepresentation = innerBuilder.getMetadataRepresentation(
-				realPath, uriInfo, apiscolInstanceName, resourceId,
-				includeDescription, params, resourceDataHandler, editUri);
+				uriInfo, apiscolInstanceName, resourceId, includeDescription,
+				params, resourceDataHandler, editUri);
 		String jsonSource = JSonUtils.convertXMLToJson(xmlRepresentation);
 		JSONWithPadding metadataResponseJson = new JSONWithPadding(jsonSource,
 				"callback");
@@ -46,12 +46,11 @@ public class JSonPRepresentationBuilder extends
 	}
 
 	@Override
-	public JSONWithPadding getMetadataSnippetRepresentation(String realPath,
-			UriInfo uriInfo, String apiscolInstanceName, String metadataId,
-			String version) {
+	public JSONWithPadding getMetadataSnippetRepresentation(UriInfo uriInfo,
+			String apiscolInstanceName, String metadataId, String version) {
 		Document xmlRepresentation = (Document) innerBuilder
-				.getMetadataSnippetRepresentation(realPath, uriInfo,
-						apiscolInstanceName, metadataId, version);
+				.getMetadataSnippetRepresentation(uriInfo, apiscolInstanceName,
+						metadataId, version);
 		String jsonSource = JSonUtils.convertXMLToJson(xmlRepresentation);
 		JSONWithPadding metadataResponseJson = new JSONWithPadding(jsonSource,
 				"callback");
@@ -60,8 +59,8 @@ public class JSonPRepresentationBuilder extends
 
 	@Override
 	public JSONWithPadding getMetadataSuccessfulDestructionReport(
-			Object realPath, UriInfo uriInfo, String apiscolInstanceName,
-			String metadataId, String warnings) {
+			UriInfo uriInfo, String apiscolInstanceName, String metadataId,
+			String warnings) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -86,10 +85,10 @@ public class JSonPRepresentationBuilder extends
 	}
 
 	@Override
-	public JSONWithPadding selectMetadataFollowingCriterium(String realPath,
-			UriInfo uriInfo, String apiscolInstanceName,
-			String apiscolInstanceLabel, ISearchEngineResultHandler handler,
-			int start, int rows, boolean includeDescription,
+	public JSONWithPadding selectMetadataFollowingCriterium(UriInfo uriInfo,
+			String apiscolInstanceName, String apiscolInstanceLabel,
+			ISearchEngineResultHandler handler, int start, int rows,
+			boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws NumberFormatException, DBAccessException {
 		// TODO Auto-generated method stub
@@ -98,7 +97,7 @@ public class JSonPRepresentationBuilder extends
 
 	@Override
 	public JSONWithPadding getCompleteMetadataListRepresentation(
-			String realPath, UriInfo uriInfo, String apiscolInstanceName,
+			UriInfo uriInfo, String apiscolInstanceName,
 			String apiscolInstanceLabel, int start, int rows,
 			boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,

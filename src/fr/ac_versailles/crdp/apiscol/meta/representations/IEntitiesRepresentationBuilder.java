@@ -16,7 +16,7 @@ public interface IEntitiesRepresentationBuilder<T> {
 
 	String getMetadataDownloadUri(UriInfo uriInfo, String metadataId);
 
-	T getMetadataSuccessfulDestructionReport(Object realPath, UriInfo uriInfo,
+	T getMetadataSuccessfulDestructionReport(UriInfo uriInfo,
 			String apiscolInstanceName, String metadataId, String warnings);
 
 	T getSuccessfullOptimizationReport(String requestedFormat, UriInfo uriInfo);
@@ -29,25 +29,25 @@ public interface IEntitiesRepresentationBuilder<T> {
 
 	String getMetadataJsonpDownloadUri(UriInfo uriInfo, String metadataId);
 
-	T getMetadataSnippetRepresentation(String realPath, UriInfo uriInfo,
+	T getMetadataSnippetRepresentation(UriInfo uriInfo,
 			String apiscolInstanceName, String metadataId, String version);
 
 	String getMetadataSnippetUri(UriInfo uriInfo, String metadataId);
 
-	T selectMetadataFollowingCriterium(String realPath, UriInfo uriInfo,
+	T selectMetadataFollowingCriterium(UriInfo uriInfo,
 			String apiscolInstanceName, String apiscolInstanceLabel,
 			ISearchEngineResultHandler handler, int start, int rows,
 			boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws NumberFormatException, DBAccessException;
 
-	T getMetadataRepresentation(String realPath, UriInfo uriInfo,
-			String apiscolInstanceName, String resourceId,
-			boolean includeDescription, Map<String, String> params,
+	T getMetadataRepresentation(UriInfo uriInfo, String apiscolInstanceName,
+			String resourceId, boolean includeDescription,
+			Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException;
 
-	T getCompleteMetadataListRepresentation(String realPath, UriInfo uriInfo,
+	T getCompleteMetadataListRepresentation(UriInfo uriInfo,
 			String apiscolInstanceName, String apiscolInstanceLabel, int start,
 			int rows, boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,

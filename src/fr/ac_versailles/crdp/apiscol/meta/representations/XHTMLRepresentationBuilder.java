@@ -2,6 +2,7 @@ package fr.ac_versailles.crdp.apiscol.meta.representations;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.IResourceDataHandler;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundException;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.ResourceDirectoryInterface;
+import fr.ac_versailles.crdp.apiscol.meta.resources.ResourcesLoader;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineResultHandler;
 import fr.ac_versailles.crdp.apiscol.utils.HTMLUtils;
 import fr.ac_versailles.crdp.apiscol.utils.XMLUtils;
@@ -50,7 +52,7 @@ public class XHTMLRepresentationBuilder extends
 	}
 
 	@Override
-	public String getMetadataRepresentation(String realPath, UriInfo uriInfo,
+	public String getMetadataRepresentation(UriInfo uriInfo,
 			String apiscolInstanceName, String metadataId,
 			boolean includeDescription, Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
@@ -69,18 +71,20 @@ public class XHTMLRepresentationBuilder extends
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Node result = XMLUtils.xsltTransform(
-				new StringBuilder().append(realPath)
-						.append("/xsl/metadataXMLToHTMLTransformer.xsl")
-						.toString(), metadataDocument, params);
+		InputStream xslStream = ResourcesLoader
+				.loadResource("xsl/metadataXMLToHTMLTransformer.xsl");
+		if (xslStream == null) {
+			logger.error("Impossible de charger la feuille de transformation xsl");
+		}
+		Node result = XMLUtils.xsltTransform(xslStream, metadataDocument,
+				params);
 		return HTMLUtils.WrapInHTML5Headers((Document) result);
 
 	}
 
 	@Override
-	public String getMetadataSuccessfulDestructionReport(Object realPath,
-			UriInfo uriInfo, String apiscolInstanceName, String metadataId,
-			String warnings) {
+	public String getMetadataSuccessfulDestructionReport(UriInfo uriInfo,
+			String apiscolInstanceName, String metadataId, String warnings) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -105,41 +109,42 @@ public class XHTMLRepresentationBuilder extends
 	}
 
 	@Override
-	public String getMetadataSnippetRepresentation(String realPath,
-			UriInfo uriInfo, String apiscolInstanceName, String metadataId,
-			String version) {
+	public String getMetadataSnippetRepresentation(UriInfo uriInfo,
+			String apiscolInstanceName, String metadataId, String version) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getCompleteMetadataListRepresentation(String realPath,
-			UriInfo uriInfo, String apiscolInstanceLabel,
-			String apiscolInstanceName, int start, int rows,
-			boolean includeDescription,
+	public String getCompleteMetadataListRepresentation(UriInfo uriInfo,
+			String apiscolInstanceLabel, String apiscolInstanceName, int start,
+			int rows, boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws DBAccessException {
 		// TODO Auto-generated method stub
 		return XMLUtils.XMLToString(innerBuilder
-				.getCompleteMetadataListRepresentation(realPath, uriInfo,
+				.getCompleteMetadataListRepresentation(uriInfo,
 						apiscolInstanceName, apiscolInstanceLabel, start, rows,
 						includeDescription, resourceDataHandler, editUri,
 						version));
 	}
 
 	@Override
-	public String selectMetadataFollowingCriterium(String realPath,
-			UriInfo uriInfo, String apiscolInstanceLabel,
-			String apiscolInstanceName, ISearchEngineResultHandler handler,
-			int start, int rows, boolean includeDescription,
+	public String selectMetadataFollowingCriterium(UriInfo uriInfo,
+			String apiscolInstanceLabel, String apiscolInstanceName,
+			ISearchEngineResultHandler handler, int start, int rows,
+			boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws NumberFormatException, DBAccessException {
 		Document xmlResponse = innerBuilder.selectMetadataFollowingCriterium(
-				realPath, uriInfo, apiscolInstanceName, apiscolInstanceLabel,
-				handler, start, rows, true, resourceDataHandler, editUri,
-				version);
-		Node result = XMLUtils.xsltTransform(realPath
-				+ "/xsl/metadataListXMLToHTMLTransformer.xsl", xmlResponse,
+				uriInfo, apiscolInstanceName, apiscolInstanceLabel, handler,
+				start, rows, true, resourceDataHandler, editUri, version);
+		InputStream xslStream = ResourcesLoader
+				.loadResource("xsl/metadataListXMLToHTMLTransformer.xsl");
+		if (xslStream == null) {
+			logger.error("Impossible de charger la feuille de transformation xsl pour les listes xsl/metadataListXMLToHTMLTransformer.xsl");
+		}
+		Node result = XMLUtils.xsltTransform(xslStream, xmlResponse,
 				Collections.<String, String> emptyMap());
 		return HTMLUtils.WrapInHTML5Headers((Document) result);
 

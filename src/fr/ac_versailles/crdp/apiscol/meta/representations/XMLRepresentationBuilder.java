@@ -50,7 +50,7 @@ public class XMLRepresentationBuilder extends
 	private static VCardEngine vcardengine = new VCardEngine();
 
 	@Override
-	public Document getMetadataRepresentation(String realPath, UriInfo uriInfo,
+	public Document getMetadataRepresentation(UriInfo uriInfo,
 			String apiscolInstanceName, String resourceId,
 			boolean includeDescription, Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
@@ -64,9 +64,8 @@ public class XMLRepresentationBuilder extends
 	}
 
 	@Override
-	public Document getMetadataSnippetRepresentation(String realPath,
-			UriInfo uriInfo, String apiscolInstanceName, String metadataId,
-			String version) {
+	public Document getMetadataSnippetRepresentation(UriInfo uriInfo,
+			String apiscolInstanceName, String metadataId, String version) {
 		Document XMLRepresentation = createXMLDocument();
 		Element rootElement = XMLRepresentation
 				.createElement("apiscol:snippet");
@@ -125,8 +124,8 @@ public class XMLRepresentationBuilder extends
 	}
 
 	@Override
-	public Document getCompleteMetadataListRepresentation(String realPath,
-			UriInfo uriInfo, final String apiscolInstanceName,
+	public Document getCompleteMetadataListRepresentation(UriInfo uriInfo,
+			final String apiscolInstanceName,
 			final String apiscolInstanceLabel, int start, int rows,
 			boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
@@ -540,8 +539,8 @@ public class XMLRepresentationBuilder extends
 	}
 
 	@Override
-	public Document selectMetadataFollowingCriterium(String realPath,
-			UriInfo uriInfo, final String apiscolInstanceName,
+	public Document selectMetadataFollowingCriterium(UriInfo uriInfo,
+			final String apiscolInstanceName,
 			final String apiscolInstanceLabel,
 			ISearchEngineResultHandler handler, int start, int rows,
 			boolean includeDescription,
@@ -712,9 +711,8 @@ public class XMLRepresentationBuilder extends
 	}
 
 	@Override
-	public Document getMetadataSuccessfulDestructionReport(Object realPath,
-			UriInfo uriInfo, String apiscolInstanceName, String metadataId,
-			String warnings) {
+	public Document getMetadataSuccessfulDestructionReport(UriInfo uriInfo,
+			String apiscolInstanceName, String metadataId, String warnings) {
 		Document report = createXMLDocument();
 		Element rootElement = report.createElement("status");
 		Element stateElement = report.createElement("state");
@@ -740,7 +738,7 @@ public class XMLRepresentationBuilder extends
 	}
 
 	@Override
-	public Document getSuccessfullOptimizationReport(String realPath,
+	public Document getSuccessfullOptimizationReport(String requestedFormat,
 			UriInfo uriInfo) {
 		Document report = createXMLDocument();
 		Element rootElement = report.createElement("status");
@@ -790,4 +788,5 @@ public class XMLRepresentationBuilder extends
 		XMLUtils.addNameSpaces(report, UsedNamespaces.APISCOL);
 		return report;
 	}
+
 }

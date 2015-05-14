@@ -89,12 +89,12 @@ public class MetadataApi extends ApiscolApi {
 	}
 
 	public static void initializeResourceDirectoryInterface(
-			ServletContext context) {  
+			ServletContext context) {
 		if (!ResourceDirectoryInterface.isInitialized())
 			ResourceDirectoryInterface.initialize(
 					getProperty(ParametersKeys.fileRepoPath, context),
 					getProperty(ParametersKeys.systemDefaultLanguage, context),
-					context.getRealPath("scolomfr-xsd-1-1bis/scolomfr.xsd"), 
+					"scolomfr-xsd-1-1bis/scolomfr.xsd",
 					getProperty(ParametersKeys.temporaryFilesPrefix, context));
 	}
 
@@ -198,7 +198,7 @@ public class MetadataApi extends ApiscolApi {
 	 * @throws MetadataNotFoundException
 	 */
 	@POST
-	@Path("/")  
+	@Path("/")
 	@Produces({ MediaType.APPLICATION_ATOM_XML, MediaType.APPLICATION_XML })
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response createMetadata(
@@ -223,22 +223,14 @@ public class MetadataApi extends ApiscolApi {
 			ResourceDirectoryInterface.registerMetadataFile(metadataId,
 					uploadedInputStream, url, apiscolInstanceName);
 		} catch (FileSystemAccessException e) {
-			try {
-				ResourceDirectoryInterface.deleteMetadataFile(metadataId, true);
-			} catch (MetadataNotFoundException e1) {
-				logger.error(String
-						.format("Registration of file was aborted as a transfer problem occured for metadata %s, but it was impossible to delete the file",
-								metadataId));
-			}
+			logger.error(String
+					.format("Registration of file was aborted as a transfer problem occured for metadata %s",
+							metadataId));
 			throw e;
 		} catch (InvalidProvidedMetadataFileException e) {
-			try {
-				ResourceDirectoryInterface.deleteMetadataFile(metadataId, true);
-			} catch (MetadataNotFoundException e1) {
-				logger.error(String
-						.format("Registration of file was aborted as a transfer problem occured for metadata %s, but it was impossible to delete the file",
-								metadataId));
-			}
+			logger.error(String
+					.format("Registration of file was aborted as a transfer problem occured for metadata %s",
+							metadataId));
 			throw e;
 		}
 		try {
@@ -255,15 +247,6 @@ public class MetadataApi extends ApiscolApi {
 							metadataId);
 			logger.error(error1);
 			errors.append(error1);
-			try {
-				ResourceDirectoryInterface.deleteMetadataFile(metadataId, true);
-			} catch (MetadataNotFoundException e1) {
-				String error2 = String
-						.format("The temporary file for metadata %s was note deleted for an unknown reason.",
-								metadataId);
-				logger.error(error2);
-				errors.append(error2);
-			}
 
 			throw new FileSystemAccessException(errors.toString());
 		}
@@ -283,8 +266,7 @@ public class MetadataApi extends ApiscolApi {
 		} catch (SearchEngineCommunicationException e1) {
 			e1.printStackTrace();
 			try {
-				ResourceDirectoryInterface
-						.deleteMetadataFile(metadataId, false);
+				ResourceDirectoryInterface.deleteMetadataFile(metadataId);
 			} catch (MetadataNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -294,8 +276,7 @@ public class MetadataApi extends ApiscolApi {
 		} catch (SearchEngineErrorException e1) {
 			e1.printStackTrace();
 			try {
-				ResourceDirectoryInterface
-						.deleteMetadataFile(metadataId, false);
+				ResourceDirectoryInterface.deleteMetadataFile(metadataId);
 			} catch (MetadataNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -311,8 +292,7 @@ public class MetadataApi extends ApiscolApi {
 					.getResourceDataHandler(DBTypes.mongoDB);
 			return Response
 					.ok()
-					.entity(rb.getMetadataRepresentation(
-							context.getRealPath(""), uriInfo,
+					.entity(rb.getMetadataRepresentation(uriInfo,
 							apiscolInstanceName, metadataId, true,
 							Collections.<String, String> emptyMap(),
 							resourceDataHandler, editUri))
@@ -401,8 +381,7 @@ public class MetadataApi extends ApiscolApi {
 							.getResourceDataHandler(DBTypes.mongoDB);
 					response = Response
 							.ok()
-							.entity(rb.getMetadataRepresentation(
-									context.getRealPath(""), uriInfo,
+							.entity(rb.getMetadataRepresentation(uriInfo,
 									apiscolInstanceName, metadataId, true,
 									Collections.<String, String> emptyMap(),
 									resourceDataHandler, editUri))
@@ -465,24 +444,17 @@ public class MetadataApi extends ApiscolApi {
 					ResourceDirectoryInterface.registerMetadataFile(metadataId,
 							uploadedInputStream, url, apiscolInstanceName);
 				} catch (FileSystemAccessException e) {
-					try {
-						ResourceDirectoryInterface.deleteMetadataFile(
-								metadataId, true);
-					} catch (MetadataNotFoundException e1) {
-						logger.error(String
-								.format("Registration of file was aborted as a transfer problem occured for metadata %s, but it was impossible to delete the file",
-										metadataId));
-					}
+					logger.error(String
+							.format("Registration of file was aborted as a transfer problem occured for metadata %s",
+									metadataId));
+
 					throw e;
 				} catch (InvalidProvidedMetadataFileException e) {
-					try {
-						ResourceDirectoryInterface.deleteMetadataFile(
-								metadataId, true);
-					} catch (MetadataNotFoundException e1) {
-						logger.error(String
-								.format("Registration of file was aborted as a transfer problem occured for metadata %s, but it was impossible to delete the file",
-										metadataId));
-					}
+
+					logger.error(String
+							.format("Registration of file was aborted as a transfer problem occured for metadata %s",
+									metadataId));
+
 					throw e;
 				}
 				try {
@@ -495,7 +467,7 @@ public class MetadataApi extends ApiscolApi {
 				Map<String, String> propertiesToSave = ResourceDirectoryInterface
 						.extractPropertiesToSave(metadataId);
 				boolean successFullFileDeletion = ResourceDirectoryInterface
-						.deleteMetadataFile(metadataId, false);
+						.deleteMetadataFile(metadataId);
 
 				if (!successFullFileDeletion) {
 					// we don't stop, perhaps previous metadata file did not
@@ -529,8 +501,7 @@ public class MetadataApi extends ApiscolApi {
 					warnings.append(errorReport);
 					logger.error(errorReport);
 					// delete the temporary file
-					ResourceDirectoryInterface.deleteMetadataFile(metadataId,
-							true);
+					ResourceDirectoryInterface.deleteMetadataFile(metadataId);
 					throw new FileSystemAccessException(errorReport);
 				}
 				ResourceDirectoryInterface.restoreProperties(metadataId,
@@ -600,8 +571,7 @@ public class MetadataApi extends ApiscolApi {
 							.getResourceDataHandler(DBTypes.mongoDB);
 					response = Response
 							.ok()
-							.entity(rb.getMetadataRepresentation(
-									context.getRealPath(""), uriInfo,
+							.entity(rb.getMetadataRepresentation(uriInfo,
 									apiscolInstanceName, metadataId, true,
 									Collections.<String, String> emptyMap(),
 									resourceDataHandler, editUri))
@@ -1010,12 +980,12 @@ public class MetadataApi extends ApiscolApi {
 				e.printStackTrace();
 			}
 		}
-		return Response.ok(
-				rb.selectMetadataFollowingCriterium(context.getRealPath(""),
-						uriInfo, apiscolInstanceName, apiscolInstanceLabel,
-						handler, start, rows, includeDescription,
-						resourceDataHandler, editUri, version),
-				rb.getMediaType()).build();
+		return Response
+				.ok(rb.selectMetadataFollowingCriterium(uriInfo,
+						apiscolInstanceName, apiscolInstanceLabel, handler,
+						start, rows, includeDescription, resourceDataHandler,
+						editUri, version), rb.getMediaType())
+				.header("Access-Control-Allow-Origin", "*").build();
 
 	}
 
@@ -1039,10 +1009,10 @@ public class MetadataApi extends ApiscolApi {
 			}
 		}
 		return Response.ok(
-				rb.selectMetadataFollowingCriterium(context.getRealPath(""),
-						uriInfo, apiscolInstanceName, apiscolInstanceLabel,
-						handler, 0, 1, includeDescription, resourceDataHandler,
-						editUri, version), rb.getMediaType()).build();
+				rb.selectMetadataFollowingCriterium(uriInfo,
+						apiscolInstanceName, apiscolInstanceLabel, handler, 0,
+						1, includeDescription, resourceDataHandler, editUri,
+						version), rb.getMediaType()).build();
 	}
 
 	public enum GetModalities {
@@ -1091,9 +1061,9 @@ public class MetadataApi extends ApiscolApi {
 			params.put("device", device);
 		IResourceDataHandler resourceDataHandler = DBAccessFactory
 				.getResourceDataHandler(DBTypes.mongoDB);
-		Object response = rb.getMetadataRepresentation(context.getRealPath(""),
-				uriInfo, apiscolInstanceName, metadataId, includeDescription,
-				params, resourceDataHandler, editUri);
+		Object response = rb.getMetadataRepresentation(uriInfo,
+				apiscolInstanceName, metadataId, includeDescription, params,
+				resourceDataHandler, editUri);
 
 		String mediaType = rb.getMediaType().toString();
 		return Response
@@ -1142,9 +1112,8 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		Object response = rb.getMetadataSnippetRepresentation(
-				context.getRealPath(""), uriInfo, apiscolInstanceName,
-				metadataId, version);
+		Object response = rb.getMetadataSnippetRepresentation(uriInfo,
+				apiscolInstanceName, metadataId, version);
 
 		String mediaType = rb.getMediaType().toString();
 		return Response
@@ -1178,8 +1147,7 @@ public class MetadataApi extends ApiscolApi {
 					.getResultHandler();
 			handler.parse(result);
 			return Response.ok(
-					rb.selectMetadataFollowingCriterium(
-							context.getRealPath(""), uriInfo,
+					rb.selectMetadataFollowingCriterium(uriInfo,
 							apiscolInstanceName, apiscolInstanceLabel, handler,
 							0, 10, false, null, editUri, version),
 					rb.getMediaType()).build();
@@ -1226,7 +1194,7 @@ public class MetadataApi extends ApiscolApi {
 				}
 				String url = rb.getMetadataUri(uriInfo, metadataId);
 				boolean successFullFileDeletion = ResourceDirectoryInterface
-						.deleteMetadataFile(metadataId, false);
+						.deleteMetadataFile(metadataId);
 				if (successFullFileDeletion) {
 					try {
 						searchEngineQueryHandler.processDeleteQuery(url);
@@ -1259,8 +1227,7 @@ public class MetadataApi extends ApiscolApi {
 				if (response == null) {
 
 					response = Response.ok(rb
-							.getMetadataSuccessfulDestructionReport(
-									realPath(context), uriInfo,
+							.getMetadataSuccessfulDestructionReport(uriInfo,
 									apiscolInstanceName, metadataId,
 									warnings.toString()), rb.getMediaType());
 
@@ -1425,9 +1392,8 @@ public class MetadataApi extends ApiscolApi {
 
 				IResourceDataHandler resourceDataHandler = DBAccessFactory
 						.getResourceDataHandler(DBTypes.mongoDB);
-				Object representation = rb.getMetadataRepresentation(
-						context.getRealPath(""), uriInfo, packMetadataId,
-						packMetadataId, false,
+				Object representation = rb.getMetadataRepresentation(uriInfo,
+						packMetadataId, packMetadataId, false,
 						Collections.<String, String> emptyMap(),
 						resourceDataHandler, requestedFormat);
 				response = Response.status(Status.OK).entity(representation);

@@ -16,10 +16,6 @@
 		<servlet-name>ApiScol_Meta</servlet-name>
 		<servlet-class>fr.ac_versailles.crdp.apiscol.meta.ApiscolMeta</servlet-class>
 		<init-param>
-			<param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-			<param-value>fr.ac_versailles.crdp.apiscol.meta.filters.SecurityFilter</param-value>
-		</init-param>
-		<init-param>
 			<param-name>com.sun.jersey.config.property.packages</param-name>
 			<param-value>fr.ac_versailles.crdp.apiscol.meta</param-value>
 		</init-param>

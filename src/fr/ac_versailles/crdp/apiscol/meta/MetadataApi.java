@@ -78,7 +78,8 @@ public class MetadataApi extends ApiscolApi {
 	private static ISearchEngineQueryHandler searchEngineQueryHandler;
 	private static String editUri;
 
-	public MetadataApi(@Context ServletContext context) {
+	public MetadataApi(@Context ServletContext context)
+			throws FileSystemAccessException {
 		super(context);
 		if (!staticInitialization) {
 			initializeResourceDirectoryInterface(context);
@@ -89,13 +90,19 @@ public class MetadataApi extends ApiscolApi {
 	}
 
 	public static void initializeResourceDirectoryInterface(
-			ServletContext context) {
-		if (!ResourceDirectoryInterface.isInitialized())
-			ResourceDirectoryInterface.initialize(
+			ServletContext context) throws FileSystemAccessException {
+
+		if (!ResourceDirectoryInterface.isInitialized()) {
+			boolean success = ResourceDirectoryInterface.initialize(
 					getProperty(ParametersKeys.fileRepoPath, context),
 					getProperty(ParametersKeys.systemDefaultLanguage, context),
-					"scolomfr-xsd-1-1bis/scolomfr.xsd",
+					getProperty(ParametersKeys.scolomfrXsdRepoPath, context),
 					getProperty(ParametersKeys.temporaryFilesPrefix, context));
+			if (!success)
+				throw new FileSystemAccessException(
+						"File System access initialization failure : check log files.");
+		}
+
 	}
 
 	/**

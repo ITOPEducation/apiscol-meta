@@ -65,13 +65,16 @@ public class ResourceDirectoryInterface {
 
 	private static HashMap<String, File> temporaryFiles;
 
-	public static void initialize(String fileRepoPath, String defaultLanguage,
-			String xsdPath, String temporaryFilesPrefix) {
+	public static boolean initialize(String fileRepoPath,
+			String defaultLanguage, String xsdPath, String temporaryFilesPrefix) {
 		ResourceDirectoryInterface.fileRepoPath = fileRepoPath;
 		ResourceDirectoryInterface.defaultLanguage = defaultLanguage;
 		ResourceDirectoryInterface.temporaryFilesPrefix = temporaryFilesPrefix;
 		initializeLogger();
-		createValidator(xsdPath);
+		boolean validatorCreationSuccess = createValidator(xsdPath);
+		if (!validatorCreationSuccess)
+			return false;
+		return true;
 
 	}
 
@@ -103,25 +106,22 @@ public class ResourceDirectoryInterface {
 				.toString();
 	}
 
-	private static void createValidator(String xsdPath) {
+	private static boolean createValidator(String xsdPath) {
 		SchemaFactory factory = SchemaFactory
 				.newInstance("http://www.w3.org/2001/XMLSchema");
-		logger.info("Tentative de chargement des xsd depuis " + xsdPath);
-		InputStream schemaStream = ResourcesLoader.loadResource(xsdPath);
-
-		if (schemaStream == null) {
-			logger.error("Impossible de trouver les fichiers xsd en " + xsdPath);
-			return;
-		}
+		File schemaLocation = new File(xsdPath);
+		logger.info("Trying to load xsd validation files from " + xsdPath);
 		Schema schema = null;
 		try {
-			schema = factory.newSchema(new StreamSource(schemaStream));
+			schema = factory.newSchema(schemaLocation);
 			validator = schema.newValidator();
 		} catch (SAXException e1) {
 			logger.error("The scolomfr xsd files seems to be corrupted or not available on "
 					+ xsdPath);
 			e1.printStackTrace();
+			return false;
 		}
+		return true;
 
 	}
 
@@ -370,6 +370,7 @@ public class ResourceDirectoryInterface {
 	private static void validateFile(File scolomFrXml)
 			throws InvalidProvidedMetadataFileException,
 			FileSystemAccessException {
+		System.out.println(scolomFrXml.exists());
 		StreamSource source = new StreamSource(scolomFrXml);
 		try {
 			validator.validate(source);
@@ -377,12 +378,12 @@ public class ResourceDirectoryInterface {
 		} catch (SAXException ex) {
 			throw new InvalidProvidedMetadataFileException(String.format(
 					"The file %s is not valid because %s",
-					scolomFrXml.getName(), ex.getMessage()));
+					scolomFrXml.getAbsolutePath(), ex.getMessage()));
 		} catch (IOException e) {
 			throw new FileSystemAccessException(
 					String.format(
 							"Impossible to reach the xml file %s when trying to validate",
-							scolomFrXml.getName()));
+							scolomFrXml.getAbsolutePath()));
 		}
 
 	}

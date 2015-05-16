@@ -53,7 +53,8 @@ public class MaintenanceApi extends ApiscolApi {
 	@Context
 	ServletContext context;
 
-	public MaintenanceApi(@Context ServletContext context) {
+	public MaintenanceApi(@Context ServletContext context)
+			throws FileSystemAccessException {
 		super(context);
 		if (!staticInitialization) {
 			MetadataApi.initializeResourceDirectoryInterface(context);

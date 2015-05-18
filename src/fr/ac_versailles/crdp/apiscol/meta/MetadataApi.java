@@ -1187,21 +1187,33 @@ public class MetadataApi extends ApiscolApi {
 								metadataId));
 				checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
 						metadataId);
-				List<String> packsContainingMetadata = ResourceDirectoryInterface
-						.getPacksContainingMetadata(metadataId);
-				if (packsContainingMetadata.size() > 0) {
-					throw new DeletionNotAllowedException(metadataId,
-							packsContainingMetadata.get(0));
-				}
-				List<String> otherAffectedRelations = ResourceDirectoryInterface
-						.removePackRelations(metadataId, uriInfo);
-				for (Iterator<String> iterator = otherAffectedRelations
-						.iterator(); iterator.hasNext();) {
-					refreshMetadata(iterator.next());
-				}
 				String url = rb.getMetadataUri(uriInfo, metadataId);
 				boolean successFullFileDeletion = ResourceDirectoryInterface
 						.deleteMetadataFile(metadataId);
+
+				if (!successFullFileDeletion) {
+					int counter = 0;
+					// FIXME chiffre exagéré
+					// TODO chiffre exagéré
+					while (counter < 5
+							&& ResourceDirectoryInterface
+									.metadataFileExists(metadataId)) {
+						String errorReport = String
+								.format("New attempt to delete file for metadata %s after 1 second",
+										metadataId);
+						logger.error(errorReport);
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						successFullFileDeletion = ResourceDirectoryInterface
+								.deleteMetadataFile(metadataId);
+						counter++;
+					}
+
+				}
 				if (successFullFileDeletion) {
 					try {
 						searchEngineQueryHandler.processDeleteQuery(url);

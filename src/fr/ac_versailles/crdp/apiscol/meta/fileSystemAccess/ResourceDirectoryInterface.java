@@ -264,6 +264,7 @@ public class ResourceDirectoryInterface {
 	}
 
 	public static void renewJsonpFile(String metadataId) {
+		System.gc();
 		File XMLFile = new File(getFilePath(metadataId));
 		File actualJsonpFile = new File(getFilePath(metadataId, "js"));
 		if (actualJsonpFile.exists())
@@ -370,7 +371,6 @@ public class ResourceDirectoryInterface {
 	private static void validateFile(File scolomFrXml)
 			throws InvalidProvidedMetadataFileException,
 			FileSystemAccessException {
-		System.out.println(scolomFrXml.exists());
 		StreamSource source = new StreamSource(scolomFrXml);
 		try {
 			validator.validate(source);
@@ -556,6 +556,7 @@ public class ResourceDirectoryInterface {
 
 	public static boolean deleteMetadataFile(String metadataId)
 			throws MetadataNotFoundException {
+		System.gc();
 		File metadataFile = new File(getFilePath(metadataId));
 		File jsonpMetadataFile = new File(getFilePath(metadataId, "js"));
 		File parent = metadataFile.getParentFile();
@@ -584,7 +585,13 @@ public class ResourceDirectoryInterface {
 
 	}
 
+	public static boolean metadataFileExists(String metadataId) {
+		return new File(getFilePath(metadataId)).exists();
+
+	}
+
 	public static void deleteAllFiles() {
+		System.gc();
 		File resourceDir = new File(fileRepoPath);
 		for (File dir : resourceDir.listFiles()) {
 			if (!dir.getName().equals("..") && !dir.getName().equals("."))

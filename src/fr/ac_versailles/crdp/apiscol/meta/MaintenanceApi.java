@@ -22,8 +22,8 @@ import fr.ac_versailles.crdp.apiscol.ApiscolApi;
 import fr.ac_versailles.crdp.apiscol.ParametersKeys;
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.database.InexistentResourceInDatabaseException;
-import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessFactory;
-import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessFactory.DBTypes;
+import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessBuilder;
+import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessBuilder.DBTypes;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.IResourceDataHandler;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.FileSystemAccessException;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundException;
@@ -142,7 +142,7 @@ public class MaintenanceApi extends ApiscolApi {
 			try {
 				ResourceDirectoryInterface.deleteAllFiles();
 				searchEngineQueryHandler.deleteIndex();
-				IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(dbConnexionParameters).build();
 				resourceDataHandler.deleteAllDocuments();
@@ -180,7 +180,7 @@ public class MaintenanceApi extends ApiscolApi {
 			keyLock = keyLockManager.getLock(KeyLockManager.GLOBAL_LOCK_KEY);
 			keyLock.lock();
 			try {
-				IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 				.setDbType(DBTypes.mongoDB)
 				.setParameters(dbConnexionParameters).build();
 

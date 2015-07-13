@@ -7,8 +7,8 @@ import javax.ws.rs.core.Application;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
-import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessFactory;
-import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessFactory.DBTypes;
+import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessBuilder;
+import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessBuilder.DBTypes;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.IResourceDataHandler;
 
 public class ApiscolMeta extends ServletContainer {
@@ -32,7 +32,7 @@ public class ApiscolMeta extends ServletContainer {
 
 	@PreDestroy
 	public void deinitialize() {
-		DBAccessFactory.deinitialize();
+		DBAccessBuilder.deinitialize();
 	}
 
 	@PostConstruct

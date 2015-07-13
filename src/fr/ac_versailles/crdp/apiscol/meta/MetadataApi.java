@@ -43,8 +43,8 @@ import com.sun.jersey.multipart.FormDataParam;
 import fr.ac_versailles.crdp.apiscol.ApiscolApi;
 import fr.ac_versailles.crdp.apiscol.ParametersKeys;
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
-import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessFactory;
-import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessFactory.DBTypes;
+import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessBuilder;
+import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessBuilder.DBTypes;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.IResourceDataHandler;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.FileSystemAccessException;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.InvalidProvidedMetadataFileException;
@@ -296,7 +296,7 @@ public class MetadataApi extends ApiscolApi {
 		createMetadataEntryInDatabase(metadataId);
 
 		try {
-			IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+			IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 					.setDbType(DBTypes.mongoDB)
 					.setParameters(dbConnexionParameters).build();
 			return Response
@@ -386,7 +386,7 @@ public class MetadataApi extends ApiscolApi {
 				}
 
 				try {
-					IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+					IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 							.setDbType(DBTypes.mongoDB)
 							.setParameters(dbConnexionParameters).build();
 					response = Response
@@ -577,7 +577,7 @@ public class MetadataApi extends ApiscolApi {
 					updateMetadataEntryInDataBase(metadataId);
 				}
 				try {
-					IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+					IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 							.setDbType(DBTypes.mongoDB)
 							.setParameters(dbConnexionParameters).build();
 					response = Response
@@ -611,7 +611,7 @@ public class MetadataApi extends ApiscolApi {
 
 	private void updateMetadataEntryInDataBase(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
-		IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 				.setDbType(DBTypes.mongoDB)
 				.setParameters(dbConnexionParameters).build();
 		Document metadata = ResourceDirectoryInterface
@@ -622,7 +622,7 @@ public class MetadataApi extends ApiscolApi {
 
 	private void createMetadataEntryInDatabase(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
-		IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 				.setDbType(DBTypes.mongoDB)
 				.setParameters(dbConnexionParameters).build();
 		Document metadata = ResourceDirectoryInterface
@@ -633,7 +633,7 @@ public class MetadataApi extends ApiscolApi {
 
 	private void deleteMetadataEntryInDatabase(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
-		IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 				.setDbType(DBTypes.mongoDB)
 				.setParameters(dbConnexionParameters).build();
 		resourceDataHandler.deleteMetadataEntry(metadataId);
@@ -987,7 +987,7 @@ public class MetadataApi extends ApiscolApi {
 		IResourceDataHandler resourceDataHandler = null;
 		if (includeDescription) {
 			try {
-				resourceDataHandler = new DBAccessFactory()
+				resourceDataHandler = new DBAccessBuilder()
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(dbConnexionParameters).build();
 			} catch (DBAccessException e) {
@@ -1016,7 +1016,7 @@ public class MetadataApi extends ApiscolApi {
 		IResourceDataHandler resourceDataHandler = null;
 		if (includeDescription) {
 			try {
-				resourceDataHandler = new DBAccessFactory()
+				resourceDataHandler = new DBAccessBuilder()
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(dbConnexionParameters).build();
 			} catch (DBAccessException e) {
@@ -1075,7 +1075,7 @@ public class MetadataApi extends ApiscolApi {
 			params.put("style", style);
 		if (StringUtils.isNotEmpty(device))
 			params.put("device", device);
-		IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 				.setDbType(DBTypes.mongoDB)
 				.setParameters(dbConnexionParameters).build();
 		Object response = rb.getMetadataRepresentation(uriInfo,
@@ -1419,7 +1419,7 @@ public class MetadataApi extends ApiscolApi {
 					refreshMetadata(next);
 				}
 
-				IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(dbConnexionParameters).build();
 				Object representation = rb.getMetadataRepresentation(uriInfo,

@@ -84,6 +84,7 @@ public class MetadataApi extends ApiscolApi {
 		if (!staticInitialization) {
 			initializeResourceDirectoryInterface(context);
 			initializeStaticParameters();
+			initializeDbConnexionParameters(context);
 			createSearchEngineQueryHandler(context);
 			staticInitialization = true;
 		}
@@ -295,8 +296,9 @@ public class MetadataApi extends ApiscolApi {
 		createMetadataEntryInDatabase(metadataId);
 
 		try {
-			IResourceDataHandler resourceDataHandler = DBAccessFactory
-					.getResourceDataHandler(DBTypes.mongoDB);
+			IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+					.setDbType(DBTypes.mongoDB)
+					.setParameters(dbConnexionParameters).build();
 			return Response
 					.ok()
 					.entity(rb.getMetadataRepresentation(uriInfo,
@@ -384,8 +386,9 @@ public class MetadataApi extends ApiscolApi {
 				}
 
 				try {
-					IResourceDataHandler resourceDataHandler = DBAccessFactory
-							.getResourceDataHandler(DBTypes.mongoDB);
+					IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+							.setDbType(DBTypes.mongoDB)
+							.setParameters(dbConnexionParameters).build();
 					response = Response
 							.ok()
 							.entity(rb.getMetadataRepresentation(uriInfo,
@@ -574,8 +577,9 @@ public class MetadataApi extends ApiscolApi {
 					updateMetadataEntryInDataBase(metadataId);
 				}
 				try {
-					IResourceDataHandler resourceDataHandler = DBAccessFactory
-							.getResourceDataHandler(DBTypes.mongoDB);
+					IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+							.setDbType(DBTypes.mongoDB)
+							.setParameters(dbConnexionParameters).build();
 					response = Response
 							.ok()
 							.entity(rb.getMetadataRepresentation(uriInfo,
@@ -607,8 +611,9 @@ public class MetadataApi extends ApiscolApi {
 
 	private void updateMetadataEntryInDataBase(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
-		IResourceDataHandler resourceDataHandler = DBAccessFactory
-				.getResourceDataHandler(DBTypes.mongoDB);
+		IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+				.setDbType(DBTypes.mongoDB)
+				.setParameters(dbConnexionParameters).build();
 		Document metadata = ResourceDirectoryInterface
 				.getMetadataAsDocument(metadataId);
 		resourceDataHandler.updateMetadataEntry(metadataId, metadata);
@@ -617,8 +622,9 @@ public class MetadataApi extends ApiscolApi {
 
 	private void createMetadataEntryInDatabase(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
-		IResourceDataHandler resourceDataHandler = DBAccessFactory
-				.getResourceDataHandler(DBTypes.mongoDB);
+		IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+				.setDbType(DBTypes.mongoDB)
+				.setParameters(dbConnexionParameters).build();
 		Document metadata = ResourceDirectoryInterface
 				.getMetadataAsDocument(metadataId);
 		resourceDataHandler.createMetadataEntry(metadataId, metadata);
@@ -627,8 +633,9 @@ public class MetadataApi extends ApiscolApi {
 
 	private void deleteMetadataEntryInDatabase(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
-		IResourceDataHandler resourceDataHandler = DBAccessFactory
-				.getResourceDataHandler(DBTypes.mongoDB);
+		IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+				.setDbType(DBTypes.mongoDB)
+				.setParameters(dbConnexionParameters).build();
 		resourceDataHandler.deleteMetadataEntry(metadataId);
 
 	}
@@ -980,8 +987,9 @@ public class MetadataApi extends ApiscolApi {
 		IResourceDataHandler resourceDataHandler = null;
 		if (includeDescription) {
 			try {
-				resourceDataHandler = DBAccessFactory
-						.getResourceDataHandler(DBTypes.mongoDB);
+				resourceDataHandler = new DBAccessFactory()
+						.setDbType(DBTypes.mongoDB)
+						.setParameters(dbConnexionParameters).build();
 			} catch (DBAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1008,8 +1016,9 @@ public class MetadataApi extends ApiscolApi {
 		IResourceDataHandler resourceDataHandler = null;
 		if (includeDescription) {
 			try {
-				resourceDataHandler = DBAccessFactory
-						.getResourceDataHandler(DBTypes.mongoDB);
+				resourceDataHandler = new DBAccessFactory()
+						.setDbType(DBTypes.mongoDB)
+						.setParameters(dbConnexionParameters).build();
 			} catch (DBAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1066,8 +1075,9 @@ public class MetadataApi extends ApiscolApi {
 			params.put("style", style);
 		if (StringUtils.isNotEmpty(device))
 			params.put("device", device);
-		IResourceDataHandler resourceDataHandler = DBAccessFactory
-				.getResourceDataHandler(DBTypes.mongoDB);
+		IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+				.setDbType(DBTypes.mongoDB)
+				.setParameters(dbConnexionParameters).build();
 		Object response = rb.getMetadataRepresentation(uriInfo,
 				apiscolInstanceName, metadataId, includeDescription, params,
 				resourceDataHandler, editUri);
@@ -1409,8 +1419,9 @@ public class MetadataApi extends ApiscolApi {
 					refreshMetadata(next);
 				}
 
-				IResourceDataHandler resourceDataHandler = DBAccessFactory
-						.getResourceDataHandler(DBTypes.mongoDB);
+				IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+						.setDbType(DBTypes.mongoDB)
+						.setParameters(dbConnexionParameters).build();
 				Object representation = rb.getMetadataRepresentation(uriInfo,
 						packMetadataId, packMetadataId, false,
 						Collections.<String, String> emptyMap(),

@@ -1,5 +1,7 @@
 package fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
@@ -12,8 +14,7 @@ public abstract class AbstractResourcesDataHandler implements
 	public enum MetadataProperties {
 		title("title"), description("description"), contentUrl("content-url"), contentRestUrl(
 				"content-rest-url"), contentMime("content-mime"), icon("icon"), author(
-						"author"), aggregationLevel(
-								"agregation-level");
+				"author"), aggregationLevel("agregation-level");
 		private String value;
 
 		private MetadataProperties(String value) {
@@ -26,9 +27,10 @@ public abstract class AbstractResourcesDataHandler implements
 		}
 	}
 
-	public AbstractResourcesDataHandler() throws DBAccessException {
+	public AbstractResourcesDataHandler(Map<String, String> dbParams)
+			throws DBAccessException {
 		createLogger();
-		dbConnect();
+		dbConnect(dbParams);
 	}
 
 	@Override
@@ -46,6 +48,6 @@ public abstract class AbstractResourcesDataHandler implements
 
 	}
 
-	abstract protected void dbConnect() throws DBAccessException;
-
+	abstract protected void dbConnect(Map<String, String> dbParams)
+			throws DBAccessException;
 }

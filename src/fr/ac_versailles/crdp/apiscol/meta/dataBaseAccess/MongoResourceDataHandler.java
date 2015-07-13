@@ -3,6 +3,7 @@ package fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
@@ -21,6 +22,11 @@ import fr.ac_versailles.crdp.apiscol.database.MongoUtils;
 import fr.ac_versailles.crdp.apiscol.utils.JSonUtils;
 
 public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
+
+	public MongoResourceDataHandler(Map<String, String> dbParams)
+			throws DBAccessException {
+		super(dbParams);
+	}
 
 	public enum DBKeys {
 		id("_id"), mainFile("main"), type("type"), metadata("metadata"), url(
@@ -52,24 +58,25 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		}
 	}
 
-	public MongoResourceDataHandler() throws DBAccessException {
-		super();
-	}
-
 	private static final String DB_NAME = "apiscol";
 	private static final String COLLECTION_NAME = "metadata";
 	private static DBCollection metadataCollection;
 	private static Mongo mongo;
 
 	@Override
-	protected void dbConnect() throws DBAccessException {
+	protected void dbConnect(Map<String, String> dbParams)
+			throws DBAccessException {
 		if (mongo != null) {
 			return;
 		}
-		mongo = MongoUtils.getMongoConnection();
+		mongo = MongoUtils.getMongoConnection(dbParams);
+		initMetadataCollection();
+
+	}
+
+	private void initMetadataCollection() throws DBAccessException {
 		metadataCollection = MongoUtils.getCollection(DB_NAME, COLLECTION_NAME,
 				mongo);
-
 	}
 
 	@Override

@@ -142,8 +142,9 @@ public class MaintenanceApi extends ApiscolApi {
 			try {
 				ResourceDirectoryInterface.deleteAllFiles();
 				searchEngineQueryHandler.deleteIndex();
-				IResourceDataHandler resourceDataHandler = DBAccessFactory
-						.getResourceDataHandler(DBTypes.mongoDB);
+				IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+						.setDbType(DBTypes.mongoDB)
+						.setParameters(dbConnexionParameters).build();
 				resourceDataHandler.deleteAllDocuments();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -179,8 +180,9 @@ public class MaintenanceApi extends ApiscolApi {
 			keyLock = keyLockManager.getLock(KeyLockManager.GLOBAL_LOCK_KEY);
 			keyLock.lock();
 			try {
-				IResourceDataHandler resourceDataHandler = DBAccessFactory
-						.getResourceDataHandler(DBTypes.mongoDB);
+				IResourceDataHandler resourceDataHandler = new DBAccessFactory()
+				.setDbType(DBTypes.mongoDB)
+				.setParameters(dbConnexionParameters).build();
 
 				rb = EntitiesRepresentationBuilderFactory
 						.getRepresentationBuilder(

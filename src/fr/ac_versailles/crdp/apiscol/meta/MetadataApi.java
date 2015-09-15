@@ -471,7 +471,7 @@ public class MetadataApi extends ApiscolApi {
 					uploadedInputStream.close();
 				} catch (IOException e) {
 					logger.warn(String
-							.format("A probleme was encountered while closing the input streamm for file %s : %s",
+							.format("A probleme was encountered while closing the input stream for file %s : %s",
 									fileDetail.getFileName(), e.getMessage()));
 				}
 				Map<String, String> propertiesToSave = ResourceDirectoryInterface

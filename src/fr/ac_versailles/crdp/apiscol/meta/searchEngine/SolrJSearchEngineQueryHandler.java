@@ -77,7 +77,7 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 
 			String fieldName = split[0];
 			String fieldValue = split[1];
-			parameters.addFilterQuery(String.format("{!field f=%s}%s",
+			parameters.addFilterQuery(String.format("{!term f=%s}%s",
 					fieldName, fieldValue));
 		}
 		for (int i = 0; i < dynamicFiltersList.size(); i++) {
@@ -107,13 +107,18 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 							keywords, e.getMessage());
 			logger.error(error);
 			throw new SearchEngineErrorException(error);
+		} catch (IOException e) {
+			String error = String
+					.format("Solr has thrown an IO exception when he was asked to search keywords  %s whith the message %s",
+							keywords, e.getMessage());
+			logger.error(error);
+			throw new SearchEngineErrorException(error);
 		}
 		return response;
 	}
-	
+
 	@Override
-	public Object processSearchQuery(
-			String identifier)
+	public Object processSearchQuery(String identifier)
 			throws SearchEngineErrorException {
 		createLogger();
 		SolrQuery parameters = new SolrQuery();
@@ -122,8 +127,7 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 		parameters.setStart(0);
 		parameters.setRows(1);
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("id:\"").append(identifier)
-			.append("\"");
+		queryBuilder.append("id:\"").append(identifier).append("\"");
 		parameters.set("q", queryBuilder.toString());
 		parameters.set("qt", solrSearchPath);
 		parameters.set("hl", false);
@@ -141,6 +145,12 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 		} catch (SolrException e) {
 			String error = String
 					.format("Solr was not able to parse the request  %s whith the message %s",
+							identifier, e.getMessage());
+			logger.error(error);
+			throw new SearchEngineErrorException(error);
+		} catch (IOException e) {
+			String error = String
+					.format("Solr has thrown an IO exception when he was asked to search for metadata  %s whith the message %s",
 							identifier, e.getMessage());
 			logger.error(error);
 			throw new SearchEngineErrorException(error);
@@ -270,6 +280,12 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 		} catch (SolrServerException e) {
 			String error = String
 					.format("Solr has thrown an exception when he was asked to search keywords  %s  for completion whith the message %s",
+							keywords, e.getMessage());
+			logger.error(error);
+			throw new SearchEngineErrorException(error);
+		} catch (IOException e) {
+			String error = String
+					.format("Solr has thrown an IO exception when he was asked to search keywords  %s whith the message %s",
 							keywords, e.getMessage());
 			logger.error(error);
 			throw new SearchEngineErrorException(error);

@@ -744,6 +744,8 @@ public class MetadataApi extends ApiscolApi {
 	 *            Pagination start
 	 * @param rows
 	 *            Pagination end
+	 * @param sort
+	 *            Field used for sorting of results : may be "score" (default) or "title"
 	 * @param includeDescription
 	 *            If set to true, more informative (textual) content will be
 	 *            delivered : title, summary. For clients who are considering

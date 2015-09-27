@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +22,7 @@ import org.apache.solr.common.SolrDocumentList;
 
 public class SolrJSearchEngineResultHandler implements
 		ISearchEngineResultHandler {
-	private Set<String> resultsIds;
+	private LinkedHashSet<String> resultsIds;
 	private Map<String, String> resultScoresById;
 	private Map<String, List<String>> resultSnippetsById;
 	private Map<String, List<String>> wordSuggestionsByQueryTerms;
@@ -67,7 +68,7 @@ public class SolrJSearchEngineResultHandler implements
 	 * #getResultsIds()
 	 */
 	@Override
-	public Set<String> getResultsIds() {
+	public LinkedHashSet<String> getResultsIds() {
 		return resultsIds;
 	}
 
@@ -101,8 +102,8 @@ public class SolrJSearchEngineResultHandler implements
 		SolrDocumentList documents = response.getResults();
 		Map<String, Map<String, List<String>>> highlights = response
 				.getHighlighting();
-		totalResultsFound=documents.getNumFound();
-		resultsIds = new HashSet<String>();
+		totalResultsFound = documents.getNumFound();
+		resultsIds = new LinkedHashSet<String>();
 		resultScoresById = new HashMap<String, String>();
 		resultSnippetsById = new HashMap<String, List<String>>();
 		querySuggestions = new ArrayList<String>();
@@ -183,8 +184,7 @@ public class SolrJSearchEngineResultHandler implements
 				if (collatedResults != null) {
 					Iterator<Collation> it4 = collatedResults.iterator();
 					while (it4.hasNext()) {
-						SpellCheckResponse.Collation collation = it4
-								.next();
+						SpellCheckResponse.Collation collation = it4.next();
 						querySuggestions.add(collation
 								.getCollationQueryString());
 					}

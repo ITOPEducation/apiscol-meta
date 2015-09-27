@@ -924,6 +924,7 @@ public class MetadataApi extends ApiscolApi {
 			@DefaultValue("[]") @QueryParam(value = "dynamic-filters") final String dynamicFilters,
 			@DefaultValue("0") @QueryParam(value = "start") final int start,
 			@DefaultValue("10") @QueryParam(value = "rows") final int rows,
+			@DefaultValue("score") @QueryParam(value = "sort") final String sort,
 			@DefaultValue("false") @QueryParam(value = "desc") boolean includeDescription)
 			throws SearchEngineErrorException, NumberFormatException,
 			DBAccessException, InvalidFilterListException {
@@ -980,7 +981,7 @@ public class MetadataApi extends ApiscolApi {
 			dynamicFiltersList = Collections.emptyList();
 		Object result = searchEngineQueryHandler.processSearchQuery(
 				query.trim(), supplementsIds, fuzzy, staticFiltersList,
-				dynamicFiltersList, disableHighlighting, start, rows);
+				dynamicFiltersList, disableHighlighting, start, rows, sort);
 		ISearchEngineResultHandler handler = searchEngineFactory
 				.getResultHandler();
 		handler.parse(result);

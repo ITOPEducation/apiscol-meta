@@ -7,8 +7,8 @@ public interface ISearchEngineQueryHandler {
 	public abstract Object processSearchQuery(String keywords,
 			String[] supplementsIds, float fuzzy,
 			List<String> staticFiltersList, List<String> dynamicFiltersList,
-			boolean disableHighlighting, Integer start, Integer rows)
-			throws SearchEngineErrorException;
+			boolean disableHighlighting, Integer start, Integer rows,
+			String sort) throws SearchEngineErrorException;
 
 	public Object processSearchQuery(String identifiers)
 			throws SearchEngineErrorException;

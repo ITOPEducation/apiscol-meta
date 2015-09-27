@@ -562,7 +562,6 @@ public class XMLRepresentationBuilder extends
 				.createElement("apiscol:spellcheck");
 
 		Set<String> resultsIds = handler.getResultsIds();
-		System.out.println(resultsIds.size());
 		Iterator<String> it = resultsIds.iterator();
 		Element lengthElement = response.createElement("apiscol:length");
 		lengthElement.setTextContent(String.valueOf(handler

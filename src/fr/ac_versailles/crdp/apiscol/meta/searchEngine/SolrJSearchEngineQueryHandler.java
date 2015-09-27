@@ -7,8 +7,9 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -25,7 +26,7 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 	private final String solrUpdatePath;
 	private final String solrSuggestPath;
 
-	private HttpSolrServer solr;
+	private HttpSolrClient solr;
 	private static Logger logger;
 
 	public SolrJSearchEngineQueryHandler(String solrAddress,
@@ -34,7 +35,7 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 		this.solrSearchPath = solrSearchPath;
 		this.solrUpdatePath = solrUpdatePath;
 		this.solrSuggestPath = solrSuggestPath;
-		solr = new HttpSolrServer(solrAddress);
+		solr = new HttpSolrClient(solrAddress);
 		solr.setParser(new XMLResponseParser());
 	}
 
@@ -42,8 +43,8 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 	public Object processSearchQuery(String keywords,
 			String[] supplementsIdentifiers, float fuzzy,
 			List<String> staticFiltersList, List<String> dynamicFiltersList,
-			boolean disableHighlighting, Integer start, Integer rows)
-			throws SearchEngineErrorException {
+			boolean disableHighlighting, Integer start, Integer rows,
+			String sort) throws SearchEngineErrorException {
 		createLogger();
 		SolrQuery parameters = new SolrQuery();
 
@@ -91,6 +92,19 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 						"{!field f=%s-taxon}%s!_!%s(__%s__)", split[0],
 						split[1], split[2], split[3]));
 		}
+
+		switch (sort) {
+		case "score":
+			parameters.addSort("score", ORDER.desc);
+			break;
+		case "title":
+			parameters.addSort("general.title", ORDER.asc);
+			break;
+		default:
+			parameters.addSort("score", ORDER.desc);
+			break;
+		}
+
 		QueryResponse response = null;
 
 		try {

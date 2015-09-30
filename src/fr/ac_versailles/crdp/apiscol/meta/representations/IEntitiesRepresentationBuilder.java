@@ -8,6 +8,7 @@ import javax.ws.rs.core.UriInfo;
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.IResourceDataHandler;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundException;
+import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRegistry;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineResultHandler;
 
 public interface IEntitiesRepresentationBuilder<T> {
@@ -24,8 +25,6 @@ public interface IEntitiesRepresentationBuilder<T> {
 	String getMetadataUri(UriInfo uriInfo, String metadataId);
 
 	T getSuccessfulGlobalDeletionReport();
-
-	T getSuccessfulRecoveryReport();
 
 	String getMetadataJsonpDownloadUri(UriInfo uriInfo, String metadataId);
 
@@ -52,5 +51,8 @@ public interface IEntitiesRepresentationBuilder<T> {
 			int rows, boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws DBAccessException;
+
+	Object getMaintenanceRecoveryRepresentation(Integer maintenanceRecoveryId,
+			UriInfo uriInfo, MaintenanceRegistry maintenanceRegistry);
 
 }

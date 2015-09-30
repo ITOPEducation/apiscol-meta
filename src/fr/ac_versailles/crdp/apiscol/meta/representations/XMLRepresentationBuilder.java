@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +39,8 @@ import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.FileSystemAccessExcep
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.InvalidProvidedMetadataFileException;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundException;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.ResourceDirectoryInterface;
+import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRecoveryStates;
+import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRegistry;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineResultHandler;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.SolrRecordsSyntaxAnalyser;
 import fr.ac_versailles.crdp.apiscol.utils.TimeUtils;
@@ -774,17 +777,35 @@ public class XMLRepresentationBuilder extends
 	}
 
 	@Override
-	public Document getSuccessfulRecoveryReport() {
+	public Object getMaintenanceRecoveryRepresentation(
+			Integer maintenanceRecoveryId, UriInfo uriInfo,
+			MaintenanceRegistry maintenanceRegistry) {
 		Document report = createXMLDocument();
-		Element rootElement = report.createElement("status");
-		Element stateElement = report.createElement("state");
-		stateElement.setTextContent("done");
-		Element messageElement = report.createElement("message");
-		messageElement.setTextContent("Search engine index has been restored.");
+		Element rootElement = report.createElement("apiscol:status");
+		Element stateElement = report.createElement("apiscol:state");
+		MaintenanceRecoveryStates parsingState = maintenanceRegistry
+				.getTransferState(maintenanceRecoveryId);
+		stateElement.setTextContent(parsingState.toString());
+		Element linkElement = report.createElement("link");
+		linkElement.setAttribute(
+				"href",
+				getUrlForMaintenanceRecovery(uriInfo.getBaseUriBuilder(),
+						maintenanceRecoveryId).toString());
+		linkElement.setAttribute("rel", "self");
+		linkElement.setAttribute("type", "application/atom+xml");
+		LinkedList<String> messages = maintenanceRegistry
+				.getMessages(maintenanceRecoveryId);
+		Iterator<String> it = messages.iterator();
 		rootElement.appendChild(stateElement);
-		rootElement.appendChild(messageElement);
+		rootElement.appendChild(linkElement);
+		while (it.hasNext()) {
+			String message = (String) it.next();
+			Element messageElement = report.createElement("apiscol:message");
+			messageElement.setTextContent(message);
+			rootElement.appendChild(messageElement);
+		}
 		report.appendChild(rootElement);
-		XMLUtils.addNameSpaces(report, UsedNamespaces.APISCOL);
+		XMLUtils.addNameSpaces(report, UsedNamespaces.ATOM);
 		return report;
 	}
 

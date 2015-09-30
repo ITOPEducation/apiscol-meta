@@ -1,12 +1,13 @@
 package fr.ac_versailles.crdp.apiscol.meta;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.IOException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -16,7 +17,6 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
 
 import fr.ac_versailles.crdp.apiscol.ApiscolApi;
 import fr.ac_versailles.crdp.apiscol.ParametersKeys;
@@ -26,8 +26,8 @@ import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessBuilder;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessBuilder.DBTypes;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.IResourceDataHandler;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.FileSystemAccessException;
-import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundException;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.ResourceDirectoryInterface;
+import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRegistry;
 import fr.ac_versailles.crdp.apiscol.meta.representations.EntitiesRepresentationBuilderFactory;
 import fr.ac_versailles.crdp.apiscol.meta.representations.IEntitiesRepresentationBuilder;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.AbstractSearchEngineFactory;
@@ -47,6 +47,7 @@ public class MaintenanceApi extends ApiscolApi {
 	private static boolean staticInitialization = false;
 	private static KeyLockManager keyLockManager;
 	private static ISearchEngineFactory searchEngineFactory;
+	private static MaintenanceRegistry maintenanceRegistry;
 
 	@Context
 	UriInfo uriInfo;
@@ -61,6 +62,7 @@ public class MaintenanceApi extends ApiscolApi {
 			createLogger();
 			createKeyLockManager();
 			createSearchEngineQueryHandler(context);
+			maintenanceRegistry = new MaintenanceRegistry();
 			staticInitialization = true;
 		}
 	}
@@ -176,6 +178,7 @@ public class MaintenanceApi extends ApiscolApi {
 			DBAccessException {
 		KeyLock keyLock = null;
 		IEntitiesRepresentationBuilder<?> rb = null;
+		Integer maintenanceRecoveryId;
 		try {
 			keyLock = keyLockManager.getLock(KeyLockManager.GLOBAL_LOCK_KEY);
 			keyLock.lock();
@@ -187,34 +190,12 @@ public class MaintenanceApi extends ApiscolApi {
 				rb = EntitiesRepresentationBuilderFactory
 						.getRepresentationBuilder(
 								MediaType.APPLICATION_ATOM_XML, context);
-				searchEngineQueryHandler.deleteIndex();
-				resourceDataHandler.deleteAllDocuments();
-				ArrayList<String> resourceList = ResourceDirectoryInterface
-						.getMetadataList();
-				Iterator<String> it = resourceList.iterator();
-				boolean solrIsWaitingForCommit = false;
-				while (it.hasNext()) {
-					String metadataId = it.next();
 
-					String filePath = ResourceDirectoryInterface
-							.getFilePath(metadataId);
-					ResourceDirectoryInterface.renewJsonpFile(metadataId);
-					searchEngineQueryHandler.processAddQuery(filePath);
-					solrIsWaitingForCommit = true;
-					Document metadata = null;
-					try {
-						metadata = ResourceDirectoryInterface
-								.getMetadataAsDocument(metadataId);
-					} catch (MetadataNotFoundException e) {
-						logger.warn(String
-								.format("It is impossible, we are listing the file from metadata files directory, file for %s must exist",
-										metadataId));
-					}
-					resourceDataHandler.createMetadataEntry(metadataId,
-							metadata);
+				synchronized (maintenanceRegistry) {
+					maintenanceRecoveryId = maintenanceRegistry.newMaintenance(
+							searchEngineQueryHandler, resourceDataHandler);
 				}
-				if (solrIsWaitingForCommit)
-					searchEngineQueryHandler.processCommitQuery();
+
 			} finally {
 				keyLock.unlock();
 
@@ -226,6 +207,29 @@ public class MaintenanceApi extends ApiscolApi {
 			logger.info(String
 					.format("Leaving critical section with mutual exclusion for all the content service"));
 		}
-		return Response.ok().entity(rb.getSuccessfulRecoveryReport()).build();
+		return Response
+				.ok()
+				.entity(rb.getMaintenanceRecoveryRepresentation(
+						maintenanceRecoveryId, uriInfo, maintenanceRegistry))
+				.build();
+	}
+
+	@GET
+	@Path("/recovery/{maintenancerecoveryid}")
+	@Produces({ MediaType.APPLICATION_ATOM_XML, MediaType.APPLICATION_XML })
+	public Response getMaintenanceRecoveryState(
+			@Context HttpServletRequest request,
+			@PathParam(value = "maintenancerecoveryid") final Integer urlParsingId)
+			throws IOException {
+
+		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
+				.getRepresentationBuilder(MediaType.APPLICATION_ATOM_XML,
+						context);
+		return Response
+				.ok()
+				.entity(rb.getMaintenanceRecoveryRepresentation(urlParsingId,
+						uriInfo, maintenanceRegistry))
+				.header("Access-Control-Allow-Origin", "*")
+				.type(rb.getMediaType()).build();
 	}
 }

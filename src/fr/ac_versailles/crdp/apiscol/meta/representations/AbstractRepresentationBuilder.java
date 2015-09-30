@@ -2,6 +2,7 @@ package fr.ac_versailles.crdp.apiscol.meta.representations;
 
 import java.util.ArrayList;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
@@ -76,6 +77,13 @@ public abstract class AbstractRepresentationBuilder<T> implements
 
 	protected ArrayList<String> getMetadataList() {
 		return ResourceDirectoryInterface.getMetadataList();
+	}
+
+	protected Object getUrlForMaintenanceRecovery(UriBuilder uriBuilder,
+			Integer maintenanceRecoveryIdentifier) {
+		return uriBuilder.path("maintenance/recovery")
+				.path(maintenanceRecoveryIdentifier.toString()).build();
+
 	}
 
 }

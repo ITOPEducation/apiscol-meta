@@ -20,6 +20,7 @@ import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.IResourceDataHandler;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundException;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.ResourceDirectoryInterface;
+import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRegistry;
 import fr.ac_versailles.crdp.apiscol.meta.resources.ResourcesLoader;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineResultHandler;
 import fr.ac_versailles.crdp.apiscol.utils.HTMLUtils;
@@ -40,7 +41,7 @@ public class XHTMLRepresentationBuilder extends
 		}
 	}
 
-	private XMLRepresentationBuilder innerBuilder;
+	private AbstractRepresentationBuilder<Document> innerBuilder;
 
 	public XHTMLRepresentationBuilder() {
 		innerBuilder = new XMLRepresentationBuilder();
@@ -103,12 +104,6 @@ public class XHTMLRepresentationBuilder extends
 	}
 
 	@Override
-	public String getSuccessfulRecoveryReport() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String getMetadataSnippetRepresentation(UriInfo uriInfo,
 			String apiscolInstanceName, String metadataId, String version) {
 		// TODO Auto-generated method stub
@@ -148,5 +143,13 @@ public class XHTMLRepresentationBuilder extends
 				Collections.<String, String> emptyMap());
 		return HTMLUtils.WrapInHTML5Headers((Document) result);
 
+	}
+
+	@Override
+	public Object getMaintenanceRecoveryRepresentation(
+			Integer maintenanceRecoveryId, UriInfo uriInfo,
+			MaintenanceRegistry maintenanceRegistry) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -13,12 +13,13 @@ import fr.ac_versailles.crdp.apiscol.CustomMediaType;
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.IResourceDataHandler;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundException;
+import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRegistry;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineResultHandler;
 import fr.ac_versailles.crdp.apiscol.utils.JSonUtils;
 
 public class JSonPRepresentationBuilder extends
 		AbstractRepresentationBuilder<JSONWithPadding> {
-	private XMLRepresentationBuilder innerBuilder;
+	private AbstractRepresentationBuilder<Document> innerBuilder;
 
 	@Override
 	public MediaType getMediaType() {
@@ -79,12 +80,6 @@ public class JSonPRepresentationBuilder extends
 	}
 
 	@Override
-	public JSONWithPadding getSuccessfulRecoveryReport() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public JSONWithPadding selectMetadataFollowingCriterium(UriInfo uriInfo,
 			String apiscolInstanceName, String apiscolInstanceLabel,
 			ISearchEngineResultHandler handler, int start, int rows,
@@ -102,6 +97,14 @@ public class JSonPRepresentationBuilder extends
 			boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws DBAccessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object getMaintenanceRecoveryRepresentation(
+			Integer maintenanceRecoveryId, UriInfo uriInfo,
+			MaintenanceRegistry maintenanceRegistry) {
 		// TODO Auto-generated method stub
 		return null;
 	}

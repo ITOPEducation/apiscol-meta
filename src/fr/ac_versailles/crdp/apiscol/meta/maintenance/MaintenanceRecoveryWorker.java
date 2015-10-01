@@ -66,6 +66,8 @@ public class MaintenanceRecoveryWorker implements Runnable {
 					e1.getMessage()), identifier);
 		}
 		maintenanceRegistry.addMessage("Database has been erased", identifier);
+		maintenanceRegistry.setState(identifier,
+				MaintenanceRecoveryStates.content_deleted);
 		ArrayList<String> resourceList = ResourceDirectoryInterface
 				.getMetadataList();
 		maintenanceRegistry
@@ -74,13 +76,19 @@ public class MaintenanceRecoveryWorker implements Runnable {
 								"		**** The recovery process will now loop on the %d metadata files. ****",
 								resourceList.size()), identifier);
 		Iterator<String> it = resourceList.iterator();
-
+		maintenanceRegistry.setTotalNumberOfDocuments(resourceList.size());
 		boolean solrIsWaitingForCommit = false;
+		int nbOfDocumentProcessed = 0;
 		while (it.hasNext()) {
+			maintenanceRegistry.setState(identifier,
+					MaintenanceRecoveryStates.recovery_running);
 			String metadataId = it.next();
-			maintenanceRegistry.addMessage(
-					String.format("				+++ Métadonnée %s", metadataId),
-					identifier);
+			maintenanceRegistry
+					.addMessage(
+							String.format(
+									"================================================ Metadata %s (n. %d)",
+									metadataId, nbOfDocumentProcessed + 1),
+							identifier);
 			String filePath = ResourceDirectoryInterface
 					.getFilePath(metadataId);
 			maintenanceRegistry.addMessage(
@@ -89,6 +97,11 @@ public class MaintenanceRecoveryWorker implements Runnable {
 			ResourceDirectoryInterface.renewJsonpFile(metadataId);
 			try {
 				searchEngineQueryHandler.processAddQuery(filePath);
+				maintenanceRegistry
+						.addMessage(
+								String.format(
+										"La métadonnée %s a été ajoutée à l'index du serveur de recherche",
+										metadataId), identifier);
 			} catch (SearchEngineCommunicationException
 					| SearchEngineErrorException e1) {
 				maintenanceRegistry
@@ -116,13 +129,22 @@ public class MaintenanceRecoveryWorker implements Runnable {
 			}
 			try {
 				resourceDataHandler.createMetadataEntry(metadataId, metadata);
+				maintenanceRegistry.addMessage(String.format(
+						"La métadonnée %s a été ajoutée à la base de données",
+						metadataId), identifier);
 			} catch (DBAccessException e) {
+
 				maintenanceRegistry
 						.addMessage(
 								String.format(
 										"Impossible, to read metadata in database , error : %s",
 										e.getMessage()), identifier);
 			}
+
+			nbOfDocumentProcessed++;
+			maintenanceRegistry
+					.setNumberOfDocumentsProcessed(nbOfDocumentProcessed);
+
 		}
 		maintenanceRegistry.addMessage(
 				"		**** End of metadata files processing. ****", identifier);

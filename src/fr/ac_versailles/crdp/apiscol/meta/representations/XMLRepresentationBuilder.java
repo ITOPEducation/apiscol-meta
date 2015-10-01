@@ -784,7 +784,7 @@ public class XMLRepresentationBuilder extends
 		Element rootElement = report.createElement("apiscol:status");
 		Element stateElement = report.createElement("apiscol:state");
 		MaintenanceRecoveryStates parsingState = maintenanceRegistry
-				.getTransferState(maintenanceRecoveryId);
+				.getState(maintenanceRecoveryId);
 		stateElement.setTextContent(parsingState.toString());
 		Element linkElement = report.createElement("link");
 		linkElement.setAttribute(
@@ -804,6 +804,10 @@ public class XMLRepresentationBuilder extends
 			messageElement.setTextContent(message);
 			rootElement.appendChild(messageElement);
 		}
+		Element processedElement = report.createElement("apiscol:processed");
+		processedElement.setTextContent(String.valueOf(maintenanceRegistry
+				.getPercentageOfDocumentProcessed()));
+		rootElement.appendChild(processedElement);
 		report.appendChild(rootElement);
 		XMLUtils.addNameSpaces(report, UsedNamespaces.ATOM);
 		return report;

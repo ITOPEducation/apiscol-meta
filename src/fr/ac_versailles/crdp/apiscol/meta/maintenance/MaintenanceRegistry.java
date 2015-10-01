@@ -13,6 +13,8 @@ public class MaintenanceRegistry {
 	private static Map<Integer, Thread> maintenanceRecoveries = new HashMap<Integer, Thread>();
 	private static Map<Integer, MaintenanceRecoveryStates> maintenanceRecoveryStates = new HashMap<Integer, MaintenanceRecoveryStates>();
 	private static Map<Integer, LinkedList<String>> messages = new HashMap<Integer, LinkedList<String>>();
+	private int totalNumberOfDocuments = 0;
+	private int numberOfDocumentsProcessed = 0;
 
 	public MaintenanceRegistry() {
 
@@ -32,8 +34,7 @@ public class MaintenanceRegistry {
 			thread.start();
 			maintenanceRecoveries.put(counter, thread);
 			messages.put(counter, new LinkedList<String>());
-			maintenanceRecoveryStates.put(counter,
-					MaintenanceRecoveryStates.initiated);
+			setState(counter, MaintenanceRecoveryStates.initiated);
 			messages.get(counter).add("Recovery process initiated");
 			return counter;
 		}
@@ -41,16 +42,20 @@ public class MaintenanceRegistry {
 
 	public void notifyParsingSuccess(Integer identifier) {
 		maintenanceRecoveries.put(identifier, null);
-		maintenanceRecoveryStates.put(identifier,
-				MaintenanceRecoveryStates.done);
+		setState(identifier, MaintenanceRecoveryStates.done);
 		messages.get(identifier).add("Recovery process successful");
 
 	}
 
-	public MaintenanceRecoveryStates getTransferState(Integer urlParsingId) {
-		if (!maintenanceRecoveryStates.containsKey(urlParsingId))
+	public MaintenanceRecoveryStates getState(Integer maintenanceRecoveryId) {
+		if (!maintenanceRecoveryStates.containsKey(maintenanceRecoveryId))
 			return MaintenanceRecoveryStates.unknown;
-		return maintenanceRecoveryStates.get(urlParsingId);
+		return maintenanceRecoveryStates.get(maintenanceRecoveryId);
+	}
+
+	public void setState(Integer maintenanceRecoveryId,
+			MaintenanceRecoveryStates state) {
+		maintenanceRecoveryStates.put(maintenanceRecoveryId, state);
 	}
 
 	public LinkedList<String> getMessages(Integer maintenanceRecoveryId) {
@@ -68,6 +73,29 @@ public class MaintenanceRegistry {
 	public void addMessage(String message, Integer identifier) {
 		messages.get(identifier).add(message);
 
+	}
+
+	public int getTotalNumberOfDocuments() {
+		return totalNumberOfDocuments;
+	}
+
+	public void setTotalNumberOfDocuments(int totalNumberOfDocuments) {
+		this.totalNumberOfDocuments = totalNumberOfDocuments;
+	}
+
+	public int getNumberOfDocumentsProcessed() {
+		return numberOfDocumentsProcessed;
+	}
+
+	public void setNumberOfDocumentsProcessed(int numberOfDocumentsProcessed) {
+		this.numberOfDocumentsProcessed = numberOfDocumentsProcessed;
+	}
+
+	public float getPercentageOfDocumentProcessed() {
+		if (this.totalNumberOfDocuments == 0)
+			return 0;
+		return (float) this.numberOfDocumentsProcessed
+				/ (float) this.totalNumberOfDocuments;
 	}
 
 }

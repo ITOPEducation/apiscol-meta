@@ -161,6 +161,7 @@ public class MaintenanceRecoveryWorker implements Runnable {
 										"Communication problem with Search Engine while trying to commit  : %s",
 										e.getMessage()), identifier);
 			}
-
+		maintenanceRegistry
+				.setState(identifier, MaintenanceRecoveryStates.done);
 	}
 }

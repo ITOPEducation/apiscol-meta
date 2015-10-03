@@ -42,6 +42,7 @@ public class MaintenanceRecoveryWorker implements Runnable {
 
 	@Override
 	public void run() {
+		maintenanceRegistry.setHasRunningWorker(true);
 		maintenanceRegistry.addMessage("Solr index is going to be erased",
 				identifier);
 		try {
@@ -161,7 +162,18 @@ public class MaintenanceRecoveryWorker implements Runnable {
 										"Communication problem with Search Engine while trying to commit  : %s",
 										e.getMessage()), identifier);
 			}
+		try {
+			searchEngineQueryHandler.processOptimizationQuery();
+		} catch (SearchEngineErrorException
+				| SearchEngineCommunicationException e) {
+			maintenanceRegistry
+					.addMessage(
+							String.format(
+									"Communication problem with Search Engine while trying to optimize index  : %s",
+									e.getMessage()), identifier);
+		}
 		maintenanceRegistry
 				.setState(identifier, MaintenanceRecoveryStates.done);
+		maintenanceRegistry.setHasRunningWorker(false);
 	}
 }

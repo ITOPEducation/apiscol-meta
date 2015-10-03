@@ -53,6 +53,7 @@ public interface IEntitiesRepresentationBuilder<T> {
 			String version) throws DBAccessException;
 
 	Object getMaintenanceRecoveryRepresentation(Integer maintenanceRecoveryId,
-			UriInfo uriInfo, MaintenanceRegistry maintenanceRegistry);
+			UriInfo uriInfo, MaintenanceRegistry maintenanceRegistry,
+			Integer nbLines);
 
 }

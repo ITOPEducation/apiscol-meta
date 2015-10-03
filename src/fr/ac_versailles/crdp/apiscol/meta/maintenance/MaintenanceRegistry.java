@@ -15,6 +15,8 @@ public class MaintenanceRegistry {
 	private static Map<Integer, LinkedList<String>> messages = new HashMap<Integer, LinkedList<String>>();
 	private int totalNumberOfDocuments = 0;
 	private int numberOfDocumentsProcessed = 0;
+	private int runninWorkerId;
+	private boolean hasRunningWorker;
 
 	public MaintenanceRegistry() {
 
@@ -27,6 +29,8 @@ public class MaintenanceRegistry {
 			IResourceDataHandler resourceDataHandler) {
 		synchronized (counter) {
 			counter++;
+			setRunninWorkerId(counter);
+			
 			MaintenanceRecoveryWorker worker = new MaintenanceRecoveryWorker(
 					counter, searchEngineQueryHandler, resourceDataHandler,
 					this);
@@ -38,13 +42,6 @@ public class MaintenanceRegistry {
 			messages.get(counter).add("Recovery process initiated");
 			return counter;
 		}
-	}
-
-	public void notifyParsingSuccess(Integer identifier) {
-		maintenanceRecoveries.put(identifier, null);
-		setState(identifier, MaintenanceRecoveryStates.done);
-		messages.get(identifier).add("Recovery process successful");
-
 	}
 
 	public MaintenanceRecoveryStates getState(Integer maintenanceRecoveryId) {
@@ -96,6 +93,22 @@ public class MaintenanceRegistry {
 			return 0;
 		return (float) this.numberOfDocumentsProcessed
 				/ (float) this.totalNumberOfDocuments;
+	}
+
+	public int getRunninWorkerId() {
+		return runninWorkerId;
+	}
+
+	public void setRunninWorkerId(int runninWorkerId) {
+		this.runninWorkerId = runninWorkerId;
+	}
+
+	public boolean hasRunningWorker() {
+		return hasRunningWorker;
+	}
+
+	public void setHasRunningWorker(boolean hasRunningWorker) {
+		this.hasRunningWorker = hasRunningWorker;
 	}
 
 }

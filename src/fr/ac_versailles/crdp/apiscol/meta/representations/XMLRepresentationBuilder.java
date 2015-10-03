@@ -779,7 +779,7 @@ public class XMLRepresentationBuilder extends
 	@Override
 	public Object getMaintenanceRecoveryRepresentation(
 			Integer maintenanceRecoveryId, UriInfo uriInfo,
-			MaintenanceRegistry maintenanceRegistry) {
+			MaintenanceRegistry maintenanceRegistry, Integer nbLines) {
 		Document report = createXMLDocument();
 		Element rootElement = report.createElement("apiscol:status");
 		Element stateElement = report.createElement("apiscol:state");
@@ -798,11 +798,22 @@ public class XMLRepresentationBuilder extends
 		Iterator<String> it = messages.iterator();
 		rootElement.appendChild(stateElement);
 		rootElement.appendChild(linkElement);
+		int counter = 0;
+		int start = 0;
+		if (nbLines > 0)
+			start = Math.max(0, messages.size() - nbLines);
 		while (it.hasNext()) {
+			counter++;
 			String message = (String) it.next();
+			System.out.println("compteur  " + counter + "  start  " + start);
+			if (counter - 1 < start) {
+				continue;
+			}
+
 			Element messageElement = report.createElement("apiscol:message");
 			messageElement.setTextContent(message);
 			rootElement.appendChild(messageElement);
+
 		}
 		Element processedElement = report.createElement("apiscol:processed");
 		processedElement.setTextContent(String.valueOf(maintenanceRegistry

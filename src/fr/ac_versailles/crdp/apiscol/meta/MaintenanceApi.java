@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -192,6 +193,9 @@ public class MaintenanceApi extends ApiscolApi {
 								MediaType.APPLICATION_ATOM_XML, context);
 
 				synchronized (maintenanceRegistry) {
+					if (maintenanceRegistry.hasRunningWorker())
+						maintenanceRecoveryId = maintenanceRegistry
+								.getRunninWorkerId();
 					maintenanceRecoveryId = maintenanceRegistry.newMaintenance(
 							searchEngineQueryHandler, resourceDataHandler);
 				}
@@ -210,7 +214,7 @@ public class MaintenanceApi extends ApiscolApi {
 		return Response
 				.ok()
 				.entity(rb.getMaintenanceRecoveryRepresentation(
-						maintenanceRecoveryId, uriInfo, maintenanceRegistry))
+						maintenanceRecoveryId, uriInfo, maintenanceRegistry, 0))
 				.build();
 	}
 
@@ -219,16 +223,16 @@ public class MaintenanceApi extends ApiscolApi {
 	@Produces({ MediaType.APPLICATION_ATOM_XML, MediaType.APPLICATION_XML })
 	public Response getMaintenanceRecoveryState(
 			@Context HttpServletRequest request,
-			@PathParam(value = "maintenancerecoveryid") final Integer urlParsingId)
+			@PathParam(value = "maintenancerecoveryid") final Integer urlParsingId,
+			@DefaultValue("0") @QueryParam(value = "nblines") final Integer nblines)
 			throws IOException {
-
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(MediaType.APPLICATION_ATOM_XML,
 						context);
 		return Response
 				.ok()
 				.entity(rb.getMaintenanceRecoveryRepresentation(urlParsingId,
-						uriInfo, maintenanceRegistry))
+						uriInfo, maintenanceRegistry, nblines))
 				.header("Access-Control-Allow-Origin", "*")
 				.type(rb.getMediaType()).build();
 	}

@@ -777,7 +777,7 @@ public class XMLRepresentationBuilder extends
 	}
 
 	@Override
-	public Object getMaintenanceRecoveryRepresentation(
+	public synchronized Object getMaintenanceRecoveryRepresentation(
 			Integer maintenanceRecoveryId, UriInfo uriInfo,
 			MaintenanceRegistry maintenanceRegistry, Integer nbLines) {
 		Document report = createXMLDocument();
@@ -805,7 +805,6 @@ public class XMLRepresentationBuilder extends
 		while (it.hasNext()) {
 			counter++;
 			String message = (String) it.next();
-			System.out.println("compteur  " + counter + "  start  " + start);
 			if (counter - 1 < start) {
 				continue;
 			}

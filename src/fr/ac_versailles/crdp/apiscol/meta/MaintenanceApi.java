@@ -192,13 +192,12 @@ public class MaintenanceApi extends ApiscolApi {
 						.getRepresentationBuilder(
 								MediaType.APPLICATION_ATOM_XML, context);
 
-				synchronized (maintenanceRegistry) {
-					if (maintenanceRegistry.hasRunningWorker())
-						maintenanceRecoveryId = maintenanceRegistry
-								.getRunninWorkerId();
+				if (maintenanceRegistry.hasRunningWorker())
+					maintenanceRecoveryId = maintenanceRegistry
+							.getRunninWorkerId();
+				else
 					maintenanceRecoveryId = maintenanceRegistry.newMaintenance(
 							searchEngineQueryHandler, resourceDataHandler);
-				}
 
 			} finally {
 				keyLock.unlock();

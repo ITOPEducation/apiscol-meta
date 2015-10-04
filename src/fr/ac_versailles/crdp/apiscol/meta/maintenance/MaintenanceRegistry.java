@@ -24,13 +24,13 @@ public class MaintenanceRegistry {
 
 	}
 
-	public Integer newMaintenance(
+	public synchronized Integer newMaintenance(
 			ISearchEngineQueryHandler searchEngineQueryHandler,
 			IResourceDataHandler resourceDataHandler) {
 		synchronized (counter) {
 			counter++;
 			setRunninWorkerId(counter);
-			
+
 			MaintenanceRecoveryWorker worker = new MaintenanceRecoveryWorker(
 					counter, searchEngineQueryHandler, resourceDataHandler,
 					this);
@@ -103,7 +103,7 @@ public class MaintenanceRegistry {
 		this.runninWorkerId = runninWorkerId;
 	}
 
-	public boolean hasRunningWorker() {
+	public synchronized boolean hasRunningWorker() {
 		return hasRunningWorker;
 	}
 

@@ -84,12 +84,11 @@ public class MaintenanceRecoveryWorker implements Runnable {
 			maintenanceRegistry.setState(identifier,
 					MaintenanceRecoveryStates.recovery_running);
 			String metadataId = it.next();
-			maintenanceRegistry
-					.addMessage(
-							String.format(
-									"================================================ Metadata %s (n. %d)",
-									metadataId, nbOfDocumentProcessed + 1),
-							identifier);
+			maintenanceRegistry.addMessage(
+					"================================================",
+					identifier);
+			maintenanceRegistry.addMessage(String.format("Metadata %s (n. %d)",
+					metadataId, nbOfDocumentProcessed + 1), identifier);
 			String filePath = ResourceDirectoryInterface
 					.getFilePath(metadataId);
 			maintenanceRegistry.addMessage(
@@ -110,7 +109,9 @@ public class MaintenanceRecoveryWorker implements Runnable {
 								String.format(
 										"Communication problem with Search Engine while trying to add metadata %s with message %s",
 										metadataId, e1.getMessage()),
-								identifier);
+								identifier,
+								MaintenanceRegistry.MessageTypes.errorType);
+				continue;
 			}
 			solrIsWaitingForCommit = true;
 

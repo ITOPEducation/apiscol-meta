@@ -148,7 +148,7 @@ public class XHTMLRepresentationBuilder extends
 	@Override
 	public Object getMaintenanceRecoveryRepresentation(
 			Integer maintenanceRecoveryId, UriInfo uriInfo,
-			MaintenanceRegistry maintenanceRegistry) {
+			MaintenanceRegistry maintenanceRegistry, Integer nbLines) {
 		// TODO Auto-generated method stub
 		return null;
 	}

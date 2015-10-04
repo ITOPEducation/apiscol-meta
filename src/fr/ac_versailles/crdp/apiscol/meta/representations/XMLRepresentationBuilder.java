@@ -21,6 +21,7 @@ import net.sourceforge.cardme.engine.VCardEngine;
 import net.sourceforge.cardme.vcard.VCard;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.solr.common.util.Pair;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -41,6 +42,7 @@ import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundExcep
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.ResourceDirectoryInterface;
 import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRecoveryStates;
 import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRegistry;
+import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRegistry.MessageTypes;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineResultHandler;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.SolrRecordsSyntaxAnalyser;
 import fr.ac_versailles.crdp.apiscol.utils.TimeUtils;
@@ -793,9 +795,9 @@ public class XMLRepresentationBuilder extends
 						maintenanceRecoveryId).toString());
 		linkElement.setAttribute("rel", "self");
 		linkElement.setAttribute("type", "application/atom+xml");
-		LinkedList<String> messages = maintenanceRegistry
+		LinkedList<Pair<String, MessageTypes>> messages = maintenanceRegistry
 				.getMessages(maintenanceRecoveryId);
-		Iterator<String> it = messages.iterator();
+		Iterator<Pair<String, MessageTypes>> it = messages.iterator();
 		rootElement.appendChild(stateElement);
 		rootElement.appendChild(linkElement);
 		int counter = 0;
@@ -804,13 +806,14 @@ public class XMLRepresentationBuilder extends
 			start = Math.max(0, messages.size() - nbLines);
 		while (it.hasNext()) {
 			counter++;
-			String message = (String) it.next();
+			Pair<String, MessageTypes> message = it.next();
 			if (counter - 1 < start) {
 				continue;
 			}
 
 			Element messageElement = report.createElement("apiscol:message");
-			messageElement.setTextContent(message);
+			messageElement.setAttribute("type", message.getValue().toString());
+			messageElement.setTextContent(message.getKey());
 			rootElement.appendChild(messageElement);
 
 		}
@@ -822,5 +825,4 @@ public class XMLRepresentationBuilder extends
 		XMLUtils.addNameSpaces(report, UsedNamespaces.ATOM);
 		return report;
 	}
-
 }

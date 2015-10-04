@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.apache.solr.common.util.Pair;
+
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.IResourceDataHandler;
+import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRegistry.MessageTypes;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineQueryHandler;
 
 public class MaintenanceRegistry {
@@ -12,16 +15,14 @@ public class MaintenanceRegistry {
 	private static Integer counter;
 	private static Map<Integer, Thread> maintenanceRecoveries = new HashMap<Integer, Thread>();
 	private static Map<Integer, MaintenanceRecoveryStates> maintenanceRecoveryStates = new HashMap<Integer, MaintenanceRecoveryStates>();
-	private static Map<Integer, LinkedList<String>> messages = new HashMap<Integer, LinkedList<String>>();
+	private static Map<Integer, LinkedList<Pair<String, MessageTypes>>> messages = new HashMap<Integer, LinkedList<Pair<String, MaintenanceRegistry.MessageTypes>>>();
 	private int totalNumberOfDocuments = 0;
 	private int numberOfDocumentsProcessed = 0;
 	private int runninWorkerId;
 	private boolean hasRunningWorker;
 
 	public MaintenanceRegistry() {
-
 		counter = 0;
-
 	}
 
 	public synchronized Integer newMaintenance(
@@ -37,9 +38,11 @@ public class MaintenanceRegistry {
 			Thread thread = new Thread(worker);
 			thread.start();
 			maintenanceRecoveries.put(counter, thread);
-			messages.put(counter, new LinkedList<String>());
+			messages.put(counter, new LinkedList<Pair<String, MessageTypes>>());
 			setState(counter, MaintenanceRecoveryStates.initiated);
-			messages.get(counter).add("Recovery process initiated");
+			messages.get(counter)
+					.add(new Pair<String, MaintenanceRegistry.MessageTypes>(
+							"Recovery process initiated", MessageTypes.infoType));
 			return counter;
 		}
 	}
@@ -55,21 +58,29 @@ public class MaintenanceRegistry {
 		maintenanceRecoveryStates.put(maintenanceRecoveryId, state);
 	}
 
-	public LinkedList<String> getMessages(Integer maintenanceRecoveryId) {
+	public LinkedList<Pair<String, MessageTypes>> getMessages(
+			Integer maintenanceRecoveryId) {
 		if (!messages.containsKey(maintenanceRecoveryId)) {
-			LinkedList<String> errorMessages = new LinkedList<String>();
-			errorMessages
-					.add(String
-							.format("The maintenance recovery operation %d is unknown from the system",
-									maintenanceRecoveryId));
+			LinkedList<Pair<String, MessageTypes>> errorMessages = new LinkedList<Pair<String, MessageTypes>>();
+			Pair<String, MessageTypes> pair = new Pair<String, MaintenanceRegistry.MessageTypes>(
+					String.format(
+							"The maintenance recovery operation %d is unknown from the system",
+							maintenanceRecoveryId), MessageTypes.errorType);
+			errorMessages.add(pair);
 			return errorMessages;
 		}
 		return messages.get(maintenanceRecoveryId);
 	}
 
 	public void addMessage(String message, Integer identifier) {
-		messages.get(identifier).add(message);
 
+		addMessage(message, identifier, MessageTypes.infoType);
+	}
+
+	public void addMessage(String message, Integer identifier, MessageTypes type) {
+		Pair<String, MessageTypes> pair = new Pair<String, MaintenanceRegistry.MessageTypes>(
+				message, type);
+		messages.get(identifier).add(pair);
 	}
 
 	public int getTotalNumberOfDocuments() {
@@ -109,6 +120,22 @@ public class MaintenanceRegistry {
 
 	public void setHasRunningWorker(boolean hasRunningWorker) {
 		this.hasRunningWorker = hasRunningWorker;
+	}
+
+	public enum MessageTypes {
+		errorType("error_type"), warningType("warning_type"), infoType(
+				"info_type");
+		private String value;
+
+		private MessageTypes(String value) {
+			this.value = value;
+		}
+
+		@Override
+		public String toString() {
+			return value;
+		}
+
 	}
 
 }

@@ -102,9 +102,9 @@ public class JSonPRepresentationBuilder extends
 	}
 
 	@Override
-	public Object getMaintenanceRecoveryRepresentation(
-			Integer maintenanceRecoveryId, UriInfo uriInfo,
-			MaintenanceRegistry maintenanceRegistry) {
+	public Object getMaintenanceRecoveryRepresentation(Integer maintenanceRecoveryId,
+			UriInfo uriInfo, MaintenanceRegistry maintenanceRegistry,
+			Integer nbLines) {
 		// TODO Auto-generated method stub
 		return null;
 	}

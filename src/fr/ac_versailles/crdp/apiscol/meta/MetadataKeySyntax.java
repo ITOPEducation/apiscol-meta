@@ -8,7 +8,7 @@ public class MetadataKeySyntax {
 	private final static Pattern apiscolMetadataIdSchema = Pattern
 			.compile(String.format("^(%s)$", uidPortion));
 	private final static Pattern apiscolMetadataUrlSchema = Pattern
-			.compile(String.format("^http://.*/meta/(%s)$", uidPortion));
+			.compile(String.format("^https?://.*/meta/(%s)$", uidPortion));
 
 	public static boolean metadataIdIsCorrect(String resourceId) {
 		Matcher matcher = apiscolMetadataIdSchema.matcher(resourceId);

@@ -14,7 +14,6 @@ public class IncorrectMetadataKeySyntaxExceptionMapper implements
 
 	@Override
 	public Response toResponse(IncorrectMetadataKeySyntaxException e) {
-		System.out.println("******************");
 		return Response.status(Status.BAD_REQUEST)
 				.type(MediaType.APPLICATION_XML).entity(e.getXMLMessage())
 				.build();

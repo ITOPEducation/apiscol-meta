@@ -13,6 +13,8 @@ public interface ISearchEngineQueryHandler {
 	public Object processSearchQuery(String identifiers)
 			throws SearchEngineErrorException;
 
+	public Object processSearchQuery(List<String> forcedMetadataIdList) throws SearchEngineErrorException;
+
 	public abstract Object processSpellcheckQuery(String query)
 			throws SearchEngineErrorException;
 

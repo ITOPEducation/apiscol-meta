@@ -910,6 +910,7 @@ public class MetadataApi extends ApiscolApi {
 	 * @throws NumberFormatException
 	 * @throws DBAccessException
 	 * @throws InvalidFilterListException
+	 * @throws InvalidMetadataListException
 	 */
 	@GET
 	@Path("/")
@@ -920,6 +921,7 @@ public class MetadataApi extends ApiscolApi {
 			@QueryParam(value = "format") final String format,
 			@QueryParam(value = "query") String query,
 			@QueryParam(value = "mdid") String forcedMetadataId,
+			@QueryParam(value = "mdids") String forcedMetadataIds,
 			@DefaultValue("") @QueryParam(value = "supplements") final String supplements,
 			@DefaultValue("0") @QueryParam(value = "fuzzy") final float fuzzy,
 			@DefaultValue("[]") @QueryParam(value = "static-filters") final String staticFilters,
@@ -929,7 +931,10 @@ public class MetadataApi extends ApiscolApi {
 			@DefaultValue("score") @QueryParam(value = "sort") final String sort,
 			@DefaultValue("false") @QueryParam(value = "desc") boolean includeDescription)
 			throws SearchEngineErrorException, NumberFormatException,
-			DBAccessException, InvalidFilterListException {
+			DBAccessException, InvalidFilterListException,
+			InvalidMetadataListException {
+		java.lang.reflect.Type collectionType = new TypeToken<List<String>>() {
+		}.getType();
 		String requestedFormat = guessRequestedFormat(request, format);
 		String[] supplementsIds = StringUtils.split(supplements, ",");
 
@@ -940,6 +945,21 @@ public class MetadataApi extends ApiscolApi {
 		if (StringUtils.isNotEmpty(forcedMetadataId))
 			return forcedMetadataSearch(rb, request, forcedMetadataId,
 					includeDescription);
+		if (StringUtils.isNotEmpty(forcedMetadataIds)) {
+			List<String> forcedMetadataIdList = null;
+			try {
+				forcedMetadataIdList = new Gson().fromJson(forcedMetadataIds,
+						collectionType);
+			} catch (Exception e) {
+				String message = String
+						.format("The list of metadataids %s is impossible to parse as JSON",
+								forcedMetadataIds);
+				logger.warn(message);
+				throw new InvalidMetadataListException(message);
+			}
+			return forcedMetadataListSearch(rb, request, forcedMetadataIdList,
+					includeDescription);
+		}
 		for (int i = 0; i < supplementsIds.length; i++) {
 			// TODO it's not very useful
 			String metadataId = MetadataKeySyntax
@@ -951,8 +971,7 @@ public class MetadataApi extends ApiscolApi {
 			query = "*";
 			disableHighlighting = true;
 		}
-		java.lang.reflect.Type collectionType = new TypeToken<List<String>>() {
-		}.getType();
+
 		List<String> staticFiltersList = null;
 		if (StringUtils.isNotEmpty(staticFilters))
 			try {
@@ -1032,6 +1051,35 @@ public class MetadataApi extends ApiscolApi {
 						apiscolInstanceName, apiscolInstanceLabel, handler, 0,
 						1, includeDescription, resourceDataHandler, editUri,
 						version), rb.getMediaType()).build();
+	}
+
+	private Response forcedMetadataListSearch(
+			IEntitiesRepresentationBuilder<?> rb, HttpServletRequest request,
+			List<String> forcedMetadataIdList, boolean includeDescription)
+			throws SearchEngineErrorException, NumberFormatException,
+			DBAccessException {
+		Object result = searchEngineQueryHandler
+				.processSearchQuery(forcedMetadataIdList);
+		ISearchEngineResultHandler handler = searchEngineFactory
+				.getResultHandler();
+		handler.parse(result);
+		IResourceDataHandler resourceDataHandler = null;
+		if (includeDescription) {
+			try {
+				resourceDataHandler = new DBAccessBuilder()
+						.setDbType(DBTypes.mongoDB)
+						.setParameters(getDbConnexionParameters()).build();
+			} catch (DBAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return Response.ok(
+				rb.selectMetadataFollowingCriterium(uriInfo,
+						apiscolInstanceName, apiscolInstanceLabel, handler, 0,
+						forcedMetadataIdList.size(), includeDescription,
+						resourceDataHandler, editUri, version),
+				rb.getMediaType()).build();
 	}
 
 	public enum GetModalities {

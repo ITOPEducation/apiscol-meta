@@ -2,6 +2,7 @@ package fr.ac_versailles.crdp.apiscol.meta.searchEngine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -166,6 +167,55 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 			String error = String
 					.format("Solr has thrown an IO exception when he was asked to search for metadata  %s whith the message %s",
 							identifier, e.getMessage());
+			logger.error(error);
+			throw new SearchEngineErrorException(error);
+		}
+		return response;
+	}
+
+	@Override
+	public Object processSearchQuery(List<String> forcedMetadataIdList)
+			throws SearchEngineErrorException {
+		createLogger();
+		SolrQuery parameters = new SolrQuery();
+		// strange behaviour. Rows means end
+		parameters.setStart(0);
+		parameters.setRows(forcedMetadataIdList.size());
+		StringBuilder queryBuilder = new StringBuilder();
+		Iterator<String> it = forcedMetadataIdList.iterator();
+		boolean first = true;
+		while (it.hasNext()) {
+			String identifier = (String) it.next();
+			if (!first)
+				queryBuilder.append(" OR ");
+			queryBuilder.append("id:\"").append(identifier).append("\"");
+			first = false;
+		}
+
+		parameters.set("q", queryBuilder.toString());
+		parameters.set("qt", solrSearchPath);
+		parameters.set("hl", false);
+
+		QueryResponse response = null;
+
+		try {
+			response = solr.query(parameters);
+		} catch (SolrServerException e) {
+			String error = String
+					.format("Solr has thrown an exception when he was asked to search for metadata list %s whith the message %s",
+							forcedMetadataIdList, e.getMessage());
+			logger.error(error);
+			throw new SearchEngineErrorException(error);
+		} catch (SolrException e) {
+			String error = String
+					.format("Solr was not able to parse the request  %s whith the message %s",
+							forcedMetadataIdList, e.getMessage());
+			logger.error(error);
+			throw new SearchEngineErrorException(error);
+		} catch (IOException e) {
+			String error = String
+					.format("Solr has thrown an IO exception when he was asked to search for metadata list %s whith the message %s",
+							forcedMetadataIdList, e.getMessage());
 			logger.error(error);
 			throw new SearchEngineErrorException(error);
 		}

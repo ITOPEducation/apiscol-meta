@@ -84,7 +84,10 @@ public class ResourceDirectoryInterface {
 			temporaryFiles = new HashMap<String, File>();
 		String identifier = getTemporaryFileHashMapIdentifier(id, ext);
 		if (!temporaryFiles.containsKey(identifier)) {
-			temporaryFiles.put(identifier, File.createTempFile(id, ext));
+			temporaryFiles.put(
+					identifier,
+					File.createTempFile(id, new StringBuilder().append('.')
+							.append(ext).toString()));
 		}
 		return temporaryFiles.get(identifier);
 	}
@@ -97,6 +100,16 @@ public class ResourceDirectoryInterface {
 			return null;
 		}
 		return temporaryFiles.get(identifier);
+	}
+
+	private static boolean deleteTemporaryFile(String id, String ext) {
+		if (temporaryFiles == null)
+			temporaryFiles = new HashMap<String, File>();
+		String identifier = getTemporaryFileHashMapIdentifier(id, ext);
+		if (!temporaryFiles.containsKey(identifier)) {
+			return false;
+		}
+		return temporaryFiles.get(identifier).delete();
 	}
 
 	private static String getTemporaryFileHashMapIdentifier(String id,
@@ -251,6 +264,8 @@ public class ResourceDirectoryInterface {
 		File newXMLFile = null;
 		try {
 			newXMLFile = getOrCreateTemporaryFile(metadataId, "xml");
+			logger.info(String.format("Fichier provisoire créé en %s",
+					newXMLFile.getAbsolutePath()));
 			FileUtils.writeStreamToFile(uploadedInputStream, newXMLFile);
 			validateFile(newXMLFile);
 			updateMetadata(newXMLFile, url, apiscolInstanceName);
@@ -259,6 +274,8 @@ public class ResourceDirectoryInterface {
 			// TODO relancer une exception
 			logger.error(e1.getMessage());
 			e1.printStackTrace();
+		} finally {
+			deleteTemporaryFile(metadataId, "xml");
 		}
 
 	}
@@ -271,6 +288,7 @@ public class ResourceDirectoryInterface {
 			actualJsonpFile.delete();
 		serializeIntoJSon(XMLFile, metadataId);
 		commitTemporaryJsonMetadataFile(metadataId);
+
 	}
 
 	private static void serializeIntoJSon(File xmlFile, String metadataId) {
@@ -363,6 +381,8 @@ public class ResourceDirectoryInterface {
 							temporary.getAbsolutePath(), metadataId,
 							e.getMessage()));
 			return false;
+		} finally {
+			deleteTemporaryFile(metadataId, "js");
 		}
 
 		return true;

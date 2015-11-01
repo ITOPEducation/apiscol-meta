@@ -213,7 +213,7 @@ public class MetadataApi extends ApiscolApi {
 			@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail,
 			@DefaultValue("") @FormDataParam("edit_uri") String editUri,
-			@DefaultValue("1") @FormDataParam("aggregation_level") int aggregationLevel)
+			@DefaultValue("0") @FormDataParam("aggregation_level") int aggregationLevel)
 			throws FileSystemAccessException,
 			InvalidProvidedMetadataFileException,
 			SearchEngineCommunicationException, SearchEngineErrorException,
@@ -290,8 +290,9 @@ public class MetadataApi extends ApiscolApi {
 			}
 			throw e1;
 		}
-		ResourceDirectoryInterface.setAggregationLevel(metadataId,
-				aggregationLevel);
+		if (aggregationLevel > 0)
+			ResourceDirectoryInterface.setAggregationLevel(metadataId,
+					aggregationLevel);
 		createMetadataEntryInDatabase(metadataId);
 
 		try {
@@ -521,9 +522,10 @@ public class MetadataApi extends ApiscolApi {
 				if (aggregationLevel > 0)
 					ResourceDirectoryInterface.setAggregationLevel(metadataId,
 							aggregationLevel);
-				else if (!propertiesToSave.containsKey("aggregation_level"))
-					ResourceDirectoryInterface.setAggregationLevel(metadataId,
-							1);
+				// behavior disabled. aggregation level carried by scolomfr data
+				// else if (!propertiesToSave.containsKey("aggregation_level"))
+				// ResourceDirectoryInterface.setAggregationLevel(metadataId,
+				// 1);
 				String filePath = "";
 				if (continueProcessing) {
 					try {

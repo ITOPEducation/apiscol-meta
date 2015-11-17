@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
-<project default="ask" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+<project default="compile" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 	<taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" />
 
 	<property name="tomcat.home" value="/usr/share/tomcat7" />
@@ -31,15 +31,6 @@
 			<include name="*.jar" />
 		</fileset>
 	</path>
-	<target name="ask">
-		<input message="Build apiscol meta ?" validargs="true,false" addproperty="deploy-meta" defaultvalue="true" />
-		<if>
-			<equals arg1="${deploy-meta}" arg2="true" />
-			<then>
-				<antcall target="compile" />
-			</then>
-		</if>
-	</target>
 	<target name="clean">
 		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="${build.dir}" includes="**/*" excludes="**/log4j.properties" />
@@ -48,11 +39,13 @@
 	<target name="resolve" depends="clean">
 		<ivy:resolve file="${ivy.file}" conf="meta">
 		</ivy:resolve>
-		<ivy:retrieve sync="true" type="jar,bundle" pattern="${libs.dir}/[artifact]-[revision].[ext]" conf="meta" />
+		<ivy:retrieve sync="true" type="jar,bundle"
+			pattern="${libs.dir}/[artifact]-[revision].[ext]" conf="meta" />
 	</target>
 	<target name="compile" depends="resolve">
 		<mkdir dir="${build.dir}" />
-		<javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false" debug="true">
+		<javac srcdir="${src.dir}" destdir="${build.dir}"
+			includeantruntime="false">
 			<classpath>
 				<fileset dir="${libs.dir}">
 					<include name="*.jar" />

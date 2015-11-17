@@ -2,7 +2,6 @@ package fr.ac_versailles.crdp.apiscol.meta;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,6 +35,7 @@ import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
@@ -50,6 +50,8 @@ import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.FileSystemAccessExcep
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.InvalidProvidedMetadataFileException;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundException;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.ResourceDirectoryInterface;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Deserializer;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
 import fr.ac_versailles.crdp.apiscol.meta.representations.EntitiesRepresentationBuilderFactory;
 import fr.ac_versailles.crdp.apiscol.meta.representations.IEntitiesRepresentationBuilder;
 import fr.ac_versailles.crdp.apiscol.meta.representations.XHTMLRepresentationBuilder;
@@ -1376,13 +1378,12 @@ public class MetadataApi extends ApiscolApi {
 	}
 
 	@PUT
-	@Path("/{mdid}/parts")
+	@Path("/{mdid}/hierarchy")
 	@Produces({ MediaType.APPLICATION_ATOM_XML, MediaType.APPLICATION_XML })
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response defineRelations(@Context HttpServletRequest request,
-			@PathParam(value = "mdid") final String packMetadataId,
-			@FormParam(value = "packid") final String packId,
-			@FormParam("mdids") String metadataIds)
+			@PathParam(value = "mdid") final String metadataId,
+			@FormParam(value = "hierarchy") final String hierarchy)
 			throws FileSystemAccessException,
 			InvalidProvidedMetadataFileException, MetadataNotFoundException,
 			InvalidEtagException, DBAccessException {
@@ -1393,6 +1394,7 @@ public class MetadataApi extends ApiscolApi {
 				.getRepresentationBuilder(requestedFormat, context);
 		KeyLock keyLock = null;
 		ResponseBuilder response = null;
+
 		try {
 			keyLock = keyLockManager.getLock(KeyLockManager.GLOBAL_LOCK_KEY);
 			keyLock.lock();
@@ -1401,82 +1403,76 @@ public class MetadataApi extends ApiscolApi {
 						.format("Passing through mutual exclusion for all the content service"));
 
 				checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
-						packMetadataId);
-				List<String> metadataUriList = null;
-				List<String> partsMetadataIds = new ArrayList<String>();
-				String filePath = "";
-				try {
-					metadataUriList = new Gson().fromJson(metadataIds,
-							collectionType);
-				} catch (Exception e) {
-					String message = String
-							.format("The list of metadata %s is impossible to parse as JSON",
-									metadataIds);
-					logger.warn(message);
-					metadataUriList = new ArrayList<String>();
-				}
-				for (Iterator<String> iterator = metadataUriList.iterator(); iterator
-						.hasNext();) {
-					String metadata = (String) iterator.next();
-					if (!metadata.startsWith(uriInfo.getBaseUri().toString()))
-						continue;
-					String id = metadata.replaceAll(uriInfo.getBaseUri()
-							.toString(), "");
-					partsMetadataIds.add(id);
-				}
-				ResourceDirectoryInterface.setAggregationLevel(packMetadataId,
-						2);
-				List<String> relationstoBeRemovedIds = ResourceDirectoryInterface
-						.addPartsToPackMetadata(packMetadataId, packId,
-								partsMetadataIds, uriInfo);
-				ResourceDirectoryInterface.renewJsonpFile(packMetadataId);
-				updateMetadataEntryInDataBase(packMetadataId);
-				filePath = ResourceDirectoryInterface
-						.getFilePath(packMetadataId);
-				try {
-					searchEngineQueryHandler.processDeleteQuery(filePath);
-					searchEngineQueryHandler.processAddQuery(filePath);
-				} catch (SearchEngineCommunicationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SearchEngineErrorException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				for (Iterator<String> iterator = partsMetadataIds.iterator(); iterator
-						.hasNext();) {
-					String partMetadataId = (String) iterator.next();
-					ResourceDirectoryInterface.renewJsonpFile(partMetadataId);
-					updateMetadataEntryInDataBase(partMetadataId);
-					filePath = ResourceDirectoryInterface
-							.getFilePath(partMetadataId);
-					try {
-						searchEngineQueryHandler.processDeleteQuery(filePath);
-						searchEngineQueryHandler.processAddQuery(filePath);
-					} catch (SearchEngineErrorException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (SearchEngineCommunicationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					ResourceDirectoryInterface.setAggregationLevel(
-							partMetadataId, 1);
-				}
-				relationstoBeRemovedIds.removeAll(partsMetadataIds);
-				for (Iterator<String> iterator = relationstoBeRemovedIds
-						.iterator(); iterator.hasNext();) {
-					String next = iterator.next();
-					if (StringUtils.isEmpty(next))
-						continue;
-					refreshMetadata(next);
-				}
+						metadataId);
+
+				GsonBuilder gb = new GsonBuilder();
+				gb.registerTypeAdapter(Node.class, new Deserializer());
+
+				Gson gson = gb.create();
+				Node tree = gson.fromJson(hierarchy, Node.class);
+				registerRelations(tree);
+
+				// for (Iterator<String> iterator = metadataUriList.iterator();
+				// iterator
+				// .hasNext();) {
+				// String metadata = (String) iterator.next();
+				// if (!metadata.startsWith(uriInfo.getBaseUri().toString()))
+				// continue;
+				// String id = metadata.replaceAll(uriInfo.getBaseUri()
+				// .toString(), "");
+				// partsMetadataIds.add(id);
+				// }
+				// List<String> relationstoBeRemovedIds =
+
+				// ResourceDirectoryInterface.renewJsonpFile(packMetadataId);
+				// updateMetadataEntryInDataBase(packMetadataId);
+				// filePath = ResourceDirectoryInterface
+				// .getFilePath(packMetadataId);
+				// try {
+				// searchEngineQueryHandler.processDeleteQuery(filePath);
+				// searchEngineQueryHandler.processAddQuery(filePath);
+				// } catch (SearchEngineCommunicationException e) {
+				// // TODO Auto-generated catch block
+				// e.printStackTrace();
+				// } catch (SearchEngineErrorException e) {
+				// // TODO Auto-generated catch block
+				// e.printStackTrace();
+				// }
+				// for (Iterator<String> iterator = partsMetadataIds.iterator();
+				// iterator
+				// .hasNext();) {
+				// String partMetadataId = (String) iterator.next();
+				// ResourceDirectoryInterface.renewJsonpFile(partMetadataId);
+				// updateMetadataEntryInDataBase(partMetadataId);
+				// filePath = ResourceDirectoryInterface
+				// .getFilePath(partMetadataId);
+				// try {
+				// searchEngineQueryHandler.processDeleteQuery(filePath);
+				// searchEngineQueryHandler.processAddQuery(filePath);
+				// } catch (SearchEngineErrorException e) {
+				// // TODO Auto-generated catch block
+				// e.printStackTrace();
+				// } catch (SearchEngineCommunicationException e) {
+				// // TODO Auto-generated catch block
+				// e.printStackTrace();
+				// }
+				// ResourceDirectoryInterface.setAggregationLevel(
+				// partMetadataId, 1);
+				// }
+				// relationstoBeRemovedIds.removeAll(partsMetadataIds);
+				// for (Iterator<String> iterator = relationstoBeRemovedIds
+				// .iterator(); iterator.hasNext();) {
+				// String next = iterator.next();
+				// if (StringUtils.isEmpty(next))
+				// continue;
+				// refreshMetadata(next);
+				// }
 
 				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 				Object representation = rb.getMetadataRepresentation(uriInfo,
-						packMetadataId, packMetadataId, false,
+						apiscolInstanceName, metadataId, false,
 						Collections.<String, String> emptyMap(),
 						resourceDataHandler, requestedFormat);
 				response = Response.status(Status.OK).entity(representation);
@@ -1489,19 +1485,37 @@ public class MetadataApi extends ApiscolApi {
 				keyLock.release();
 			}
 			logger.info(String
-					.format("Leaving critical section with mutual exclusion for metadata %s",
-							packMetadataId));
+					.format("Leaving critical section with mutual exclusion for whole repository",
+							metadataId));
 		}
 		return response.build();
 	}
 
-	private void refreshMetadata(String relationToBeRemovedId)
-			throws DBAccessException, MetadataNotFoundException {
+	private void registerRelations(Node tree) throws MetadataNotFoundException,
+			DBAccessException {
+		ResourceDirectoryInterface.registerMetadataChildren(tree.getMdid(),
+				tree.getChildrenId(), uriInfo);
+		refreshMetadata(tree.getMdid(), true, false, true);
+		if (tree.getChildren() != null && tree.getChildren().size() > 0) {
+			Iterator<Node> it = tree.getChildren().iterator();
+			while (it.hasNext()) {
+				Node node = (Node) it.next();
+				registerRelations(node);
+				refreshMetadata(node.getMdid(), true, false, true);
+			}
+		}
+	}
 
-		ResourceDirectoryInterface.renewJsonpFile(relationToBeRemovedId);
-		updateMetadataEntryInDataBase(relationToBeRemovedId);
-		String filePath = ResourceDirectoryInterface
-				.getFilePath(relationToBeRemovedId);
+	private void refreshMetadata(String metadataId, boolean takeCareOfDatabase,
+			boolean takecareOfSearchEngine, boolean takeCareOfJsonpFile)
+			throws DBAccessException, MetadataNotFoundException {
+		if (takeCareOfJsonpFile)
+			ResourceDirectoryInterface.renewJsonpFile(metadataId);
+		if (takeCareOfDatabase)
+			updateMetadataEntryInDataBase(metadataId);
+		if (!takecareOfSearchEngine)
+			return;
+		String filePath = ResourceDirectoryInterface.getFilePath(metadataId);
 		try {
 			searchEngineQueryHandler.processDeleteQuery(filePath);
 			searchEngineQueryHandler.processAddQuery(filePath);

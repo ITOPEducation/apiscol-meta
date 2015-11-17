@@ -266,6 +266,8 @@ public class ResourceDirectoryInterface {
 			newXMLFile = getOrCreateTemporaryFile(metadataId, "xml");
 			logger.info(String.format("Fichier provisoire créé en %s",
 					newXMLFile.getAbsolutePath()));
+			System.out.println(String.format("Fichier provisoire créé en %s",
+					newXMLFile.getAbsolutePath()));
 			FileUtils.writeStreamToFile(uploadedInputStream, newXMLFile);
 			validateFile(newXMLFile);
 			updateMetadata(newXMLFile, url, apiscolInstanceName);
@@ -274,9 +276,7 @@ public class ResourceDirectoryInterface {
 			// TODO relancer une exception
 			logger.error(e1.getMessage());
 			e1.printStackTrace();
-		} finally {
-			deleteTemporaryFile(metadataId, "xml");
-		}
+		} 
 
 	}
 
@@ -343,8 +343,15 @@ public class ResourceDirectoryInterface {
 		temporary = getTemporaryFile(metadataId, "xml");
 		if (temporary == null || !temporary.exists()) {
 			logger.error(String
-					.format("Trying to commit temporary file for metadata %s but the temporary file does not exist or is not readable",
-							metadataId));
+					.format("Trying to commit temporary file for metadata %s but the temporary file %s does not exist or is not readable",
+							metadataId,
+							temporary == null ? "null" : temporary
+									.getAbsolutePath()));
+			System.out
+					.println(String
+							.format("Trying to commit temporary file for metadata %s but the temporary file %s does not exist or is not readable",
+									metadataId, temporary == null ? "null"
+											: temporary.getAbsolutePath()));
 			return false;
 		}
 
@@ -357,6 +364,11 @@ public class ResourceDirectoryInterface {
 					.format("Trying to copy temporary file %s for metadata %s but a problem occured, message : %s",
 							temporary.getAbsolutePath(), metadataId,
 							e.getMessage()));
+			System.out
+					.println(String
+							.format("Trying to copy temporary file %s for metadata %s but a problem occured, message : %s",
+									temporary.getAbsolutePath(), metadataId,
+									e.getMessage()));
 			return false;
 		}
 
@@ -768,16 +780,15 @@ public class ResourceDirectoryInterface {
 		return FileUtils.getXMLFromFile(metadata);
 	}
 
-	public static List<String> addPartsToPackMetadata(String packMetadataId,
-			String packId, List<String> partsMetadataIdList, UriInfo uriInfo)
+	public static List<String> registerMetadataChildren(String metadataId, List<String> partsMetadataIdList, UriInfo uriInfo)
 			throws MetadataNotFoundException {
-		URI packMetadataUri = convertToUri(uriInfo, packMetadataId);
+		URI packMetadataUri = convertToUri(uriInfo, metadataId);
 		SAXBuilder builder = new SAXBuilder();
 		File partFile = null;
-		File packFile = getMetadataFile(packMetadataId);
+		File packFile = getMetadataFile(metadataId);
 
 		List<String> otherAffectedMetadataIds = removePackRelations(
-				packMetadataId, uriInfo);
+				metadataId, uriInfo);
 		Document packXMLDoc = null;
 		FileWriter out = null;
 		try {
@@ -797,7 +808,6 @@ public class ResourceDirectoryInterface {
 				xmlOutput.setFormat(Format.getPrettyFormat());
 				xmlOutput.output(partXMLDoc, new FileWriter(partFile));
 			}
-			setLomIdentifier(packXMLDoc.getRootElement(), "APISCOL", packId);
 			XMLOutputter xmlOutput = new XMLOutputter();
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			out = new FileWriter(packFile);

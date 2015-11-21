@@ -6,6 +6,7 @@ import org.w3c.dom.Document;
 
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.database.InexistentResourceInDatabaseException;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
 
 public interface IResourceDataHandler {
 
@@ -24,5 +25,7 @@ public interface IResourceDataHandler {
 	void updateMetadataEntry(String metadataId, Document metadata)  throws DBAccessException;;
 
 	void deleteMetadataEntry(String metadataId)  throws DBAccessException;
+
+	Node getMetadataHierarchyFromRoot(String rootId) throws DBAccessException;
 
 }

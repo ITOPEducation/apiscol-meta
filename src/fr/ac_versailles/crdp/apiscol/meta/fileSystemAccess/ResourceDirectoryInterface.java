@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ws.rs.core.UriInfo;
 import javax.xml.transform.stream.StreamSource;
@@ -29,6 +30,7 @@ import net.sf.json.xml.XMLSerializer;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.solr.common.util.Pair;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -40,6 +42,9 @@ import org.jdom2.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
 import fr.ac_versailles.crdp.apiscol.UsedNamespaces;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser.Differencies;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.references.RelationKinds;
 import fr.ac_versailles.crdp.apiscol.meta.references.Source;
 import fr.ac_versailles.crdp.apiscol.meta.resources.ResourcesLoader;
@@ -276,7 +281,7 @@ public class ResourceDirectoryInterface {
 			// TODO relancer une exception
 			logger.error(e1.getMessage());
 			e1.printStackTrace();
-		} 
+		}
 
 	}
 
@@ -780,15 +785,16 @@ public class ResourceDirectoryInterface {
 		return FileUtils.getXMLFromFile(metadata);
 	}
 
-	public static List<String> registerMetadataChildren(String metadataId, List<String> partsMetadataIdList, UriInfo uriInfo)
+	public static List<String> registerMetadataChildren(String metadataId,
+			List<String> partsMetadataIdList, UriInfo uriInfo)
 			throws MetadataNotFoundException {
 		URI packMetadataUri = convertToUri(uriInfo, metadataId);
 		SAXBuilder builder = new SAXBuilder();
 		File partFile = null;
 		File packFile = getMetadataFile(metadataId);
 
-		List<String> otherAffectedMetadataIds = removePackRelations(
-				metadataId, uriInfo);
+		List<String> otherAffectedMetadataIds = removePackRelations(metadataId,
+				uriInfo);
 		Document packXMLDoc = null;
 		FileWriter out = null;
 		try {
@@ -1025,4 +1031,62 @@ public class ResourceDirectoryInterface {
 		return otherAffectedMetadataIds;
 	}
 
+	public static void applyChanges(
+			HashMap<String, ArrayList<Modification>> hashMap, UriInfo uriInfo)
+			throws MetadataNotFoundException, JDOMException, IOException,
+			URISyntaxException {
+		Iterator<Entry<String, ArrayList<Modification>>> metadataIterator = hashMap
+				.entrySet().iterator();
+		SAXBuilder builder = new SAXBuilder();
+		HashMap<String, Pair<File, Document>> memoryBuffer = new HashMap<String, Pair<File, Document>>();
+		Pair<File, Document> pair;
+		Document xmlDocument;
+		File xmlFile;
+		Entry<String, ArrayList<Modification>> metadataEntry;
+		ArrayList<Modification> modifications;
+		Iterator<Modification> modificationsIterator;
+		while (metadataIterator.hasNext()) {
+			metadataEntry = metadataIterator.next();
+
+			String metadataUri = metadataEntry.getKey();
+			String mdid = removeBaseUri(metadataUri, uriInfo);
+			xmlFile = getMetadataFile(mdid);
+			xmlDocument = (Document) builder.build(xmlFile);
+			
+			modifications = metadataEntry.getValue();
+			modificationsIterator = modifications.iterator();
+			Modification modification;
+			URI targetMetadataUri;
+			while (modificationsIterator.hasNext()) {
+				modification = (Modification) modificationsIterator.next();
+				targetMetadataUri = new URI(modification.getTarget());
+				if (modification.getDifferency().toString()
+						.equals(Differencies.removed.toString())) {
+					deleteRelation(modification.getRelation(), xmlDocument,
+							targetMetadataUri);
+				}
+				if (modification.getDifferency().toString()
+						.equals(Differencies.added.toString())) {
+					addRelation(modification.getRelation(), Source.LOMV10,
+							xmlDocument, targetMetadataUri);
+				}
+			}
+			pair = new Pair<File, Document>(xmlFile, xmlDocument);
+			memoryBuffer.put(mdid, pair);
+
+		}
+		Iterator<String> fileIterators = memoryBuffer.keySet().iterator();
+		XMLOutputter xmlOutput = new XMLOutputter();
+		xmlOutput.setFormat(Format.getPrettyFormat());
+		FileWriter out;
+		while (fileIterators.hasNext()) {
+			String mdid = (String) fileIterators.next();
+			Pair<File, Document> content = memoryBuffer.get(mdid);
+
+			out = new FileWriter(content.getKey());
+			xmlOutput.output(content.getValue(), out);
+			out.close();
+		}
+
+	}
 }

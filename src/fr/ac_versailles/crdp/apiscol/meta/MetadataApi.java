@@ -2,11 +2,14 @@ package fr.ac_versailles.crdp.apiscol.meta;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
@@ -32,6 +35,8 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.solr.common.util.Pair;
+import org.jdom2.JDOMException;
 import org.w3c.dom.Document;
 
 import com.google.gson.Gson;
@@ -51,6 +56,8 @@ import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.InvalidProvidedMetada
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundException;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.ResourceDirectoryInterface;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Deserializer;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser.Differencies;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
 import fr.ac_versailles.crdp.apiscol.meta.representations.EntitiesRepresentationBuilderFactory;
 import fr.ac_versailles.crdp.apiscol.meta.representations.IEntitiesRepresentationBuilder;
@@ -620,6 +627,15 @@ public class MetadataApi extends ApiscolApi {
 		Document metadata = ResourceDirectoryInterface
 				.getMetadataAsDocument(metadataId);
 		resourceDataHandler.updateMetadataEntry(metadataId, metadata);
+
+	}
+
+	private Node getMetadataHierarchyFromRoot(String metadataId)
+			throws DBAccessException, MetadataNotFoundException {
+		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
+				.setDbType(DBTypes.mongoDB)
+				.setParameters(getDbConnexionParameters()).build();
+		return resourceDataHandler.getMetadataHierarchyFromRoot(metadataId);
 
 	}
 
@@ -1386,7 +1402,8 @@ public class MetadataApi extends ApiscolApi {
 			@FormParam(value = "hierarchy") final String hierarchy)
 			throws FileSystemAccessException,
 			InvalidProvidedMetadataFileException, MetadataNotFoundException,
-			InvalidEtagException, DBAccessException {
+			InvalidEtagException, DBAccessException, JDOMException,
+			IOException, URISyntaxException {
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
 		java.lang.reflect.Type collectionType = new TypeToken<List<String>>() {
 		}.getType();
@@ -1409,8 +1426,12 @@ public class MetadataApi extends ApiscolApi {
 				gb.registerTypeAdapter(Node.class, new Deserializer());
 
 				Gson gson = gb.create();
-				Node tree = gson.fromJson(hierarchy, Node.class);
-				registerRelations(tree);
+				Node newTree = gson.fromJson(hierarchy, Node.class);
+				Node oldTree = getMetadataHierarchyFromRoot(metadataId);
+				HierarchyAnalyser.detectChanges(oldTree, newTree);
+
+				ResourceDirectoryInterface.applyChanges(
+						HierarchyAnalyser.getModifications(), uriInfo);
 
 				// for (Iterator<String> iterator = metadataUriList.iterator();
 				// iterator

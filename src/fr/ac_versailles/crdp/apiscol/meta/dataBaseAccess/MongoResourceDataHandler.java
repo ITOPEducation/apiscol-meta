@@ -19,6 +19,7 @@ import com.mongodb.util.JSON;
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.database.InexistentResourceInDatabaseException;
 import fr.ac_versailles.crdp.apiscol.database.MongoUtils;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
 import fr.ac_versailles.crdp.apiscol.utils.JSonUtils;
 
 public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
@@ -103,6 +104,60 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 			throws DBAccessException, InexistentResourceInDatabaseException {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public Node getMetadataHierarchyFromRoot(String rootId)
+			throws DBAccessException {
+		Node node = new Node();
+		node.setMdid(rootId);
+		DBObject rootMetadataObject = getMetadataById(rootId);
+		if (rootMetadataObject != null
+				&& rootMetadataObject.containsField("relation")) {
+			ArrayList<BasicDBObject> relationsObject;
+			try {
+				relationsObject = (ArrayList<BasicDBObject>) rootMetadataObject
+						.get("relation");
+			} catch (ClassCastException e) {
+				relationsObject = new ArrayList<BasicDBObject>();
+				BasicDBObject relationObject = (BasicDBObject) rootMetadataObject
+						.get("relation");
+				relationsObject.add(relationObject);
+			}
+			if (relationsObject != null)
+				for (BasicDBObject relationObject : relationsObject) {
+					if (relationObject != null
+							&& relationObject.containsField("kind")) {
+						DBObject kindObject = (DBObject) relationObject
+								.get("kind");
+						if (kindObject.containsField("value")) {
+							String value = (String) kindObject.get("value");
+							if (StringUtils.equals(value, "contient")) {
+								if (relationObject.containsField("resource")) {
+									DBObject resourceObject = (DBObject) relationObject
+											.get("resource");
+									if (resourceObject
+											.containsField("identifier")) {
+										DBObject identifierObject = (DBObject) resourceObject
+												.get("identifier");
+										if (identifierObject
+												.containsField("entry")) {
+											String childId = (String) identifierObject
+													.get("entry");
+											node.addChild(getMetadataHierarchyFromRoot(childId));
+										}
+									}
+
+								}
+							}
+
+						}
+					}
+				}
+		}
+
+		return node;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -17,6 +17,12 @@ public class Node {
 		this.children = children;
 	}
 
+	public void addChild(Node child) {
+		if (null == children)
+			children = new LinkedList<Node>();
+		children.add(child);
+	}
+
 	public String getMdid() {
 		return mdid;
 	}
@@ -50,5 +56,29 @@ public class Node {
 			}
 		}
 		return childrenIds;
+	}
+
+	public boolean hasChild(Node node) {
+		if (children == null || children.size() == 0)
+			return false;
+		Iterator<Node> it = children.iterator();
+		while (it.hasNext()) {
+			Node nextNode = (Node) it.next();
+			if (nextNode.getMdid().equals(node.getMdid())) {
+
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public Node getChild(String mdid) {
+		Iterator<Node> it = children.iterator();
+		while (it.hasNext()) {
+			Node nextNode = (Node) it.next();
+			if (nextNode.getMdid().equals(mdid))
+				return nextNode;
+		}
+		return null;
 	}
 }

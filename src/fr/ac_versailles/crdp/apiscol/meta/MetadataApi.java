@@ -1432,7 +1432,14 @@ public class MetadataApi extends ApiscolApi {
 
 				ResourceDirectoryInterface.applyChanges(
 						HierarchyAnalyser.getModifications(), uriInfo);
-
+				Iterator<String> metadataIterator = HierarchyAnalyser
+						.getModifications().keySet().iterator();
+				while (metadataIterator.hasNext()) {
+					String metadataUri = (String) metadataIterator.next();
+					String mdid = metadataUri.replaceAll(uriInfo.getBaseUri()
+							.toString(), "");
+					refreshMetadata(mdid, true, false, true);
+				}
 				// for (Iterator<String> iterator = metadataUriList.iterator();
 				// iterator
 				// .hasNext();) {
@@ -1442,51 +1449,6 @@ public class MetadataApi extends ApiscolApi {
 				// String id = metadata.replaceAll(uriInfo.getBaseUri()
 				// .toString(), "");
 				// partsMetadataIds.add(id);
-				// }
-				// List<String> relationstoBeRemovedIds =
-
-				// ResourceDirectoryInterface.renewJsonpFile(packMetadataId);
-				// updateMetadataEntryInDataBase(packMetadataId);
-				// filePath = ResourceDirectoryInterface
-				// .getFilePath(packMetadataId);
-				// try {
-				// searchEngineQueryHandler.processDeleteQuery(filePath);
-				// searchEngineQueryHandler.processAddQuery(filePath);
-				// } catch (SearchEngineCommunicationException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// } catch (SearchEngineErrorException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
-				// for (Iterator<String> iterator = partsMetadataIds.iterator();
-				// iterator
-				// .hasNext();) {
-				// String partMetadataId = (String) iterator.next();
-				// ResourceDirectoryInterface.renewJsonpFile(partMetadataId);
-				// updateMetadataEntryInDataBase(partMetadataId);
-				// filePath = ResourceDirectoryInterface
-				// .getFilePath(partMetadataId);
-				// try {
-				// searchEngineQueryHandler.processDeleteQuery(filePath);
-				// searchEngineQueryHandler.processAddQuery(filePath);
-				// } catch (SearchEngineErrorException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// } catch (SearchEngineCommunicationException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
-				// ResourceDirectoryInterface.setAggregationLevel(
-				// partMetadataId, 1);
-				// }
-				// relationstoBeRemovedIds.removeAll(partsMetadataIds);
-				// for (Iterator<String> iterator = relationstoBeRemovedIds
-				// .iterator(); iterator.hasNext();) {
-				// String next = iterator.next();
-				// if (StringUtils.isEmpty(next))
-				// continue;
-				// refreshMetadata(next);
 				// }
 
 				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()

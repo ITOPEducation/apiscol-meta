@@ -271,8 +271,6 @@ public class ResourceDirectoryInterface {
 			newXMLFile = getOrCreateTemporaryFile(metadataId, "xml");
 			logger.info(String.format("Fichier provisoire créé en %s",
 					newXMLFile.getAbsolutePath()));
-			System.out.println(String.format("Fichier provisoire créé en %s",
-					newXMLFile.getAbsolutePath()));
 			FileUtils.writeStreamToFile(uploadedInputStream, newXMLFile);
 			validateFile(newXMLFile);
 			updateMetadata(newXMLFile, url, apiscolInstanceName);
@@ -861,12 +859,14 @@ public class ResourceDirectoryInterface {
 		return metadataId.replaceAll(uriInfo.getBaseUri().toString(), "");
 	}
 
-	private static void deleteRelation(RelationKinds kind, Document doc,
-			URI packMetadataUri) {
-		List<Element> relationsToBeDeleted = getRelations(kind, doc,
-				packMetadataUri);
+	private static void deleteRelation(RelationKinds kind, Document doc, URI uri) {
+		System.out.println("suppression relation " + kind.toString()
+				+ "sur uri " + uri.toString());
+		List<Element> relationsToBeDeleted = getRelations(kind, doc, uri);
+		System.out.println("On en a trouvé " + relationsToBeDeleted.size());
 		for (Iterator<Element> iterator = relationsToBeDeleted.iterator(); iterator
 				.hasNext();) {
+			System.out.println("on détache !");
 			iterator.next().detach();
 		}
 	}
@@ -885,9 +885,19 @@ public class ResourceDirectoryInterface {
 			Element value = kindElem.getChild("value", lomNs);
 			if (value == null)
 				continue;
+			Element resourceElem = relation.getChild("resource", lomNs);
+			if (resourceElem == null)
+				continue;
+			Element identifierElem = resourceElem.getChild("identifier", lomNs);
+			if (identifierElem == null)
+				continue;
+			Element entryElem = identifierElem.getChild("entry", lomNs);
+			if (entryElem == null)
+				continue;
 			if (value.getText().equals(kind.toString())
 					&& (metadataUri == null || StringUtils.equals(
-							metadataUri.toString(), value.getTextNormalize())))
+							metadataUri.toString(),
+							entryElem.getTextNormalize())))
 				relations.add(relation);
 
 		}
@@ -1052,7 +1062,7 @@ public class ResourceDirectoryInterface {
 			String mdid = removeBaseUri(metadataUri, uriInfo);
 			xmlFile = getMetadataFile(mdid);
 			xmlDocument = (Document) builder.build(xmlFile);
-			
+
 			modifications = metadataEntry.getValue();
 			modificationsIterator = modifications.iterator();
 			Modification modification;
@@ -1062,11 +1072,17 @@ public class ResourceDirectoryInterface {
 				targetMetadataUri = new URI(modification.getTarget());
 				if (modification.getDifferency().toString()
 						.equals(Differencies.removed.toString())) {
+					System.out.println(mdid + " : suppression relation "
+							+ modification.getRelation().toString() + " --> "
+							+ targetMetadataUri);
 					deleteRelation(modification.getRelation(), xmlDocument,
 							targetMetadataUri);
 				}
 				if (modification.getDifferency().toString()
 						.equals(Differencies.added.toString())) {
+					System.out.println(mdid + " : ajout relation "
+							+ modification.getRelation().toString() + " --> "
+							+ targetMetadataUri);
 					addRelation(modification.getRelation(), Source.LOMV10,
 							xmlDocument, targetMetadataUri);
 				}

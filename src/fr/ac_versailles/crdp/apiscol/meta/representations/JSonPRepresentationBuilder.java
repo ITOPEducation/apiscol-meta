@@ -33,12 +33,13 @@ public class JSonPRepresentationBuilder extends
 	@Override
 	public JSONWithPadding getMetadataRepresentation(UriInfo uriInfo,
 			String apiscolInstanceName, String resourceId,
-			boolean includeDescription, Map<String, String> params,
+			boolean includeDescription, boolean includeHierarchy,
+			Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
 
 		Document xmlRepresentation = innerBuilder.getMetadataRepresentation(
-				uriInfo, apiscolInstanceName, resourceId, includeDescription,
+				uriInfo, apiscolInstanceName, resourceId, includeDescription,includeHierarchy,
 				params, resourceDataHandler, editUri);
 		String jsonSource = JSonUtils.convertXMLToJson(xmlRepresentation);
 		JSONWithPadding metadataResponseJson = new JSONWithPadding(jsonSource,
@@ -102,9 +103,9 @@ public class JSonPRepresentationBuilder extends
 	}
 
 	@Override
-	public Object getMaintenanceRecoveryRepresentation(Integer maintenanceRecoveryId,
-			UriInfo uriInfo, MaintenanceRegistry maintenanceRegistry,
-			Integer nbLines) {
+	public Object getMaintenanceRecoveryRepresentation(
+			Integer maintenanceRecoveryId, UriInfo uriInfo,
+			MaintenanceRegistry maintenanceRegistry, Integer nbLines) {
 		// TODO Auto-generated method stub
 		return null;
 	}

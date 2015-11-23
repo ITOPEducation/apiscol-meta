@@ -42,7 +42,7 @@ public interface IEntitiesRepresentationBuilder<T> {
 
 	T getMetadataRepresentation(UriInfo uriInfo, String apiscolInstanceName,
 			String resourceId, boolean includeDescription,
-			Map<String, String> params,
+			boolean includeHierarchy, Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException;
 

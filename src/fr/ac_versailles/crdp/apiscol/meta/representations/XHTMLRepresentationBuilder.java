@@ -55,7 +55,8 @@ public class XHTMLRepresentationBuilder extends
 	@Override
 	public String getMetadataRepresentation(UriInfo uriInfo,
 			String apiscolInstanceName, String metadataId,
-			boolean includeDescription, Map<String, String> params,
+			boolean includeDescription,
+			boolean includeHierarchy, Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException {
 

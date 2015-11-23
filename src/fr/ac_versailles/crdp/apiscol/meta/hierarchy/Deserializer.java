@@ -21,7 +21,6 @@ public class Deserializer implements JsonDeserializer<Node> {
 		else {
 			node = new Node();
 			JsonElement idElement = json.getAsJsonObject().get("id");
-			System.out.println(idElement.getAsString());
 			// getAsString throws exception ?
 			String id = idElement.toString();
 			node.setMdid(id.replaceAll("\"", ""));

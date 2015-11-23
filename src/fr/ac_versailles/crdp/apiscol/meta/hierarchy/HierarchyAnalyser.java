@@ -31,7 +31,7 @@ public class HierarchyAnalyser {
 	private static HashMap<String, ArrayList<Modification>> modifications;
 
 	synchronized public static void detectChanges(Node oldTree, Node newTree) {
-		// id->
+		// mdid->Modifications
 		modifications = new HashMap<String, ArrayList<Modification>>();
 		computeDifferencies(oldTree, newTree, modifications,
 				Differencies.removed);
@@ -49,7 +49,6 @@ public class HierarchyAnalyser {
 		while (it.hasNext()) {
 			Node node = (Node) it.next();
 			if (reference != null && reference.hasChild(node)) {
-
 				computeDifferencies(node, reference.getChild(node.getMdid()),
 						modifications, differenceType);
 			} else {
@@ -71,8 +70,8 @@ public class HierarchyAnalyser {
 			String mdid2) {
 		if (!modifications.containsKey(mdid1))
 			modifications.put(mdid1, new ArrayList<Modification>());
-		Modification modification = new Modification(differenceType,
-				relation, mdid2);
+		Modification modification = new Modification(differenceType, relation,
+				mdid2);
 		if (!modifications.get(mdid1).contains(modification))
 			modifications.get(mdid1).add(modification);
 

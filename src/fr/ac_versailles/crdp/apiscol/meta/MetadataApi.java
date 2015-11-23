@@ -3,13 +3,11 @@ package fr.ac_versailles.crdp.apiscol.meta;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
@@ -35,7 +33,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.solr.common.util.Pair;
 import org.jdom2.JDOMException;
 import org.w3c.dom.Document;
 
@@ -57,7 +54,6 @@ import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundExcep
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.ResourceDirectoryInterface;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Deserializer;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser;
-import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser.Differencies;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
 import fr.ac_versailles.crdp.apiscol.meta.representations.EntitiesRepresentationBuilderFactory;
 import fr.ac_versailles.crdp.apiscol.meta.representations.IEntitiesRepresentationBuilder;
@@ -311,7 +307,7 @@ public class MetadataApi extends ApiscolApi {
 			return Response
 					.ok()
 					.entity(rb.getMetadataRepresentation(uriInfo,
-							apiscolInstanceName, metadataId, true,
+							apiscolInstanceName, metadataId, true, false,
 							Collections.<String, String> emptyMap(),
 							resourceDataHandler, editUri))
 					.type(rb.getMediaType()).build();
@@ -402,6 +398,7 @@ public class MetadataApi extends ApiscolApi {
 							.ok()
 							.entity(rb.getMetadataRepresentation(uriInfo,
 									apiscolInstanceName, metadataId, true,
+									false,
 									Collections.<String, String> emptyMap(),
 									resourceDataHandler, editUri))
 							.type(rb.getMediaType());
@@ -594,6 +591,7 @@ public class MetadataApi extends ApiscolApi {
 							.ok()
 							.entity(rb.getMetadataRepresentation(uriInfo,
 									apiscolInstanceName, metadataId, true,
+									false,
 									Collections.<String, String> emptyMap(),
 									resourceDataHandler, editUri))
 							.type(rb.getMediaType());
@@ -1129,7 +1127,8 @@ public class MetadataApi extends ApiscolApi {
 	private Response getMetadataRepresentation(HttpServletRequest request,
 			HttpServletResponse httpServletResponse, String metadataId,
 			String format, String style, String device, ServletContext context,
-			UriInfo uriInfo, GetModalities modality, boolean includeDescription)
+			UriInfo uriInfo, GetModalities modality,
+			boolean includeDescription, boolean includeHierarchy)
 			throws MetadataNotFoundException,
 			IncorrectMetadataKeySyntaxException, DBAccessException {
 		checkMdidSyntax(metadataId);
@@ -1150,8 +1149,8 @@ public class MetadataApi extends ApiscolApi {
 				.setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		Object response = rb.getMetadataRepresentation(uriInfo,
-				apiscolInstanceName, metadataId, includeDescription, params,
-				resourceDataHandler, editUri);
+				apiscolInstanceName, metadataId, includeDescription,
+				includeHierarchy, params, resourceDataHandler, editUri);
 
 		String mediaType = rb.getMediaType().toString();
 		return Response
@@ -1175,13 +1174,15 @@ public class MetadataApi extends ApiscolApi {
 			@DefaultValue("") @QueryParam(value = "style") final String style,
 			@DefaultValue("") @QueryParam(value = "device") final String device,
 			@DefaultValue("false") @QueryParam(value = "desc") final boolean includeDescription,
+			@DefaultValue("false") @QueryParam(value = "tree") boolean includeHierarchy,
 			@QueryParam(value = "format") final String format
 
 	) throws MetadataNotFoundException, IncorrectMetadataKeySyntaxException,
 			DBAccessException {
 		return getMetadataRepresentation(request, httpServletResponse,
 				metadataId, format, style, device, context, uriInfo,
-				GetModalities.fromString(mode), includeDescription);
+				GetModalities.fromString(mode), includeDescription,
+				includeHierarchy);
 
 	}
 
@@ -1455,7 +1456,7 @@ public class MetadataApi extends ApiscolApi {
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 				Object representation = rb.getMetadataRepresentation(uriInfo,
-						apiscolInstanceName, metadataId, false,
+						apiscolInstanceName, metadataId, false, true,
 						Collections.<String, String> emptyMap(),
 						resourceDataHandler, requestedFormat);
 				response = Response.status(Status.OK).entity(representation);

@@ -57,13 +57,15 @@ public class XMLRepresentationBuilder extends
 	@Override
 	public Document getMetadataRepresentation(UriInfo uriInfo,
 			String apiscolInstanceName, String resourceId,
-			boolean includeDescription, Map<String, String> params,
+			boolean includeDescription, boolean includeHierarchy,
+			Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
 		Document XMLRepresentation = createXMLDocument();
 		addXMLSubTreeForMetadata(XMLRepresentation, XMLRepresentation, uriInfo,
-				apiscolInstanceName, resourceId, includeDescription, -1,
-				resourceDataHandler, editUri);
+				apiscolInstanceName, resourceId, includeDescription,
+				includeHierarchy, -1, resourceDataHandler, editUri);
+
 		addNameSpaces(XMLRepresentation);
 		return XMLRepresentation;
 	}
@@ -156,8 +158,8 @@ public class XMLRepresentationBuilder extends
 				maxUpdated = Math.max(
 						addXMLSubTreeForMetadata(response, feedElement,
 								uriInfo, apiscolInstanceName, metadataId,
-								includeDescription, -1, resourceDataHandler,
-								editUri), maxUpdated);
+								includeDescription, false, -1,
+								resourceDataHandler, editUri), maxUpdated);
 			} catch (MetadataNotFoundException e) {
 				logger.error(String
 						.format("The metadata %s was not found while trying to build xml representation",
@@ -175,9 +177,50 @@ public class XMLRepresentationBuilder extends
 		return MediaType.APPLICATION_XML_TYPE;
 	}
 
+	private void addXMLSubTreeForHierarchy(Document XMLDocument, Node node,
+			UriInfo uriInfo, String apiscolInstanceName, String resourceId,
+			boolean includeDescription, int i,
+			IResourceDataHandler resourceDataHandler, String editUri)
+			throws DBAccessException, MetadataNotFoundException {
+		Element rootElement = XMLDocument.createElement("apiscol:children");
+		fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node hierarchy = resourceDataHandler
+				.getMetadataHierarchyFromRoot(resourceId);
+		addChildren(XMLDocument, rootElement, hierarchy.getChildren(), uriInfo,
+				includeDescription, resourceDataHandler, editUri,
+				apiscolInstanceName);
+		node.appendChild(rootElement);
+	}
+
+	private void addChildren(
+			Document XMLDocument,
+			Element childrenElement,
+			LinkedList<fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node> children,
+			UriInfo uriInfo, boolean includeDescription,
+			IResourceDataHandler resourceDataHandler, String editUri,
+			String apiscolInstanceName) throws MetadataNotFoundException,
+			DBAccessException {
+		if (children == null || children.size() == 0) {
+			return;
+		}
+		Iterator<fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node> it = children
+				.iterator();
+		fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node node;
+		while (it.hasNext()) {
+			node = it.next();
+			String mdid = node.getMdid().replace(
+					uriInfo.getBaseUri().toString(), "");
+			addXMLSubTreeForMetadata(XMLDocument, childrenElement, uriInfo,
+					apiscolInstanceName, mdid, includeDescription, true, -1,
+					resourceDataHandler, editUri);
+
+		}
+
+	}
+
 	private Long addXMLSubTreeForMetadata(Document XMLDocument,
-			Node insertionElement, UriInfo uriInfo, String apiscolInstanceName,
-			String metadataId, boolean includeDescription, float score,
+			Node insertionElement, UriInfo uriInfo,
+			final String apiscolInstanceName, final String metadataId,
+			boolean includeDescription, boolean includeHierarchy, float score,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
 		Element rootElement = XMLDocument.createElement("entry");
@@ -195,6 +238,7 @@ public class XMLRepresentationBuilder extends
 		idElement
 				.setTextContent(getMetadataUrn(metadataId, apiscolInstanceName));
 		rootElement.appendChild(idElement);
+
 		if (includeDescription) {
 			HashMap<String, String> mdProperties;
 			try {
@@ -331,6 +375,11 @@ public class XMLRepresentationBuilder extends
 								metadataId));
 			}
 
+		}
+		if (includeHierarchy) {
+			addXMLSubTreeForHierarchy(XMLDocument, rootElement, uriInfo,
+					apiscolInstanceName, metadataId, includeDescription, -1,
+					resourceDataHandler, editUri);
 		}
 		Element selfHTMLLinkElement = XMLDocument.createElement("link");
 		selfHTMLLinkElement.setAttribute("rel", "self");
@@ -591,8 +640,9 @@ public class XMLRepresentationBuilder extends
 				maxUpdated = Math.max(
 						addXMLSubTreeForMetadata(response, feedElement,
 								uriInfo, apiscolInstanceName, resultId,
-								includeDescription, Float.parseFloat(score),
-								resourceDataHandler, editUri), maxUpdated);
+								includeDescription, false,
+								Float.parseFloat(score), resourceDataHandler,
+								editUri), maxUpdated);
 				addXMLSubTreeForResult(response, hitsElement, resultId, score,
 						snippets, apiscolInstanceName);
 			} catch (MetadataNotFoundException e) {

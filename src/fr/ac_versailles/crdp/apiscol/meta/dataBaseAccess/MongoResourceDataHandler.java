@@ -115,7 +115,6 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 			throws DBAccessException {
 		Node node = new Node();
 		node.setMdid(new StringBuilder().append(uriInfo.getBaseUri()).append(rootId).toString());
-		System.out.println("Ancien arbre : noeud " + node.getMdid());
 		DBObject rootMetadataObject = getMetadataById(rootId);
 		if (rootMetadataObject != null
 				&& rootMetadataObject.containsField("relation")) {

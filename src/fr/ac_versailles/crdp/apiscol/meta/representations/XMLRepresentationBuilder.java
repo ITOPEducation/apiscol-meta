@@ -522,7 +522,6 @@ public class XMLRepresentationBuilder extends
 	// private void simplifyIdentifiers(Element facetGroupElement) {
 	// NodeList entries = facetGroupElement
 	// .getElementsByTagName("apiscol:entry");
-	// System.out.println(facetGroupElement.getNodeName());
 	// for (int i = 0; i < entries.getLength(); i++) {
 	// Element entry = (Element) entries.item(i);
 	// String identifier = entry.getAttribute("identifier");
@@ -717,9 +716,6 @@ public class XMLRepresentationBuilder extends
 		rootElement.setAttribute("metadataId",
 				getMetadataUrn(metadataId, apiscolInstanceName));
 		if (snippets == null) {
-			// TODO mieux gérér ça
-			System.out
-					.println("attention snippets est null pour " + metadataId);
 			return;
 		}
 		Iterator<String> it = snippets.iterator();

@@ -350,11 +350,6 @@ public class ResourceDirectoryInterface {
 							metadataId,
 							temporary == null ? "null" : temporary
 									.getAbsolutePath()));
-			System.out
-					.println(String
-							.format("Trying to commit temporary file for metadata %s but the temporary file %s does not exist or is not readable",
-									metadataId, temporary == null ? "null"
-											: temporary.getAbsolutePath()));
 			return false;
 		}
 
@@ -367,11 +362,6 @@ public class ResourceDirectoryInterface {
 					.format("Trying to copy temporary file %s for metadata %s but a problem occured, message : %s",
 							temporary.getAbsolutePath(), metadataId,
 							e.getMessage()));
-			System.out
-					.println(String
-							.format("Trying to copy temporary file %s for metadata %s but a problem occured, message : %s",
-									temporary.getAbsolutePath(), metadataId,
-									e.getMessage()));
 			return false;
 		}
 
@@ -860,13 +850,9 @@ public class ResourceDirectoryInterface {
 	}
 
 	private static void deleteRelation(RelationKinds kind, Document doc, URI uri) {
-		System.out.println("suppression relation " + kind.toString()
-				+ "sur uri " + uri.toString());
 		List<Element> relationsToBeDeleted = getRelations(kind, doc, uri);
-		System.out.println("On en a trouvé " + relationsToBeDeleted.size());
 		for (Iterator<Element> iterator = relationsToBeDeleted.iterator(); iterator
 				.hasNext();) {
-			System.out.println("on détache !");
 			iterator.next().detach();
 		}
 	}
@@ -1072,17 +1058,11 @@ public class ResourceDirectoryInterface {
 				targetMetadataUri = new URI(modification.getTarget());
 				if (modification.getDifferency().toString()
 						.equals(Differencies.removed.toString())) {
-					System.out.println(mdid + " : suppression relation "
-							+ modification.getRelation().toString() + " --> "
-							+ targetMetadataUri);
 					deleteRelation(modification.getRelation(), xmlDocument,
 							targetMetadataUri);
 				}
 				if (modification.getDifferency().toString()
 						.equals(Differencies.added.toString())) {
-					System.out.println(mdid + " : ajout relation "
-							+ modification.getRelation().toString() + " --> "
-							+ targetMetadataUri);
 					addRelation(modification.getRelation(), Source.LOMV10,
 							xmlDocument, targetMetadataUri);
 				}

@@ -628,12 +628,12 @@ public class MetadataApi extends ApiscolApi {
 
 	}
 
-	private Node getMetadataHierarchyFromRoot(String metadataId)
+	private Node getMetadataHierarchyFromRoot(String metadataId, UriInfo uriInfo)
 			throws DBAccessException, MetadataNotFoundException {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 				.setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
-		return resourceDataHandler.getMetadataHierarchyFromRoot(metadataId);
+		return resourceDataHandler.getMetadataHierarchyFromRoot(metadataId, uriInfo);
 
 	}
 
@@ -1406,13 +1406,10 @@ public class MetadataApi extends ApiscolApi {
 			InvalidEtagException, DBAccessException, JDOMException,
 			IOException, URISyntaxException {
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
-		java.lang.reflect.Type collectionType = new TypeToken<List<String>>() {
-		}.getType();
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
 		KeyLock keyLock = null;
 		ResponseBuilder response = null;
-
 		try {
 			keyLock = keyLockManager.getLock(KeyLockManager.GLOBAL_LOCK_KEY);
 			keyLock.lock();
@@ -1428,7 +1425,7 @@ public class MetadataApi extends ApiscolApi {
 
 				Gson gson = gb.create();
 				Node newTree = gson.fromJson(hierarchy, Node.class);
-				Node oldTree = getMetadataHierarchyFromRoot(metadataId);
+				Node oldTree = getMetadataHierarchyFromRoot(metadataId, uriInfo);
 				HierarchyAnalyser.detectChanges(oldTree, newTree);
 
 				ResourceDirectoryInterface.applyChanges(

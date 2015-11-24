@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.UriInfo;
+
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 
@@ -20,6 +22,7 @@ import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.database.InexistentResourceInDatabaseException;
 import fr.ac_versailles.crdp.apiscol.database.MongoUtils;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
+import fr.ac_versailles.crdp.apiscol.meta.references.RelationKinds;
 import fr.ac_versailles.crdp.apiscol.utils.JSonUtils;
 
 public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
@@ -108,10 +111,11 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Node getMetadataHierarchyFromRoot(String rootId)
+	public Node getMetadataHierarchyFromRoot(String rootId, UriInfo uriInfo)
 			throws DBAccessException {
 		Node node = new Node();
-		node.setMdid(rootId);
+		node.setMdid(new StringBuilder().append(uriInfo.getBaseUri()).append(rootId).toString());
+		System.out.println("Ancien arbre : noeud " + node.getMdid());
 		DBObject rootMetadataObject = getMetadataById(rootId);
 		if (rootMetadataObject != null
 				&& rootMetadataObject.containsField("relation")) {
@@ -133,7 +137,8 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 								.get("kind");
 						if (kindObject.containsField("value")) {
 							String value = (String) kindObject.get("value");
-							if (StringUtils.equals(value, "contient")) {
+							if (StringUtils.equals(value,
+									RelationKinds.CONTIENT.toString())) {
 								if (relationObject.containsField("resource")) {
 									DBObject resourceObject = (DBObject) relationObject
 											.get("resource");
@@ -143,9 +148,14 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 												.get("identifier");
 										if (identifierObject
 												.containsField("entry")) {
-											String childId = (String) identifierObject
+											String childUri = (String) identifierObject
 													.get("entry");
-											node.addChild(getMetadataHierarchyFromRoot(childId));
+											String childId = childUri
+													.replaceAll(uriInfo
+															.getBaseUri()
+															.toString(), "");
+											node.addChild(getMetadataHierarchyFromRoot(
+													childId, uriInfo));
 										}
 									}
 

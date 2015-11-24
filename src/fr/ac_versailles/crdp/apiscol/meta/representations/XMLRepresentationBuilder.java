@@ -184,7 +184,7 @@ public class XMLRepresentationBuilder extends
 			throws DBAccessException, MetadataNotFoundException {
 		Element rootElement = XMLDocument.createElement("apiscol:children");
 		fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node hierarchy = resourceDataHandler
-				.getMetadataHierarchyFromRoot(resourceId);
+				.getMetadataHierarchyFromRoot(resourceId, uriInfo);
 		addChildren(XMLDocument, rootElement, hierarchy.getChildren(), uriInfo,
 				includeDescription, resourceDataHandler, editUri,
 				apiscolInstanceName);
@@ -207,6 +207,7 @@ public class XMLRepresentationBuilder extends
 		fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node node;
 		while (it.hasNext()) {
 			node = it.next();
+
 			String mdid = node.getMdid().replace(
 					uriInfo.getBaseUri().toString(), "");
 			addXMLSubTreeForMetadata(XMLDocument, childrenElement, uriInfo,

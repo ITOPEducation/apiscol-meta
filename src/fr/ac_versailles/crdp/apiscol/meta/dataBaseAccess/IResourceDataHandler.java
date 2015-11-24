@@ -2,6 +2,8 @@ package fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess;
 
 import java.util.HashMap;
 
+import javax.ws.rs.core.UriInfo;
+
 import org.w3c.dom.Document;
 
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
@@ -20,12 +22,15 @@ public interface IResourceDataHandler {
 
 	void deleteAllDocuments() throws DBAccessException;
 
-	HashMap<String, String> getMetadataProperties(String metadataId) throws DBAccessException;
+	HashMap<String, String> getMetadataProperties(String metadataId)
+			throws DBAccessException;
 
-	void updateMetadataEntry(String metadataId, Document metadata)  throws DBAccessException;;
+	void updateMetadataEntry(String metadataId, Document metadata)
+			throws DBAccessException;;
 
-	void deleteMetadataEntry(String metadataId)  throws DBAccessException;
+	void deleteMetadataEntry(String metadataId) throws DBAccessException;
 
-	Node getMetadataHierarchyFromRoot(String rootId) throws DBAccessException;
+	Node getMetadataHierarchyFromRoot(String rootId, UriInfo uriInfo)
+			throws DBAccessException;
 
 }

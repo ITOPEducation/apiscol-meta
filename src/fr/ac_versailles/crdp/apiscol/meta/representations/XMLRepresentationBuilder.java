@@ -294,8 +294,8 @@ public class XMLRepresentationBuilder extends
 							"href",
 							mdProperties.get(
 									MetadataProperties.contentRestUrl
-											.toString()).replaceAll("\\?.*$",
-									""));
+											.toString()).replaceAll(
+									"\\?format=.*$", ""));
 					rootElement.appendChild(contentRestHtmlLinkElement);
 				}
 

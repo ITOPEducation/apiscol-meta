@@ -337,6 +337,7 @@ public class XMLRepresentationBuilder extends
 				rootElement.appendChild(authorElement);
 				Element nameElement = XMLDocument.createElement("name");
 				authorElement.appendChild(nameElement);
+				// FIXME multiple authors/editors ignored
 				while (!StringUtils.isEmpty(mdProperties
 						.get(MetadataProperties.author.toString()
 								+ authorNumber))) {
@@ -344,11 +345,9 @@ public class XMLRepresentationBuilder extends
 					String inlineVcard = mdProperties
 							.get(MetadataProperties.author.toString()
 									+ authorNumber);
-					String multilineVcard = inlineVcard.replaceAll("([A-Z]+:)",
-							"\n$1")
-							.replaceAll("VCARDVERSION", "VCARD\nVERSION");
+
 					try {
-						VCard vcardParsed = vcardengine.parse(multilineVcard);
+						VCard vcardParsed = parseVCard(inlineVcard);
 
 						if (vcardParsed != null
 								&& vcardParsed.getName() != null)
@@ -364,6 +363,40 @@ public class XMLRepresentationBuilder extends
 					}
 
 					authorNumber++;
+				}
+				int editorNumber = 0;
+				Element editorElement = XMLDocument
+						.createElement("contributor");
+				rootElement.appendChild(editorElement);
+				Element editorNameElement = XMLDocument.createElement("name");
+				editorElement.appendChild(editorNameElement);
+				while (!StringUtils.isEmpty(mdProperties
+						.get(MetadataProperties.editor.toString()
+								+ editorNumber))) {
+					String inlineVcard = mdProperties
+							.get(MetadataProperties.editor.toString()
+									+ editorNumber);
+					try {
+						VCard vcardParsed = parseVCard(inlineVcard);
+
+						if (vcardParsed != null
+								&& vcardParsed.getOrganizations() != null) {
+							Iterator<String> organizations = vcardParsed
+									.getOrganizations().getOrganizations();
+							if (organizations.hasNext())
+								editorNameElement.setTextContent(organizations
+										.next().toString());
+						}
+
+					} catch (DOMException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					editorNumber++;
 				}
 
 			} catch (InvalidProvidedMetadataFileException e) {
@@ -424,6 +457,16 @@ public class XMLRepresentationBuilder extends
 		insertionElement.appendChild(rootElement);
 
 		return utcTime;
+	}
+
+	private VCard parseVCard(String inlineVcard) throws IOException {
+		String multilineVcard = "";
+		if (StringUtils.isNotEmpty(inlineVcard))
+			multilineVcard = inlineVcard.replaceAll("([A-Z]+:)", "\n$1")
+					.replaceAll("VCARDVERSION", "VCARD\nVERSION");
+		if (StringUtils.isNotEmpty(multilineVcard))
+			return vcardengine.parse(multilineVcard);
+		return null;
 	}
 
 	private void addXmlSubTreeForStaticFacets(Document response,

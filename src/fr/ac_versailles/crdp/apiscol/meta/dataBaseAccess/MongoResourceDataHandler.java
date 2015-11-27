@@ -114,7 +114,8 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 	public Node getMetadataHierarchyFromRoot(String rootId, UriInfo uriInfo)
 			throws DBAccessException {
 		Node node = new Node();
-		node.setMdid(new StringBuilder().append(uriInfo.getBaseUri()).append(rootId).toString());
+		node.setMdid(new StringBuilder().append(uriInfo.getBaseUri())
+				.append(rootId).toString());
 		DBObject rootMetadataObject = getMetadataById(rootId);
 		if (rootMetadataObject != null
 				&& rootMetadataObject.containsField("relation")) {
@@ -183,6 +184,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		String contentRestUrl = "";
 		String contentMime = "";
 		List<String> authors = new ArrayList<String>();
+		List<String> editors = new ArrayList<String>();
 		if (metadataObject != null && metadataObject.containsField("general")) {
 			DBObject generalObject = (DBObject) metadataObject.get("general");
 			if (generalObject != null && generalObject.containsField("title")) {
@@ -300,6 +302,13 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 											.get("entity"));
 								}
 							}
+							if (StringUtils.equals(value, "editor")
+									|| StringUtils.equals(value, "éditeur")) {
+								if (contributeObject.containsField("entity")) {
+									editors.add((String) contributeObject
+											.get("entity"));
+								}
+							}
 						}
 					}
 				}
@@ -344,6 +353,10 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		for (int i = 0; i < authors.size(); i++) {
 			mdProperties.put(MetadataProperties.author.toString() + i,
 					authors.get(i));
+		}
+		for (int i = 0; i < editors.size(); i++) {
+			mdProperties.put(MetadataProperties.editor.toString() + i,
+					editors.get(i));
 		}
 		return mdProperties;
 	}

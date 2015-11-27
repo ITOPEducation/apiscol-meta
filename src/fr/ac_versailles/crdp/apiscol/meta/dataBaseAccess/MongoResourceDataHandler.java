@@ -302,7 +302,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 											.get("entity"));
 								}
 							}
-							if (StringUtils.equals(value, "editor")
+							if (StringUtils.equals(value, "publisher")
 									|| StringUtils.equals(value, "éditeur")) {
 								if (contributeObject.containsField("entity")) {
 									editors.add((String) contributeObject

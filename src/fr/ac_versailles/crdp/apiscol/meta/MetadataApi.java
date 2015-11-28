@@ -1434,8 +1434,6 @@ public class MetadataApi extends ApiscolApi {
 
 				HashMap<String, ArrayList<Modification>> modifications = HierarchyAnalyser
 						.getModifications();
-				Iterator<String> it = modifications.keySet().iterator();
-
 				ResourceDirectoryInterface.applyChanges(modifications, uriInfo);
 				Iterator<String> metadataIterator = modifications.keySet()
 						.iterator();

@@ -64,6 +64,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 
 	private static final String DB_NAME = "apiscol";
 	private static final String COLLECTION_NAME = "metadata";
+	private static final int TREE_MAX_DEPTH = 14;
 	private static DBCollection metadataCollection;
 	private static Mongo mongo;
 
@@ -110,9 +111,14 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Node getMetadataHierarchyFromRoot(String rootId, UriInfo uriInfo)
 			throws DBAccessException {
+		return getMetadataHierarchyFromRoot(rootId, uriInfo, 0);
+	}
+
+	@SuppressWarnings("unchecked")
+	private Node getMetadataHierarchyFromRoot(String rootId, UriInfo uriInfo,
+			int depth) throws DBAccessException {
 		Node node = new Node();
 		node.setMdid(new StringBuilder().append(uriInfo.getBaseUri())
 				.append(rootId).toString());
@@ -154,8 +160,9 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 													.replaceAll(uriInfo
 															.getBaseUri()
 															.toString(), "");
-											node.addChild(getMetadataHierarchyFromRoot(
-													childId, uriInfo));
+											if (depth < TREE_MAX_DEPTH)
+												node.addChild(getMetadataHierarchyFromRoot(
+														childId, uriInfo, depth+1));
 										}
 									}
 

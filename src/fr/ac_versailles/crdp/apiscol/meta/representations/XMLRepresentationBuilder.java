@@ -51,8 +51,11 @@ import fr.ac_versailles.crdp.apiscol.utils.XMLUtils;
 public class XMLRepresentationBuilder extends
 		AbstractRepresentationBuilder<Document> {
 
+	private static final int MAX_TREE_DEPTH = 10;
 	private static SnippetGenerator snippetGenerator = new SnippetGenerator();
 	private static VCardEngine vcardengine = new VCardEngine();
+
+	private int treeDepth;
 
 	@Override
 	public Document getMetadataRepresentation(UriInfo uriInfo,
@@ -62,6 +65,9 @@ public class XMLRepresentationBuilder extends
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
 		Document XMLRepresentation = createXMLDocument();
+		if (includeHierarchy) {
+			treeDepth = 0;
+		}
 		addXMLSubTreeForMetadata(XMLRepresentation, XMLRepresentation, uriInfo,
 				apiscolInstanceName, resourceId, includeDescription,
 				includeHierarchy, -1, resourceDataHandler, editUri);
@@ -411,9 +417,13 @@ public class XMLRepresentationBuilder extends
 
 		}
 		if (includeHierarchy) {
-			addXMLSubTreeForHierarchy(XMLDocument, rootElement, uriInfo,
-					apiscolInstanceName, metadataId, includeDescription, -1,
-					resourceDataHandler, editUri);
+			treeDepth++;
+			if (treeDepth < MAX_TREE_DEPTH) {
+				addXMLSubTreeForHierarchy(XMLDocument, rootElement, uriInfo,
+						apiscolInstanceName, metadataId, includeDescription,
+						-1, resourceDataHandler, editUri);
+			}
+
 		}
 		Element selfHTMLLinkElement = XMLDocument.createElement("link");
 		selfHTMLLinkElement.setAttribute("rel", "self");

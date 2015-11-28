@@ -1,13 +1,17 @@
 package fr.ac_versailles.crdp.apiscol.meta.hierarchy;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 public class Node {
 
 	private LinkedList<Node> children;
 	private String mdid;
+	private String nextNodeUri;
 
 	public LinkedList<Node> getChildren() {
 		return children;
@@ -80,5 +84,99 @@ public class Node {
 			}
 		}
 		return null;
+	}
+
+	public boolean isPrevious(Node previous, Node node) {
+		if (children == null || children.size() == 0)
+			return false;
+		Iterator<Node> it = children.iterator();
+		Node nextNode, previousNode = null;
+		while (it.hasNext()) {
+			nextNode = (Node) it.next();
+			if (nextNode.getMdid().equals(node.getMdid())) {
+				return previousNode != null
+						&& previousNode.getMdid().equals(previous.getMdid());
+			}
+			previousNode = nextNode;
+		}
+		return false;
+	}
+
+	public boolean isNext(Node next, Node node) {
+		if (children == null || children.size() == 0)
+			return false;
+		Iterator<Node> it = children.iterator();
+		Node nextNode, previousNode = null;
+		while (it.hasNext()) {
+			nextNode = (Node) it.next();
+			if (previousNode != null
+					&& previousNode.getMdid().equals(node.getMdid())) {
+				return nextNode.getMdid().equals(next.getMdid());
+			}
+			previousNode = nextNode;
+		}
+		return false;
+	}
+
+	public void registerNextNodeUri(String nextNodeUri) {
+		this.nextNodeUri = nextNodeUri;
+	}
+
+	public String getNextNodeUri() {
+		return nextNodeUri;
+	}
+
+	public void reorderChildren() {
+		if (children == null || children.size() == 0)
+			return;
+
+		Iterator<Node> it = children.iterator();
+		Node nextNode;
+		ArrayList<String> nextNodeUris = new ArrayList<String>();
+		while (it.hasNext()) {
+			nextNode = (Node) it.next();
+			if (!StringUtils.isEmpty(nextNode.getNextNodeUri())) {
+				nextNodeUris.add(nextNode.getNextNodeUri());
+			}
+		}
+		it = children.iterator();
+		Node firstNode = null;
+		while (it.hasNext()) {
+			nextNode = (Node) it.next();
+			if (!nextNodeUris.contains(nextNode.getMdid())) {
+				if (firstNode == null) {
+					firstNode = nextNode;
+				} else {
+					// impossible to determine first node : too many candidates
+					return;
+				}
+			}
+
+		}
+		if (firstNode == null)
+			return;
+		children.remove(firstNode);
+		children.addLast(firstNode);
+		Node node = firstNode;
+
+		while (node.getNextNodeUri() != null) {
+			it = children.iterator();
+			boolean found = false;
+			while (it.hasNext()) {
+				nextNode = (Node) it.next();
+				if (nextNode.getMdid().equals(node.getNextNodeUri())) {
+					node = nextNode;
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				break;
+			}
+			children.remove(node);
+			children.addLast(node);
+
+		}
+
 	}
 }

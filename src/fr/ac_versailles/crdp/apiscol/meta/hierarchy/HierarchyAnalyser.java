@@ -46,12 +46,55 @@ public class HierarchyAnalyser {
 			return;
 		}
 		Iterator<Node> it = comparaisonChildren.iterator();
-		while (it.hasNext()) {
-			Node node = (Node) it.next();
+		Node node, next = null, previous = null;
+		while (it.hasNext() || next != null) {
+			node = next;
+			next = it.hasNext() ? it.next() : null;
+			if (node == null) {
+				continue;
+			}
+
 			if (reference != null && reference.hasChild(node)) {
+				if (previous != null) {
+					if (!reference.isPrevious(previous, node)) {
+						registerModification(modifications, node.getMdid(),
+								differenceType, RelationKinds.REQUIERT,
+								previous.getMdid());
+						registerModification(modifications, previous.getMdid(),
+								differenceType, RelationKinds.EST_REQUIS_PAR,
+								node.getMdid());
+					}
+				}
+				if (next != null) {
+					if (!reference.isNext(next, node)) {
+						registerModification(modifications, next.getMdid(),
+								differenceType, RelationKinds.REQUIERT,
+								node.getMdid());
+						registerModification(modifications, node.getMdid(),
+								differenceType, RelationKinds.EST_REQUIS_PAR,
+								next.getMdid());
+					}
+				}
 				computeDifferencies(node, reference.getChild(node.getMdid()),
 						modifications, differenceType);
 			} else {
+				if (previous != null) {
+					registerModification(modifications, node.getMdid(),
+							differenceType, RelationKinds.REQUIERT,
+							previous.getMdid());
+					registerModification(modifications, previous.getMdid(),
+							differenceType, RelationKinds.EST_REQUIS_PAR,
+							node.getMdid());
+				}
+				if (next != null) {
+					registerModification(modifications, next.getMdid(),
+							differenceType, RelationKinds.REQUIERT,
+							node.getMdid());
+					registerModification(modifications, node.getMdid(),
+							differenceType, RelationKinds.EST_REQUIS_PAR,
+							next.getMdid());
+				}
+
 				registerModification(modifications, comparaison.getMdid(),
 						differenceType, RelationKinds.CONTIENT, node.getMdid());
 				registerModification(modifications, node.getMdid(),
@@ -59,7 +102,7 @@ public class HierarchyAnalyser {
 						comparaison.getMdid());
 				computeDifferencies(node, null, modifications, differenceType);
 			}
-
+			previous = node;
 		}
 
 	}

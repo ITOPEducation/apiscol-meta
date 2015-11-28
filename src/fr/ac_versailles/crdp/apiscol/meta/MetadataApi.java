@@ -3,11 +3,13 @@ package fr.ac_versailles.crdp.apiscol.meta;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
@@ -54,6 +56,7 @@ import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundExcep
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.ResourceDirectoryInterface;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Deserializer;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
 import fr.ac_versailles.crdp.apiscol.meta.representations.EntitiesRepresentationBuilderFactory;
 import fr.ac_versailles.crdp.apiscol.meta.representations.IEntitiesRepresentationBuilder;
@@ -633,7 +636,8 @@ public class MetadataApi extends ApiscolApi {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 				.setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
-		return resourceDataHandler.getMetadataHierarchyFromRoot(metadataId, uriInfo);
+		return resourceDataHandler.getMetadataHierarchyFromRoot(metadataId,
+				uriInfo);
 
 	}
 
@@ -1428,26 +1432,19 @@ public class MetadataApi extends ApiscolApi {
 				Node oldTree = getMetadataHierarchyFromRoot(metadataId, uriInfo);
 				HierarchyAnalyser.detectChanges(oldTree, newTree);
 
-				ResourceDirectoryInterface.applyChanges(
-						HierarchyAnalyser.getModifications(), uriInfo);
-				Iterator<String> metadataIterator = HierarchyAnalyser
-						.getModifications().keySet().iterator();
+				HashMap<String, ArrayList<Modification>> modifications = HierarchyAnalyser
+						.getModifications();
+				Iterator<String> it = modifications.keySet().iterator();
+
+				ResourceDirectoryInterface.applyChanges(modifications, uriInfo);
+				Iterator<String> metadataIterator = modifications.keySet()
+						.iterator();
 				while (metadataIterator.hasNext()) {
 					String metadataUri = (String) metadataIterator.next();
 					String mdid = metadataUri.replaceAll(uriInfo.getBaseUri()
 							.toString(), "");
 					refreshMetadata(mdid, true, false, true);
 				}
-				// for (Iterator<String> iterator = metadataUriList.iterator();
-				// iterator
-				// .hasNext();) {
-				// String metadata = (String) iterator.next();
-				// if (!metadata.startsWith(uriInfo.getBaseUri().toString()))
-				// continue;
-				// String id = metadata.replaceAll(uriInfo.getBaseUri()
-				// .toString(), "");
-				// partsMetadataIds.add(id);
-				// }
 
 				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 						.setDbType(DBTypes.mongoDB)

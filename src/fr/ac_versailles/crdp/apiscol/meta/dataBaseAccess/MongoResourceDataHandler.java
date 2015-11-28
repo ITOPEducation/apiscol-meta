@@ -162,7 +162,27 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 															.toString(), "");
 											if (depth < TREE_MAX_DEPTH)
 												node.addChild(getMetadataHierarchyFromRoot(
-														childId, uriInfo, depth+1));
+														childId, uriInfo,
+														depth + 1));
+										}
+									}
+
+								}
+							}
+							if (StringUtils.equals(value,
+									RelationKinds.EST_REQUIS_PAR.toString())) {
+								if (relationObject.containsField("resource")) {
+									DBObject resourceObject = (DBObject) relationObject
+											.get("resource");
+									if (resourceObject
+											.containsField("identifier")) {
+										DBObject identifierObject = (DBObject) resourceObject
+												.get("identifier");
+										if (identifierObject
+												.containsField("entry")) {
+											String nextNodeuri = (String) identifierObject
+													.get("entry");
+											node.registerNextNodeUri(nextNodeuri);
 										}
 									}
 
@@ -172,8 +192,9 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 						}
 					}
 				}
-		}
 
+		}
+		node.reorderChildren();
 		return node;
 	}
 

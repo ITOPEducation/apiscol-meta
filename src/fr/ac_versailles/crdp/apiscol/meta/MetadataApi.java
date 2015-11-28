@@ -1467,21 +1467,6 @@ public class MetadataApi extends ApiscolApi {
 		return response.build();
 	}
 
-	private void registerRelations(Node tree) throws MetadataNotFoundException,
-			DBAccessException {
-		ResourceDirectoryInterface.registerMetadataChildren(tree.getMdid(),
-				tree.getChildrenId(), uriInfo);
-		refreshMetadata(tree.getMdid(), true, false, true);
-		if (tree.getChildren() != null && tree.getChildren().size() > 0) {
-			Iterator<Node> it = tree.getChildren().iterator();
-			while (it.hasNext()) {
-				Node node = (Node) it.next();
-				registerRelations(node);
-				refreshMetadata(node.getMdid(), true, false, true);
-			}
-		}
-	}
-
 	private void refreshMetadata(String metadataId, boolean takeCareOfDatabase,
 			boolean takecareOfSearchEngine, boolean takeCareOfJsonpFile)
 			throws DBAccessException, MetadataNotFoundException {

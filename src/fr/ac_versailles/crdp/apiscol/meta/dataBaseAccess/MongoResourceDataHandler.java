@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.solr.common.util.Pair;
 import org.w3c.dom.Document;
 
 import com.mongodb.BasicDBList;
@@ -106,7 +107,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 	@Override
 	public void setMetadata(String metadataId, Document lomData)
 			throws DBAccessException, InexistentResourceInDatabaseException {
-		// TODO Auto-generated method stub
+		// noop
 
 	}
 
@@ -212,7 +213,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		String contentRestUrl = "";
 		String contentMime = "";
 		List<String> authors = new ArrayList<String>();
-		List<String> editors = new ArrayList<String>();
+		List<Pair<String, String>> contributors = new ArrayList<Pair<String, String>>();
 		if (metadataObject != null && metadataObject.containsField("general")) {
 			DBObject generalObject = (DBObject) metadataObject.get("general");
 			if (generalObject != null && generalObject.containsField("title")) {
@@ -321,22 +322,56 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 							&& contributeObject.containsField("role")) {
 						DBObject roleObject = (DBObject) contributeObject
 								.get("role");
+
 						if (roleObject.containsField("value")) {
 							String value = (String) roleObject.get("value");
-							if (StringUtils.equals(value, "author")
-									|| StringUtils.equals(value, "auteur")) {
-								if (contributeObject.containsField("entity")) {
-									authors.add((String) contributeObject
-											.get("entity"));
+							// No need to publish date of contributions at this
+							// time
+							// String date = "";
+							// if (contributeObject.containsField("date")) {
+							// try {
+							// DBObject dateObject = (DBObject) contributeObject
+							// .get("date");
+							// if (dateObject.containsField("dateTime")) {
+							// date = (String) dateObject
+							// .get("dateTime");
+							// }
+							// } catch (ClassCastException e) {
+							// // nothing to do : unable to parse date
+							// // informations
+							// }
+							// }
+							ArrayList<BasicDBObject> entitiesObjects = new ArrayList<BasicDBObject>();
+							ArrayList<String> entities = new ArrayList<String>();
+							if (contributeObject.containsField("entity")) {
+								try {
+									entitiesObjects = (ArrayList<BasicDBObject>) contributeObject
+											.get("entity");
+									for (BasicDBObject entityObject : entitiesObjects) {
+										entities.add(entityObject.toString());
+									}
+								} catch (ClassCastException e) {
+									entitiesObjects = new ArrayList<BasicDBObject>();
+									String entityObject = (String) contributeObject
+											.get("entity");
+									entities.add(entityObject);
 								}
 							}
-							if (StringUtils.equals(value, "publisher")
-									|| StringUtils.equals(value, "éditeur")) {
-								if (contributeObject.containsField("entity")) {
-									editors.add((String) contributeObject
-											.get("entity"));
+
+							for (String entity : entities) {
+								if (StringUtils.equals(value, "author")
+										|| StringUtils.equals(value, "auteur")) {
+									authors.add(entity);
+
+								} else {
+
+									Pair<String, String> contributor = new Pair<String, String>(
+											value, entity);
+									contributors.add(contributor);
+
 								}
 							}
+
 						}
 					}
 				}
@@ -382,9 +417,14 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 			mdProperties.put(MetadataProperties.author.toString() + i,
 					authors.get(i));
 		}
-		for (int i = 0; i < editors.size(); i++) {
-			mdProperties.put(MetadataProperties.editor.toString() + i,
-					editors.get(i));
+		for (int i = 0; i < contributors.size(); i++) {
+			Pair<String, String> contributor = contributors.get(i);
+			String inlineContributor = new StringBuilder()
+					.append(contributor.getKey())
+					.append(MetadataProperties.separator)
+					.append(contributor.getValue()).toString();
+			mdProperties.put(MetadataProperties.contributor.toString() + i,
+					inlineContributor);
 		}
 		return mdProperties;
 	}

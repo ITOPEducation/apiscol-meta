@@ -339,15 +339,13 @@ public class XMLRepresentationBuilder extends
 				}
 
 				int authorNumber = 0;
-				Element authorElement = XMLDocument.createElement("author");
-				rootElement.appendChild(authorElement);
-				Element nameElement = XMLDocument.createElement("name");
-				authorElement.appendChild(nameElement);
+
 				// FIXME multiple authors/editors ignored
 				while (!StringUtils.isEmpty(mdProperties
 						.get(MetadataProperties.author.toString()
 								+ authorNumber))) {
-
+					Element authorElement = XMLDocument.createElement("author");
+					rootElement.appendChild(authorElement);
 					String inlineVcard = mdProperties
 							.get(MetadataProperties.author.toString()
 									+ authorNumber);
@@ -355,10 +353,30 @@ public class XMLRepresentationBuilder extends
 					try {
 						VCard vcardParsed = parseVCard(inlineVcard);
 
-						if (vcardParsed != null
-								&& vcardParsed.getName() != null)
-							nameElement.setTextContent(vcardParsed.getName()
-									.getFamilyName());
+						if (vcardParsed != null) {
+							if (vcardParsed.getName() != null) {
+								Element nameElement = XMLDocument
+										.createElement("name");
+								authorElement.appendChild(nameElement);
+								nameElement.setTextContent(vcardParsed
+										.getName().getFamilyName());
+
+							}
+							if (vcardParsed.getOrganizations() != null) {
+								Iterator<String> organizations = vcardParsed
+										.getOrganizations().getOrganizations();
+
+								if (organizations.hasNext()) {
+									Element organizationElement = XMLDocument
+											.createElement("apiscol:organization");
+									authorElement
+											.appendChild(organizationElement);
+									organizationElement
+											.setTextContent(organizations
+													.next().toString());
+								}
+							}
+						}
 
 					} catch (DOMException e) {
 						// TODO Auto-generated catch block
@@ -370,28 +388,58 @@ public class XMLRepresentationBuilder extends
 
 					authorNumber++;
 				}
-				int editorNumber = 0;
-				Element editorElement = XMLDocument
-						.createElement("contributor");
-				rootElement.appendChild(editorElement);
-				Element editorNameElement = XMLDocument.createElement("name");
-				editorElement.appendChild(editorNameElement);
+				int contributorNumber = 0;
+
 				while (!StringUtils.isEmpty(mdProperties
-						.get(MetadataProperties.editor.toString()
-								+ editorNumber))) {
-					String inlineVcard = mdProperties
-							.get(MetadataProperties.editor.toString()
-									+ editorNumber);
+						.get(MetadataProperties.contributor.toString()
+								+ contributorNumber))) {
+
+					String inlineContributor = mdProperties
+							.get(MetadataProperties.contributor.toString()
+									+ contributorNumber);
+					String[] splitted = inlineContributor
+							.split(MetadataProperties.separator.toString());
+					if (splitted.length != 2)
+						continue;
+					Element contributorElement = XMLDocument
+							.createElement("contributor");
+					rootElement.appendChild(contributorElement);
+
+					Element roleElement = XMLDocument
+							.createElement("apiscol:role");
+					contributorElement.appendChild(roleElement);
+					String role = splitted[0];
+					String inlineVcard = splitted[1];
+					roleElement.setTextContent(role);
 					try {
 						VCard vcardParsed = parseVCard(inlineVcard);
 
-						if (vcardParsed != null
-								&& vcardParsed.getOrganizations() != null) {
-							Iterator<String> organizations = vcardParsed
-									.getOrganizations().getOrganizations();
-							if (organizations.hasNext())
-								editorNameElement.setTextContent(organizations
-										.next().toString());
+						if (vcardParsed != null) {
+
+							if (vcardParsed.getOrganizations() != null) {
+								Iterator<String> organizations = vcardParsed
+										.getOrganizations().getOrganizations();
+
+								if (organizations.hasNext()) {
+									Element organizationElement = XMLDocument
+											.createElement("apiscol:organization");
+									contributorElement
+											.appendChild(organizationElement);
+									organizationElement
+											.setTextContent(organizations
+													.next().toString());
+								}
+							}
+							if (vcardParsed.getName() != null) {
+								Element contributorNameElement = XMLDocument
+										.createElement("name");
+								contributorElement
+										.appendChild(contributorNameElement);
+								String name = vcardParsed.getName()
+										.getFamilyName();
+								contributorNameElement.setTextContent(name);
+							}
+
 						}
 
 					} catch (DOMException e) {
@@ -402,7 +450,7 @@ public class XMLRepresentationBuilder extends
 						e.printStackTrace();
 					}
 
-					editorNumber++;
+					contributorNumber++;
 				}
 
 			} catch (InvalidProvidedMetadataFileException e) {

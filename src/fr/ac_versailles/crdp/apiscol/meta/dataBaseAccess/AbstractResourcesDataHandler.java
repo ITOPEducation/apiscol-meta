@@ -14,8 +14,8 @@ public abstract class AbstractResourcesDataHandler implements
 	public enum MetadataProperties {
 		title("title"), description("description"), contentUrl("content-url"), contentRestUrl(
 				"content-rest-url"), contentMime("content-mime"), icon("icon"), author(
-				"author"), editor("editor"), aggregationLevel(
-				"agregation-level");
+				"author"), contributor("contributor"), aggregationLevel(
+				"agregation-level"), separator("::::");
 		private String value;
 
 		private MetadataProperties(String value) {

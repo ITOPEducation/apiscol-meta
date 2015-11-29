@@ -450,8 +450,6 @@ public class ResourceDirectoryInterface {
 			Element locationElement = getOrCreateChild(technicalElement,
 					"location", lomNs);
 			Element sizeElem = getOrCreateChild(technicalElement, "size", lomNs);
-			locationElement.setText("");
-			sizeElem.setText("0");
 			setLanguageToDefaultIfNotSpecified(descriptionElement);
 			cleanString(descriptionElement);
 			cleanString(coverageElement);

@@ -337,10 +337,26 @@ public class XMLRepresentationBuilder extends
 							.get(MetadataProperties.contentMime.toString()));
 					rootElement.appendChild(contentElement);
 				}
+				
+				int educationalResourceTypeNumber = 0;
+
+				while (!StringUtils.isEmpty(mdProperties
+						.get(MetadataProperties.educationalResourceType
+								.toString() + educationalResourceTypeNumber))) {
+					Element educationalresourceTypeElement = XMLDocument
+							.createElement("apiscol:educational_resource_type");
+					educationalresourceTypeElement
+							.setTextContent(mdProperties
+									.get(MetadataProperties.educationalResourceType
+											.toString()
+											+ educationalResourceTypeNumber));
+					rootElement.appendChild(educationalresourceTypeElement);
+
+					educationalResourceTypeNumber++;
+				}
 
 				int authorNumber = 0;
 
-				// FIXME multiple authors/editors ignored
 				while (!StringUtils.isEmpty(mdProperties
 						.get(MetadataProperties.author.toString()
 								+ authorNumber))) {
@@ -451,16 +467,6 @@ public class XMLRepresentationBuilder extends
 					}
 
 					contributorNumber++;
-				}
-				if (!StringUtils.isBlank(mdProperties
-						.get(MetadataProperties.educationalResourceType
-								.toString()))) {
-					Element educationalresourceTypeElement = XMLDocument
-							.createElement("apiscol:educational_resource_type");
-					educationalresourceTypeElement.setTextContent(mdProperties
-							.get(MetadataProperties.educationalResourceType
-									.toString()));
-					rootElement.appendChild(educationalresourceTypeElement);
 				}
 
 			} catch (InvalidProvidedMetadataFileException e) {

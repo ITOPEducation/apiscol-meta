@@ -212,7 +212,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		String contentUrl = "";
 		String contentRestUrl = "";
 		String contentMime = "";
-		String educationalResourceType = "";
+		List<String> educationalResourceTypes = new ArrayList<String>();
 		List<String> authors = new ArrayList<String>();
 		List<Pair<String, String>> contributors = new ArrayList<Pair<String, String>>();
 		if (metadataObject != null && metadataObject.containsField("general")) {
@@ -321,23 +321,27 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 					if (educationalObject != null
 							&& educationalObject
 									.containsField("learningResourceType")) {
-						DBObject learningResourceTypeObject;
-						if (educationalObject.get("learningResourceType") instanceof BasicDBList) {
-							BasicDBList learningResourceTypeObjects = (BasicDBList) educationalObject
+						ArrayList<BasicDBObject> learningResourceTypeObjects;
+						try {
+							learningResourceTypeObjects = (ArrayList<BasicDBObject>) educationalObject
 									.get("learningResourceType");
-							learningResourceTypeObject = (DBObject) learningResourceTypeObjects
-									.get(0);
-						} else {
-							learningResourceTypeObject = (DBObject) educationalObject
+						} catch (ClassCastException e) {
+							learningResourceTypeObjects = new ArrayList<BasicDBObject>();
+							BasicDBObject learningResourceTypeObject = (BasicDBObject) educationalObject
 									.get("learningResourceType");
+							learningResourceTypeObjects
+									.add(learningResourceTypeObject);
 						}
-						if (learningResourceTypeObject.containsField("value")) {
-							educationalResourceType = (String) learningResourceTypeObject
-									.get("value");
-							if (!StringUtils.isEmpty(educationalResourceType))
-								break;
+						for (BasicDBObject learningResourceTypeObject : learningResourceTypeObjects) {
+							if (learningResourceTypeObject
+									.containsField("value")) {
+								educationalResourceTypes
+										.add((String) learningResourceTypeObject
+												.get("value"));
 
+							}
 						}
+
 					}
 				}
 		}
@@ -445,8 +449,11 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		mdProperties.put(MetadataProperties.title.toString(), title);
 		mdProperties
 				.put(MetadataProperties.description.toString(), description);
-		mdProperties.put(MetadataProperties.educationalResourceType.toString(),
-				educationalResourceType);
+		for (int i = 0; i < educationalResourceTypes.size(); i++) {
+			mdProperties.put(
+					MetadataProperties.educationalResourceType.toString() + i,
+					educationalResourceTypes.get(i));
+		}
 		mdProperties.put(MetadataProperties.icon.toString(), icon);
 		mdProperties.put(MetadataProperties.contentUrl.toString(), contentUrl);
 		mdProperties

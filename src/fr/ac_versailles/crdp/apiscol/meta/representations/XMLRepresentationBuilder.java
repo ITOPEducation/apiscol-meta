@@ -452,6 +452,16 @@ public class XMLRepresentationBuilder extends
 
 					contributorNumber++;
 				}
+				if (!StringUtils.isBlank(mdProperties
+						.get(MetadataProperties.educationalResourceType
+								.toString()))) {
+					Element educationalresourceTypeElement = XMLDocument
+							.createElement("apiscol:educational_resource_type");
+					educationalresourceTypeElement.setTextContent(mdProperties
+							.get(MetadataProperties.educationalResourceType
+									.toString()));
+					rootElement.appendChild(educationalresourceTypeElement);
+				}
 
 			} catch (InvalidProvidedMetadataFileException e) {
 				logger.error(String

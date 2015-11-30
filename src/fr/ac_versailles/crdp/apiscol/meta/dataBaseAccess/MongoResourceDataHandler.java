@@ -212,6 +212,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		String contentUrl = "";
 		String contentRestUrl = "";
 		String contentMime = "";
+		String educationalResourceType = "";
 		List<String> authors = new ArrayList<String>();
 		List<Pair<String, String>> contributors = new ArrayList<Pair<String, String>>();
 		if (metadataObject != null && metadataObject.containsField("general")) {
@@ -296,6 +297,45 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 
 								}
 							}
+
+						}
+					}
+				}
+		}
+		if (metadataObject != null
+				&& metadataObject.containsField("educational")) {
+			ArrayList<BasicDBObject> educationalObjects;
+			try {
+				educationalObjects = (ArrayList<BasicDBObject>) metadataObject
+						.get("educational");
+			} catch (ClassCastException e) {
+				educationalObjects = new ArrayList<BasicDBObject>();
+				BasicDBObject educationalObject = (BasicDBObject) metadataObject
+						.get("educational");
+				educationalObjects.add(educationalObject);
+			}
+			// no support for multiple educational tags.
+			// we keep the first one we meet
+			if (educationalObjects != null)
+				for (BasicDBObject educationalObject : educationalObjects) {
+					if (educationalObject != null
+							&& educationalObject
+									.containsField("learningResourceType")) {
+						DBObject learningResourceTypeObject;
+						if (educationalObject.get("learningResourceType") instanceof BasicDBList) {
+							BasicDBList learningResourceTypeObjects = (BasicDBList) educationalObject
+									.get("learningResourceType");
+							learningResourceTypeObject = (DBObject) learningResourceTypeObjects
+									.get(0);
+						} else {
+							learningResourceTypeObject = (DBObject) educationalObject
+									.get("learningResourceType");
+						}
+						if (learningResourceTypeObject.containsField("value")) {
+							educationalResourceType = (String) learningResourceTypeObject
+									.get("value");
+							if (!StringUtils.isEmpty(educationalResourceType))
+								break;
 
 						}
 					}
@@ -405,6 +445,8 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		mdProperties.put(MetadataProperties.title.toString(), title);
 		mdProperties
 				.put(MetadataProperties.description.toString(), description);
+		mdProperties.put(MetadataProperties.educationalResourceType.toString(),
+				educationalResourceType);
 		mdProperties.put(MetadataProperties.icon.toString(), icon);
 		mdProperties.put(MetadataProperties.contentUrl.toString(), contentUrl);
 		mdProperties

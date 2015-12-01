@@ -61,12 +61,20 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 			keywords = StringUtils.join(words, " ");
 		}
 		StringBuilder queryBuilder = new StringBuilder();
+		StringBuilder boostQueryBuilder = new StringBuilder();
 		queryBuilder.append(keywords);
 		for (int i = 0; i < supplementsIdentifiers.length; i++) {
 			queryBuilder.append(" OR id:\"").append(supplementsIdentifiers[i])
-			/* .replace("/", "\\/")) */.append("\"");
+					.append("\"^0");
+			if (i > 0) {
+				boostQueryBuilder.append(" OR ");
+			}
+			boostQueryBuilder.append("id:\"").append(supplementsIdentifiers[i])
+					.append("\"");
 		}
 		parameters.set("q", queryBuilder.toString());
+//		parameters.set("bq", boostQueryBuilder.toString());
+//		System.out.println(boostQueryBuilder.toString());
 		parameters.set("qt", solrSearchPath);
 		if (disableHighlighting)
 			parameters.set("hl", false);

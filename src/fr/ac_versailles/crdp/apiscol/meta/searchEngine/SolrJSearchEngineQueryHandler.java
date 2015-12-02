@@ -70,11 +70,10 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 				boostQueryBuilder.append(" OR ");
 			}
 			boostQueryBuilder.append("id:\"").append(supplementsIdentifiers[i])
-					.append("\"");
+					.append("\"^0.001");
 		}
 		parameters.set("q", queryBuilder.toString());
-//		parameters.set("bq", boostQueryBuilder.toString());
-//		System.out.println(boostQueryBuilder.toString());
+		parameters.set("bq", boostQueryBuilder.toString());
 		parameters.set("qt", solrSearchPath);
 		if (disableHighlighting)
 			parameters.set("hl", false);

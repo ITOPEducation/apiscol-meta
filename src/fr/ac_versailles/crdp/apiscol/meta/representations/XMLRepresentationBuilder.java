@@ -337,7 +337,7 @@ public class XMLRepresentationBuilder extends
 							.get(MetadataProperties.contentMime.toString()));
 					rootElement.appendChild(contentElement);
 				}
-				
+
 				int educationalResourceTypeNumber = 0;
 
 				while (!StringUtils.isEmpty(mdProperties
@@ -959,8 +959,9 @@ public class XMLRepresentationBuilder extends
 						maintenanceRecoveryId).toString());
 		linkElement.setAttribute("rel", "self");
 		linkElement.setAttribute("type", "application/atom+xml");
-		LinkedList<Pair<String, MessageTypes>> messages = maintenanceRegistry
-				.getMessages(maintenanceRecoveryId);
+		@SuppressWarnings("unchecked")
+		LinkedList<Pair<String, MessageTypes>> messages = (LinkedList<Pair<String, MessageTypes>>) maintenanceRegistry
+				.getMessages(maintenanceRecoveryId).clone();
 		Iterator<Pair<String, MessageTypes>> it = messages.iterator();
 		rootElement.appendChild(stateElement);
 		rootElement.appendChild(linkElement);
@@ -981,6 +982,7 @@ public class XMLRepresentationBuilder extends
 			rootElement.appendChild(messageElement);
 
 		}
+
 		Element processedElement = report.createElement("apiscol:processed");
 		processedElement.setTextContent(String.valueOf(maintenanceRegistry
 				.getPercentageOfDocumentProcessed()));

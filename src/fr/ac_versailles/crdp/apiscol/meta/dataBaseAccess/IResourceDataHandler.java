@@ -1,6 +1,8 @@
 package fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -8,6 +10,7 @@ import org.w3c.dom.Document;
 
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.database.InexistentResourceInDatabaseException;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
 
 public interface IResourceDataHandler {
@@ -32,5 +35,7 @@ public interface IResourceDataHandler {
 
 	Node getMetadataHierarchyFromRoot(String rootId, UriInfo uriInfo)
 			throws DBAccessException;
+
+	HashMap<String, ArrayList<Modification>> getModificationsToApplyToRelatedResources(String url) throws DBAccessException;
 
 }

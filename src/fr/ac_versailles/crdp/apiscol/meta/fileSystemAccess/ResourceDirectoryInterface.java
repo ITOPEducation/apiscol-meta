@@ -579,7 +579,8 @@ public class ResourceDirectoryInterface {
 
 	public static boolean deleteMetadataFile(String metadataId)
 			throws MetadataNotFoundException {
-		System.gc();
+		//TODO evaluate pertinency on windows
+//		System.gc();
 		File metadataFile = new File(getFilePath(metadataId));
 		File jsonpMetadataFile = new File(getFilePath(metadataId, "js"));
 		File parent = metadataFile.getParentFile();
@@ -891,6 +892,7 @@ public class ResourceDirectoryInterface {
 
 	private static void addRelation(RelationKinds kind, Source source,
 			Document doc, URI uri) {
+		//TODO prevent duplicates
 		Element rootNode = doc.getRootElement();
 		Element relation = createNewRelation(rootNode);
 		modifyRelation(relation, source, kind, uri);

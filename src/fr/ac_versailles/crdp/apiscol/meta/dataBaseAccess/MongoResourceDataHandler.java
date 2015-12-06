@@ -2,6 +2,7 @@ package fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.w3c.dom.Document;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
@@ -22,7 +24,9 @@ import com.mongodb.util.JSON;
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.database.InexistentResourceInDatabaseException;
 import fr.ac_versailles.crdp.apiscol.database.MongoUtils;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser.Differencies;
 import fr.ac_versailles.crdp.apiscol.meta.references.RelationKinds;
 import fr.ac_versailles.crdp.apiscol.utils.JSonUtils;
 
@@ -34,8 +38,9 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 	}
 
 	public enum DBKeys {
-		id("_id"), mainFile("main"), type("type"), metadata("metadata"), url(
-				"url"), etag("etag"), deadLink("dead_link");
+		id("_id"), relationEntry("relation.resource.identifier.entry"), mainFile(
+				"main"), type("type"), metadata("metadata"), url("url"), etag(
+				"etag"), deadLink("dead_link"), relation("relation");
 		private String value;
 
 		private DBKeys(String value) {
@@ -46,6 +51,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		public String toString() {
 			return value;
 		}
+
 	}
 
 	public enum AggregationLevels {
@@ -495,6 +501,110 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		query.put(DBKeys.id.toString(), metadataId);
 		try {
 			return metadataCollection.findOne(query);
+		} catch (MongoException e) {
+			String message = "Error while trying to read in metadata collection "
+					+ e.getMessage();
+			logger.error(message);
+			throw new DBAccessException(message);
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public HashMap<String, ArrayList<Modification>> getModificationsToApplyToRelatedResources(
+			String url) throws DBAccessException {
+		BasicDBObject query = new BasicDBObject();
+		BasicDBObject fields = new BasicDBObject(DBKeys.id.toString(), true)
+				.append(DBKeys.relation.toString(), true);
+		query.put(DBKeys.relationEntry.toString(), url);
+		try {
+			DBCursor cursor = metadataCollection.find(query, fields);
+			HashMap<String, ArrayList<Modification>> modifications = new HashMap<String, ArrayList<Modification>>();
+			Iterator<DBObject> it = cursor.iterator();
+			String relatedResourceId = null;
+			while (it.hasNext()) {
+				DBObject metadataObject = (DBObject) it.next();
+				if (metadataObject != null
+						&& metadataObject.containsField(DBKeys.id.toString())) {
+					relatedResourceId = (String) metadataObject.get(DBKeys.id
+							.toString());
+
+				}
+				if (StringUtils.isEmpty(relatedResourceId)) {
+					continue;
+				}
+				if (metadataObject != null
+						&& metadataObject.containsField("relation")) {
+					ArrayList<BasicDBObject> relationsObject;
+					try {
+						relationsObject = (ArrayList<BasicDBObject>) metadataObject
+								.get("relation");
+					} catch (ClassCastException e) {
+						relationsObject = new ArrayList<BasicDBObject>();
+						BasicDBObject relationObject = (BasicDBObject) metadataObject
+								.get("relation");
+						relationsObject.add(relationObject);
+					}
+					if (relationsObject != null)
+						for (BasicDBObject relationObject : relationsObject) {
+							if (relationObject != null
+									&& relationObject.containsField("kind")) {
+								DBObject kindObject = (DBObject) relationObject
+										.get("kind");
+								if (kindObject.containsField("value")) {
+									String relation = (String) kindObject
+											.get("value");
+									if (relationObject
+											.containsField("resource")) {
+										DBObject resourceObject = (DBObject) relationObject
+												.get("resource");
+										if (resourceObject
+												.containsField("identifier")) {
+											DBObject identifierObject = (DBObject) resourceObject
+													.get("identifier");
+											if (identifierObject
+													.containsField("entry")) {
+												String childUri = (String) identifierObject
+														.get("entry");
+												if (StringUtils.equals(
+														childUri, url)) {
+													if (!modifications
+															.containsKey(relatedResourceId)) {
+														modifications
+																.put(relatedResourceId,
+																		new ArrayList<Modification>());
+													}
+													RelationKinds relationKind = RelationKinds
+															.getFromString(relation
+																	.trim());
+													if (relationKind != null) {
+														Modification modification = new Modification(
+																Differencies.removed,
+																relationKind,
+																url);
+														if (!modifications
+																.get(relatedResourceId)
+																.contains(
+																		modification)) {
+															modifications
+																	.get(relatedResourceId)
+																	.add(modification);
+														}
+													}
+												}
+											}
+										}
+
+									}
+
+								}
+							}
+						}
+
+				}
+			}
+			return modifications;
 		} catch (MongoException e) {
 			String message = "Error while trying to read in metadata collection "
 					+ e.getMessage();

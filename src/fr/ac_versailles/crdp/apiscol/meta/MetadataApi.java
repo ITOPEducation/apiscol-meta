@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
@@ -661,6 +660,16 @@ public class MetadataApi extends ApiscolApi {
 
 	}
 
+	private HashMap<String, ArrayList<Modification>> getModificationsToApplyToRelatedResources(
+			String url) throws DBAccessException, MetadataNotFoundException {
+		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
+				.setDbType(DBTypes.mongoDB)
+				.setParameters(getDbConnexionParameters()).build();
+		return resourceDataHandler
+				.getModificationsToApplyToRelatedResources(url);
+
+	}
+
 	@PUT
 	@Path("/{mdid}/technical_infos")
 	@Produces({ MediaType.APPLICATION_ATOM_XML, MediaType.APPLICATION_XML })
@@ -1255,7 +1264,8 @@ public class MetadataApi extends ApiscolApi {
 			@QueryParam(value = "format") final String format)
 			throws MetadataNotFoundException,
 			IncorrectMetadataKeySyntaxException, InvalidEtagException,
-			DBAccessException, DeletionNotAllowedException {
+			DBAccessException, DeletionNotAllowedException, JDOMException,
+			IOException, URISyntaxException {
 		checkMdidSyntax(metadataId);
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
@@ -1274,6 +1284,9 @@ public class MetadataApi extends ApiscolApi {
 				checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
 						metadataId);
 				String url = rb.getMetadataUri(uriInfo, metadataId);
+				HashMap<String, ArrayList<Modification>> modificationsToApplyToRelatedResources = getModificationsToApplyToRelatedResources(url);
+				ResourceDirectoryInterface.applyChanges(
+						modificationsToApplyToRelatedResources, uriInfo);
 				boolean successFullFileDeletion = ResourceDirectoryInterface
 						.deleteMetadataFile(metadataId);
 
@@ -1300,6 +1313,8 @@ public class MetadataApi extends ApiscolApi {
 					}
 
 				}
+				refresModifiedMetadataInDatabase(
+						modificationsToApplyToRelatedResources, uriInfo);
 				if (successFullFileDeletion) {
 					try {
 						searchEngineQueryHandler.processDeleteQuery(url);
@@ -1326,8 +1341,10 @@ public class MetadataApi extends ApiscolApi {
 								.entity(warnings.toString())
 								.type(MediaType.TEXT_PLAIN);
 				}
-				if (successFullFileDeletion)
+				if (successFullFileDeletion) {
 					deleteMetadataEntryInDatabase(metadataId);
+
+				}
 
 				if (response == null) {
 
@@ -1435,14 +1452,7 @@ public class MetadataApi extends ApiscolApi {
 				HashMap<String, ArrayList<Modification>> modifications = HierarchyAnalyser
 						.getModifications();
 				ResourceDirectoryInterface.applyChanges(modifications, uriInfo);
-				Iterator<String> metadataIterator = modifications.keySet()
-						.iterator();
-				while (metadataIterator.hasNext()) {
-					String metadataUri = (String) metadataIterator.next();
-					String mdid = metadataUri.replaceAll(uriInfo.getBaseUri()
-							.toString(), "");
-					refreshMetadata(mdid, true, false, true);
-				}
+				refresModifiedMetadataInDatabase(modifications, uriInfo);
 
 				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 						.setDbType(DBTypes.mongoDB)
@@ -1465,6 +1475,20 @@ public class MetadataApi extends ApiscolApi {
 							metadataId));
 		}
 		return response.build();
+	}
+
+	private void refresModifiedMetadataInDatabase(
+			HashMap<String, ArrayList<Modification>> modifications,
+			UriInfo uriInfo) throws DBAccessException,
+			MetadataNotFoundException {
+		Iterator<String> metadataIterator = modifications.keySet().iterator();
+		while (metadataIterator.hasNext()) {
+			String metadataUri = (String) metadataIterator.next();
+			String mdid = metadataUri.replaceAll(uriInfo.getBaseUri()
+					.toString(), "");
+			refreshMetadata(mdid, true, false, true);
+		}
+
 	}
 
 	private void refreshMetadata(String metadataId, boolean takeCareOfDatabase,

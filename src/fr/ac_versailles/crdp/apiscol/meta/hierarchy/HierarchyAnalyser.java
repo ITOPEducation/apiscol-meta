@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.common.util.Pair;
 
 import com.sun.jersey.server.impl.cdi.SyntheticQualifier;
@@ -109,8 +112,8 @@ public class HierarchyAnalyser {
 
 	private static void registerModification(
 			HashMap<String, ArrayList<Modification>> modifications,
-			String mdid1, Differencies differenceType, RelationKinds relation,
-			String mdid2) {
+			final String mdid1, Differencies differenceType,
+			RelationKinds relation, final String mdid2) {
 		if (!modifications.containsKey(mdid1))
 			modifications.put(mdid1, new ArrayList<Modification>());
 		Modification modification = new Modification(differenceType, relation,
@@ -122,5 +125,24 @@ public class HierarchyAnalyser {
 
 	public static HashMap<String, ArrayList<Modification>> getModifications() {
 		return modifications;
+	}
+
+	public static void removeHostPartFromUris(Node tree, UriInfo uriInfo) {
+		String mdid = tree.getMdid();
+		if (StringUtils.contains(mdid, uriInfo.getBaseUri().toString())) {
+			mdid = mdid.replaceAll(uriInfo.getBaseUri().toString(), "");
+			tree.setMdid(mdid);
+		}
+
+		LinkedList<Node> children = tree.getChildren();
+		if (null == children) {
+			return;
+		}
+		Iterator<Node> it = children.iterator();
+		while (it.hasNext()) {
+			Node node = (Node) it.next();
+			removeHostPartFromUris(node, uriInfo);
+		}
+
 	}
 }

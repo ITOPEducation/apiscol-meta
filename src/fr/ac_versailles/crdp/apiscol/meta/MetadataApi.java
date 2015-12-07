@@ -212,7 +212,6 @@ public class MetadataApi extends ApiscolApi {
 	 * @throws MetadataNotFoundException
 	 */
 	@POST
-	@Path("/")
 	@Produces({ MediaType.APPLICATION_ATOM_XML, MediaType.APPLICATION_XML })
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response createMetadata(
@@ -944,7 +943,6 @@ public class MetadataApi extends ApiscolApi {
 	 * @throws InvalidMetadataListException
 	 */
 	@GET
-	@Path("/")
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_ATOM_XML,
 			MediaType.TEXT_HTML, MediaType.APPLICATION_XHTML_XML })
 	public Response getMetadataList(

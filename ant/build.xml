@@ -37,15 +37,15 @@
 		</delete>
 	</target>
 	<target name="resolve" depends="clean">
+		<mkdir dir="report" />
 		<ivy:resolve file="${ivy.file}" conf="meta">
 		</ivy:resolve>
-		<ivy:retrieve sync="true" type="jar,bundle"
-			pattern="${libs.dir}/[artifact]-[revision].[ext]" conf="meta" />
+		<ivy:report todir="report" />
+		<ivy:retrieve sync="true" type="jar,bundle" pattern="${libs.dir}/[artifact]-[revision].[ext]" conf="meta" />
 	</target>
 	<target name="compile" depends="resolve">
 		<mkdir dir="${build.dir}" />
-		<javac srcdir="${src.dir}" destdir="${build.dir}"
-			includeantruntime="false" debug="true">
+		<javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false" debug="true">
 			<classpath>
 				<fileset dir="${libs.dir}">
 					<include name="*.jar" />

@@ -1444,7 +1444,6 @@ public class MetadataApi extends ApiscolApi {
 
 				Gson gson = gb.create();
 				Node newTree = gson.fromJson(hierarchy, Node.class);
-				HierarchyAnalyser.removeHostPartFromUris(newTree, uriInfo);
 				Node oldTree = getMetadataHierarchyFromRoot(metadataId, uriInfo);
 				HierarchyAnalyser.detectChanges(oldTree, newTree);
 

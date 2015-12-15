@@ -219,6 +219,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		String contentRestUrl = "";
 		String contentMime = "";
 		List<String> educationalResourceTypes = new ArrayList<String>();
+		List<String> keywords = new ArrayList<String>();
 		List<String> authors = new ArrayList<String>();
 		List<Pair<String, String>> contributors = new ArrayList<Pair<String, String>>();
 		if (metadataObject != null && metadataObject.containsField("general")) {
@@ -240,6 +241,24 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 				if (identifierObject.containsField("entry")) {
 					contentRestUrl = (String) identifierObject.get("entry");
 				}
+			}
+			if (generalObject != null && generalObject.containsField("keyword")) {
+				ArrayList<BasicDBObject> keywordObjects;
+				try {
+					keywordObjects = (ArrayList<BasicDBObject>) generalObject
+							.get("keyword");
+				} catch (ClassCastException e) {
+					keywordObjects = new ArrayList<BasicDBObject>();
+					BasicDBObject keywordObject = (BasicDBObject) generalObject
+							.get("keyword");
+					keywordObjects.add(keywordObject);
+				}
+				if (keywordObjects != null)
+					for (BasicDBObject keywordObject : keywordObjects) {
+
+						String keyword = getStringInUserLanguage(keywordObject);
+						keywords.add(keyword);
+					}
 			}
 			if (generalObject != null
 					&& generalObject.containsField("aggregationLevel")) {
@@ -460,6 +479,10 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 					MetadataProperties.educationalResourceType.toString() + i,
 					educationalResourceTypes.get(i));
 		}
+		for (int i = 0; i < keywords.size(); i++) {
+			mdProperties.put(MetadataProperties.keyword.toString() + i,
+					keywords.get(i));
+		}
 		mdProperties.put(MetadataProperties.icon.toString(), icon);
 		mdProperties.put(MetadataProperties.contentUrl.toString(), contentUrl);
 		mdProperties
@@ -484,9 +507,9 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		return mdProperties;
 	}
 
-	private String getStringInUserLanguage(DBObject titleObject) {
-		if (titleObject.containsField("string")) {
-			DBObject stringObject = (DBObject) titleObject.get("string");
+	private String getStringInUserLanguage(DBObject langStringObject) {
+		if (langStringObject.containsField("string")) {
+			DBObject stringObject = (DBObject) langStringObject.get("string");
 			if (stringObject.containsField("#text")) {
 				return (String) stringObject.get("#text");
 			}

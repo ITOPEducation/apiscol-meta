@@ -355,6 +355,20 @@ public class XMLRepresentationBuilder extends
 					educationalResourceTypeNumber++;
 				}
 
+				int keywordNumber = 0;
+				while (!StringUtils.isEmpty(mdProperties
+						.get(MetadataProperties.keyword.toString()
+								+ keywordNumber))) {
+					Element keywordElement = XMLDocument
+							.createElement("apiscol:keyword");
+					keywordElement.setTextContent(mdProperties
+							.get(MetadataProperties.keyword.toString()
+									+ keywordNumber));
+					rootElement.appendChild(keywordElement);
+
+					keywordNumber++;
+				}
+
 				int authorNumber = 0;
 
 				while (!StringUtils.isEmpty(mdProperties

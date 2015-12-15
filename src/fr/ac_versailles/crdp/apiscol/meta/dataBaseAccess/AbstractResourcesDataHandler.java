@@ -12,7 +12,7 @@ public abstract class AbstractResourcesDataHandler implements
 	protected static Logger logger;
 
 	public enum MetadataProperties {
-		title("title"), description("description"), contentUrl("content-url"), contentRestUrl(
+		title("title"), description("description"), keyword("keyword"), contentUrl("content-url"), contentRestUrl(
 				"content-rest-url"), contentMime("content-mime"), icon("icon"), author(
 				"author"), contributor("contributor"), aggregationLevel(
 				"agregation-level"), educationalResourceType(

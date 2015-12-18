@@ -87,7 +87,7 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 			String fieldName = split[0];
 			String fieldValue = split[1];
 			parameters.addFilterQuery(String.format("{!term f=%s}%s",
-					fieldName, fieldValue));
+					fieldName.replace(' ', '_'), fieldValue));
 		}
 		for (int i = 0; i < dynamicFiltersList.size(); i++) {
 

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,9 +22,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-
-import net.sf.json.JSON;
-import net.sf.json.xml.XMLSerializer;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -42,12 +38,10 @@ import org.jdom2.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
 import fr.ac_versailles.crdp.apiscol.UsedNamespaces;
-import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser.Differencies;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.references.RelationKinds;
 import fr.ac_versailles.crdp.apiscol.meta.references.Source;
-import fr.ac_versailles.crdp.apiscol.meta.resources.ResourcesLoader;
 import fr.ac_versailles.crdp.apiscol.utils.FileUtils;
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
 
@@ -326,7 +320,6 @@ public class ResourceDirectoryInterface {
 
 	public static String getFilePath(String metadataId, String extension) {
 		StringBuilder builder = new StringBuilder();
-
 		builder = builder
 				.append(FileUtils
 						.getFilePathHierarchy(fileRepoPath, metadataId))
@@ -579,8 +572,8 @@ public class ResourceDirectoryInterface {
 
 	public static boolean deleteMetadataFile(String metadataId)
 			throws MetadataNotFoundException {
-		//TODO evaluate pertinency on windows
-//		System.gc();
+		// TODO evaluate pertinency on windows
+		// System.gc();
 		File metadataFile = new File(getFilePath(metadataId));
 		File jsonpMetadataFile = new File(getFilePath(metadataId, "js"));
 		File parent = metadataFile.getParentFile();
@@ -772,64 +765,6 @@ public class ResourceDirectoryInterface {
 		return FileUtils.getXMLFromFile(metadata);
 	}
 
-	public static List<String> registerMetadataChildren(String metadataId,
-			List<String> partsMetadataIdList, UriInfo uriInfo)
-			throws MetadataNotFoundException {
-		URI packMetadataUri = convertToUri(uriInfo, metadataId);
-		SAXBuilder builder = new SAXBuilder();
-		File partFile = null;
-		File packFile = getMetadataFile(metadataId);
-
-		List<String> otherAffectedMetadataIds = removePackRelations(metadataId,
-				uriInfo);
-		Document packXMLDoc = null;
-		FileWriter out = null;
-		try {
-			packXMLDoc = (Document) builder.build(packFile);
-
-			for (Iterator<String> iterator = partsMetadataIdList.iterator(); iterator
-					.hasNext();) {
-				String partMetadataId = iterator.next();
-				URI partMetadataUri = convertToUri(uriInfo, partMetadataId);
-				partFile = getMetadataFile(partMetadataId);
-				Document partXMLDoc = (Document) builder.build(partFile);
-				addRelation(RelationKinds.CONTIENT, Source.LOMV10, packXMLDoc,
-						partMetadataUri);
-				addRelation(RelationKinds.FAIT_PARTIE_DE, Source.LOMV10,
-						partXMLDoc, packMetadataUri);
-				XMLOutputter xmlOutput = new XMLOutputter();
-				xmlOutput.setFormat(Format.getPrettyFormat());
-				xmlOutput.output(partXMLDoc, new FileWriter(partFile));
-			}
-			XMLOutputter xmlOutput = new XMLOutputter();
-			xmlOutput.setFormat(Format.getPrettyFormat());
-			out = new FileWriter(packFile);
-			xmlOutput.output(packXMLDoc, out);
-		} catch (MetadataNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JDOMException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			if (out != null) {
-				try {
-					out.flush();
-					out.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-		}
-
-		return otherAffectedMetadataIds;
-	}
-
 	private static URI convertToUri(UriInfo uriInfo, String metadataId) {
 		String uriString = new StringBuilder()
 				.append(uriInfo.getBaseUri().toString()).append(metadataId)
@@ -844,8 +779,8 @@ public class ResourceDirectoryInterface {
 		return null;
 	}
 
-	private static String removeBaseUri(String metadataId, UriInfo uriInfo) {
-		return metadataId.replaceAll(uriInfo.getBaseUri().toString(), "");
+	private static String removeBaseUri(String metadataId, URI baseUri) {
+		return metadataId.replaceAll(baseUri.toString(), "");
 	}
 
 	private static void deleteRelation(RelationKinds kind, Document doc, URI uri) {
@@ -892,7 +827,7 @@ public class ResourceDirectoryInterface {
 
 	private static void addRelation(RelationKinds kind, Source source,
 			Document doc, URI uri) {
-		//TODO prevent duplicates
+		// TODO prevent duplicates
 		Element rootNode = doc.getRootElement();
 		Element relation = createNewRelation(rootNode);
 		modifyRelation(relation, source, kind, uri);
@@ -990,45 +925,8 @@ public class ResourceDirectoryInterface {
 		return Collections.<String> emptyList();
 	}
 
-	public static List<String> removePackRelations(String packMetadataId,
-			UriInfo uriInfo) throws MetadataNotFoundException {
-		List<String> otherAffectedMetadataIds = new ArrayList<String>();
-		URI packMetadataUri = convertToUri(uriInfo, packMetadataId);
-		List<Element> actualRelations = null;
-		File packFile = getMetadataFile(packMetadataId);
-		File partFile = null;
-		SAXBuilder builder = new SAXBuilder();
-		Document packXMLDoc = null;
-		try {
-			packXMLDoc = (Document) builder.build(packFile);
-
-			actualRelations = getRelations(RelationKinds.CONTIENT, packXMLDoc,
-					null);
-			for (Iterator<Element> iterator = actualRelations.iterator(); iterator
-					.hasNext();) {
-				String partMetadataUri = iterator.next().getTextNormalize();
-				String partMetadataId = removeBaseUri(partMetadataUri, uriInfo);
-				otherAffectedMetadataIds.add(partMetadataId);
-				partFile = getMetadataFile(partMetadataId);
-				Document partXMLDoc = (Document) builder.build(partFile);
-				deleteRelation(RelationKinds.FAIT_PARTIE_DE, partXMLDoc,
-						packMetadataUri);
-				XMLOutputter xmlOutput = new XMLOutputter();
-				xmlOutput.setFormat(Format.getPrettyFormat());
-				xmlOutput.output(partXMLDoc, new FileWriter(partFile));
-
-			}
-			deleteRelation(RelationKinds.CONTIENT, packXMLDoc, null);
-		} catch (Exception e) {
-			logger.error("It seems impossible to parse file : " + packFile);
-			e.printStackTrace();
-		}
-
-		return otherAffectedMetadataIds;
-	}
-
 	public static void applyChanges(
-			HashMap<String, ArrayList<Modification>> hashMap, UriInfo uriInfo)
+			HashMap<String, ArrayList<Modification>> hashMap, URI baseUri)
 			throws MetadataNotFoundException, JDOMException, IOException,
 			URISyntaxException {
 		Iterator<Entry<String, ArrayList<Modification>>> metadataIterator = hashMap
@@ -1045,7 +943,7 @@ public class ResourceDirectoryInterface {
 			metadataEntry = metadataIterator.next();
 
 			String metadataUri = metadataEntry.getKey();
-			String mdid = removeBaseUri(metadataUri, uriInfo);
+			String mdid = removeBaseUri(metadataUri, baseUri);
 			xmlFile = getMetadataFile(mdid);
 			xmlDocument = (Document) builder.build(xmlFile);
 

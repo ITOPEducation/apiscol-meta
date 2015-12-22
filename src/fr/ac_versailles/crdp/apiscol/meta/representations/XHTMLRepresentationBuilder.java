@@ -3,11 +3,11 @@ package fr.ac_versailles.crdp.apiscol.meta.representations;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -36,7 +36,6 @@ public class XHTMLRepresentationBuilder extends
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -53,10 +52,10 @@ public class XHTMLRepresentationBuilder extends
 	}
 
 	@Override
-	public String getMetadataRepresentation(UriInfo uriInfo,
+	public String getMetadataRepresentation(URI baseUri,
 			String apiscolInstanceName, String metadataId,
-			boolean includeDescription,
-			boolean includeHierarchy, Map<String, String> params,
+			boolean includeDescription, boolean includeHierarchy,
+			Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException {
 
@@ -67,10 +66,8 @@ public class XHTMLRepresentationBuilder extends
 		try {
 			metadataDocument = dBuilder.parse(xmlFile);
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		InputStream xslStream = ResourcesLoader
@@ -85,56 +82,53 @@ public class XHTMLRepresentationBuilder extends
 	}
 
 	@Override
-	public String getMetadataSuccessfulDestructionReport(UriInfo uriInfo,
+	public String getMetadataSuccessfulDestructionReport(URI baseUri,
 			String apiscolInstanceName, String metadataId, String warnings) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getSuccessfullOptimizationReport(String requestedFormat,
-			UriInfo uriInfo) {
-		// TODO Auto-generated method stub
+			URI baseuri) {
 		return null;
 	}
 
 	@Override
 	public String getSuccessfulGlobalDeletionReport() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getMetadataSnippetRepresentation(UriInfo uriInfo,
+	public String getMetadataSnippetRepresentation(URI baseUri,
 			String apiscolInstanceName, String metadataId, String version) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getCompleteMetadataListRepresentation(UriInfo uriInfo,
-			String apiscolInstanceLabel, String apiscolInstanceName, int start,
-			int rows, boolean includeDescription,
+	public String getCompleteMetadataListRepresentation(URI baseUri,
+			String requestPath, String apiscolInstanceLabel,
+			String apiscolInstanceName, int start, int rows,
+			boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws DBAccessException {
-		// TODO Auto-generated method stub
 		return XMLUtils.XMLToString(innerBuilder
-				.getCompleteMetadataListRepresentation(uriInfo,
+				.getCompleteMetadataListRepresentation(baseUri, requestPath,
 						apiscolInstanceName, apiscolInstanceLabel, start, rows,
 						includeDescription, resourceDataHandler, editUri,
 						version));
 	}
 
 	@Override
-	public String selectMetadataFollowingCriterium(UriInfo uriInfo,
-			String apiscolInstanceLabel, String apiscolInstanceName,
-			ISearchEngineResultHandler handler, int start, int rows,
-			boolean includeDescription,
+	public String selectMetadataFollowingCriterium(URI baseUri,
+			String requestPath, String apiscolInstanceLabel,
+			String apiscolInstanceName, ISearchEngineResultHandler handler,
+			int start, int rows, boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws NumberFormatException, DBAccessException {
 		Document xmlResponse = innerBuilder.selectMetadataFollowingCriterium(
-				uriInfo, apiscolInstanceName, apiscolInstanceLabel, handler,
-				start, rows, true, resourceDataHandler, editUri, version);
+				baseUri, requestPath, apiscolInstanceName,
+				apiscolInstanceLabel, handler, start, rows, true,
+				resourceDataHandler, editUri, version);
 		InputStream xslStream = ResourcesLoader
 				.loadResource("xsl/metadataListXMLToHTMLTransformer.xsl");
 		if (xslStream == null) {
@@ -148,9 +142,8 @@ public class XHTMLRepresentationBuilder extends
 
 	@Override
 	public Object getMaintenanceRecoveryRepresentation(
-			Integer maintenanceRecoveryId, UriInfo uriInfo,
+			Integer maintenanceRecoveryId, URI baseUri,
 			MaintenanceRegistry maintenanceRegistry, Integer nbLines) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

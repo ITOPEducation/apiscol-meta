@@ -1,9 +1,9 @@
 package fr.ac_versailles.crdp.apiscol.meta.representations;
 
+import java.net.URI;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 import org.w3c.dom.Document;
 
@@ -31,7 +31,7 @@ public class JSonPRepresentationBuilder extends
 	}
 
 	@Override
-	public JSONWithPadding getMetadataRepresentation(UriInfo uriInfo,
+	public JSONWithPadding getMetadataRepresentation(URI baseUri,
 			String apiscolInstanceName, String resourceId,
 			boolean includeDescription, boolean includeHierarchy,
 			Map<String, String> params,
@@ -39,8 +39,8 @@ public class JSonPRepresentationBuilder extends
 			throws MetadataNotFoundException, DBAccessException {
 
 		Document xmlRepresentation = innerBuilder.getMetadataRepresentation(
-				uriInfo, apiscolInstanceName, resourceId, includeDescription,includeHierarchy,
-				params, resourceDataHandler, editUri);
+				baseUri, apiscolInstanceName, resourceId, includeDescription,
+				includeHierarchy, params, resourceDataHandler, editUri);
 		String jsonSource = JSonUtils.convertXMLToJson(xmlRepresentation);
 		JSONWithPadding metadataResponseJson = new JSONWithPadding(jsonSource,
 				"callback");
@@ -48,10 +48,10 @@ public class JSonPRepresentationBuilder extends
 	}
 
 	@Override
-	public JSONWithPadding getMetadataSnippetRepresentation(UriInfo uriInfo,
+	public JSONWithPadding getMetadataSnippetRepresentation(URI baseUri,
 			String apiscolInstanceName, String metadataId, String version) {
 		Document xmlRepresentation = (Document) innerBuilder
-				.getMetadataSnippetRepresentation(uriInfo, apiscolInstanceName,
+				.getMetadataSnippetRepresentation(baseUri, apiscolInstanceName,
 						metadataId, version);
 		String jsonSource = JSonUtils.convertXMLToJson(xmlRepresentation);
 		JSONWithPadding metadataResponseJson = new JSONWithPadding(jsonSource,
@@ -60,53 +60,46 @@ public class JSonPRepresentationBuilder extends
 	}
 
 	@Override
-	public JSONWithPadding getMetadataSuccessfulDestructionReport(
-			UriInfo uriInfo, String apiscolInstanceName, String metadataId,
-			String warnings) {
-		// TODO Auto-generated method stub
+	public JSONWithPadding getMetadataSuccessfulDestructionReport(URI baseUri,
+			String apiscolInstanceName, String metadataId, String warnings) {
 		return null;
 	}
 
 	@Override
 	public JSONWithPadding getSuccessfullOptimizationReport(
-			String requestedFormat, UriInfo uriInfo) {
-		// TODO Auto-generated method stub
+			String requestedFormat, URI baseUri) {
 		return null;
 	}
 
 	@Override
 	public JSONWithPadding getSuccessfulGlobalDeletionReport() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public JSONWithPadding selectMetadataFollowingCriterium(UriInfo uriInfo,
-			String apiscolInstanceName, String apiscolInstanceLabel,
-			ISearchEngineResultHandler handler, int start, int rows,
-			boolean includeDescription,
+	public JSONWithPadding selectMetadataFollowingCriterium(URI baseUri,
+			String requestPath, String apiscolInstanceName,
+			String apiscolInstanceLabel, ISearchEngineResultHandler handler,
+			int start, int rows, boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws NumberFormatException, DBAccessException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public JSONWithPadding getCompleteMetadataListRepresentation(
-			UriInfo uriInfo, String apiscolInstanceName,
+	public JSONWithPadding getCompleteMetadataListRepresentation(URI baseUri,
+			String requestPath, String apiscolInstanceName,
 			String apiscolInstanceLabel, int start, int rows,
 			boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws DBAccessException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object getMaintenanceRecoveryRepresentation(
-			Integer maintenanceRecoveryId, UriInfo uriInfo,
+			Integer maintenanceRecoveryId, URI baseUri,
 			MaintenanceRegistry maintenanceRegistry, Integer nbLines) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

@@ -1,9 +1,9 @@
 package fr.ac_versailles.crdp.apiscol.meta.representations;
 
+import java.net.URI;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.IResourceDataHandler;
@@ -15,45 +15,45 @@ public interface IEntitiesRepresentationBuilder<T> {
 
 	MediaType getMediaType();
 
-	String getMetadataDownloadUri(UriInfo uriInfo, String metadataId);
+	String getMetadataDownloadUri(URI baseUri, String metadataId);
 
-	T getMetadataSuccessfulDestructionReport(UriInfo uriInfo,
+	T getMetadataSuccessfulDestructionReport(URI baseUri,
 			String apiscolInstanceName, String metadataId, String warnings);
 
-	T getSuccessfullOptimizationReport(String requestedFormat, UriInfo uriInfo);
+	T getSuccessfullOptimizationReport(String requestedFormat, URI baseUri);
 
-	String getMetadataUri(UriInfo uriInfo, String metadataId);
+	String getMetadataUri(URI baseUri, String metadataId);
 
 	T getSuccessfulGlobalDeletionReport();
 
-	String getMetadataJsonpDownloadUri(UriInfo uriInfo, String metadataId);
+	String getMetadataJsonpDownloadUri(URI baseUri, String metadataId);
 
-	T getMetadataSnippetRepresentation(UriInfo uriInfo,
-			String apiscolInstanceName, String metadataId, String version);
+	T getMetadataSnippetRepresentation(URI baseUri, String apiscolInstanceName,
+			String metadataId, String version);
 
-	String getMetadataSnippetUri(UriInfo uriInfo, String metadataId);
+	String getMetadataSnippetUri(URI baseUri, String metadataId);
 
-	T selectMetadataFollowingCriterium(UriInfo uriInfo,
+	T selectMetadataFollowingCriterium(URI baseUri, String requestPath,
 			String apiscolInstanceName, String apiscolInstanceLabel,
 			ISearchEngineResultHandler handler, int start, int rows,
 			boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws NumberFormatException, DBAccessException;
 
-	T getMetadataRepresentation(UriInfo uriInfo, String apiscolInstanceName,
+	T getMetadataRepresentation(URI baseUri, String apiscolInstanceName,
 			String resourceId, boolean includeDescription,
 			boolean includeHierarchy, Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException;
 
-	T getCompleteMetadataListRepresentation(UriInfo uriInfo,
+	T getCompleteMetadataListRepresentation(URI baseUri, String requestPath,
 			String apiscolInstanceName, String apiscolInstanceLabel, int start,
 			int rows, boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws DBAccessException;
 
 	Object getMaintenanceRecoveryRepresentation(Integer maintenanceRecoveryId,
-			UriInfo uriInfo, MaintenanceRegistry maintenanceRegistry,
+			URI baseUri, MaintenanceRegistry maintenanceRegistry,
 			Integer nbLines);
 
 }

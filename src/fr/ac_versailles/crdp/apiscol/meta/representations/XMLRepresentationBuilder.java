@@ -1,6 +1,7 @@
 package fr.ac_versailles.crdp.apiscol.meta.representations;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.UriBuilder;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -58,7 +59,7 @@ public class XMLRepresentationBuilder extends
 	private int treeDepth;
 
 	@Override
-	public Document getMetadataRepresentation(UriInfo uriInfo,
+	public Document getMetadataRepresentation(URI baseUri,
 			String apiscolInstanceName, String resourceId,
 			boolean includeDescription, boolean includeHierarchy,
 			Map<String, String> params,
@@ -68,7 +69,7 @@ public class XMLRepresentationBuilder extends
 		if (includeHierarchy) {
 			treeDepth = 0;
 		}
-		addXMLSubTreeForMetadata(XMLRepresentation, XMLRepresentation, uriInfo,
+		addXMLSubTreeForMetadata(XMLRepresentation, XMLRepresentation, baseUri,
 				apiscolInstanceName, resourceId, includeDescription,
 				includeHierarchy, -1, resourceDataHandler, editUri);
 
@@ -77,7 +78,7 @@ public class XMLRepresentationBuilder extends
 	}
 
 	@Override
-	public Document getMetadataSnippetRepresentation(UriInfo uriInfo,
+	public Document getMetadataSnippetRepresentation(URI baseUri,
 			String apiscolInstanceName, String metadataId, String version) {
 		Document XMLRepresentation = createXMLDocument();
 		Element rootElement = XMLRepresentation
@@ -102,7 +103,7 @@ public class XMLRepresentationBuilder extends
 		scriptElement.appendChild(script);
 		tagElement.appendChild(XMLRepresentation
 				.createCDATASection(snippetGenerator
-						.getTagPattern(getMetadataUri(uriInfo, metadataId))));
+						.getTagPattern(getMetadataUri(baseUri, metadataId))));
 		ArrayList<OPTIONS> options = snippetGenerator.getTagOptions();
 		for (Iterator<OPTIONS> iterator = options.iterator(); iterator
 				.hasNext();) {
@@ -111,7 +112,7 @@ public class XMLRepresentationBuilder extends
 		}
 		iframeElement.appendChild(XMLRepresentation
 				.createCDATASection(snippetGenerator.getIframe(getMetadataUri(
-						uriInfo, metadataId))));
+						baseUri, metadataId))));
 		XMLRepresentation.appendChild(rootElement);
 		rootElement.appendChild(frameworkElement);
 		rootElement.appendChild(scriptElement);
@@ -137,8 +138,8 @@ public class XMLRepresentationBuilder extends
 	}
 
 	@Override
-	public Document getCompleteMetadataListRepresentation(UriInfo uriInfo,
-			final String apiscolInstanceName,
+	public Document getCompleteMetadataListRepresentation(URI baseUri,
+			String requestPath, final String apiscolInstanceName,
 			final String apiscolInstanceLabel, int start, int rows,
 			boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
@@ -149,7 +150,7 @@ public class XMLRepresentationBuilder extends
 				UsedNamespaces.ATOM.getUri(), "feed");
 		feedElement.setAttribute("length", "" + metadatasList.size());
 		addFeedInfos(response, feedElement, apiscolInstanceName,
-				apiscolInstanceLabel, uriInfo, version);
+				apiscolInstanceLabel, baseUri, requestPath, version);
 		Iterator<String> it = metadatasList.iterator();
 		int counter = -1;
 		Long maxUpdated = 0L;
@@ -163,7 +164,7 @@ public class XMLRepresentationBuilder extends
 			try {
 				maxUpdated = Math.max(
 						addXMLSubTreeForMetadata(response, feedElement,
-								uriInfo, apiscolInstanceName, metadataId,
+								baseUri, apiscolInstanceName, metadataId,
 								includeDescription, false, -1,
 								resourceDataHandler, editUri), maxUpdated);
 			} catch (MetadataNotFoundException e) {
@@ -184,14 +185,14 @@ public class XMLRepresentationBuilder extends
 	}
 
 	private void addXMLSubTreeForHierarchy(Document XMLDocument, Node node,
-			UriInfo uriInfo, String apiscolInstanceName, String resourceId,
+			URI baseUri, String apiscolInstanceName, String resourceId,
 			boolean includeDescription, int i,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws DBAccessException, MetadataNotFoundException {
 		Element rootElement = XMLDocument.createElement("apiscol:children");
 		fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node hierarchy = resourceDataHandler
-				.getMetadataHierarchyFromRoot(resourceId, uriInfo);
-		addChildren(XMLDocument, rootElement, hierarchy.getChildren(), uriInfo,
+				.getMetadataHierarchyFromRoot(resourceId, baseUri);
+		addChildren(XMLDocument, rootElement, hierarchy.getChildren(), baseUri,
 				includeDescription, resourceDataHandler, editUri,
 				apiscolInstanceName);
 		node.appendChild(rootElement);
@@ -201,7 +202,7 @@ public class XMLRepresentationBuilder extends
 			Document XMLDocument,
 			Element childrenElement,
 			LinkedList<fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node> children,
-			UriInfo uriInfo, boolean includeDescription,
+			URI baseUri, boolean includeDescription,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String apiscolInstanceName) throws MetadataNotFoundException,
 			DBAccessException {
@@ -214,9 +215,9 @@ public class XMLRepresentationBuilder extends
 		while (it.hasNext()) {
 			node = it.next();
 
-			String mdid = node.getMdid().replace(
-					uriInfo.getBaseUri().toString(), "");
-			addXMLSubTreeForMetadata(XMLDocument, childrenElement, uriInfo,
+			String mdid = node.getMdid().replace(baseUri.toString().toString(),
+					"");
+			addXMLSubTreeForMetadata(XMLDocument, childrenElement, baseUri,
 					apiscolInstanceName, mdid, includeDescription, true, -1,
 					resourceDataHandler, editUri);
 
@@ -225,11 +226,15 @@ public class XMLRepresentationBuilder extends
 	}
 
 	private Long addXMLSubTreeForMetadata(Document XMLDocument,
-			Node insertionElement, UriInfo uriInfo,
+			Node insertionElement, URI baseUri,
 			final String apiscolInstanceName, final String metadataId,
 			boolean includeDescription, boolean includeHierarchy, float score,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
+		if (StringUtils.isEmpty(metadataId)) {
+			logger.error("Atom XML subtree request bt metadata identifier is void");
+			return null;
+		}
 		Element rootElement = XMLDocument.createElement("entry");
 		Element updatedElement = XMLDocument.createElement("updated");
 		long utcTime = Long.parseLong(getEtagForMetadata(metadataId));
@@ -409,10 +414,8 @@ public class XMLRepresentationBuilder extends
 						}
 
 					} catch (DOMException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -473,10 +476,8 @@ public class XMLRepresentationBuilder extends
 						}
 
 					} catch (DOMException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -497,7 +498,7 @@ public class XMLRepresentationBuilder extends
 		if (includeHierarchy) {
 			treeDepth++;
 			if (treeDepth < MAX_TREE_DEPTH) {
-				addXMLSubTreeForHierarchy(XMLDocument, rootElement, uriInfo,
+				addXMLSubTreeForHierarchy(XMLDocument, rootElement, baseUri,
 						apiscolInstanceName, metadataId, includeDescription,
 						-1, resourceDataHandler, editUri);
 			}
@@ -507,13 +508,13 @@ public class XMLRepresentationBuilder extends
 		selfHTMLLinkElement.setAttribute("rel", "self");
 		selfHTMLLinkElement.setAttribute("type", "text/html");
 		selfHTMLLinkElement.setAttribute("href",
-				getMetadataHTMLUri(uriInfo, metadataId));
+				getMetadataHTMLUri(baseUri, metadataId));
 		rootElement.appendChild(selfHTMLLinkElement);
 		Element selfAtomXMLLinkElement = XMLDocument.createElement("link");
 		selfAtomXMLLinkElement.setAttribute("rel", "self");
 		selfAtomXMLLinkElement.setAttribute("type", "application/atom+xml");
 		selfAtomXMLLinkElement.setAttribute("href",
-				getMetadataAtomXMLUri(uriInfo, metadataId));
+				getMetadataAtomXMLUri(baseUri, metadataId));
 		rootElement.appendChild(selfAtomXMLLinkElement);
 		if (StringUtils.isNotEmpty(editUri)) {
 			Element editionLinkElement = XMLDocument.createElement("link");
@@ -528,19 +529,19 @@ public class XMLRepresentationBuilder extends
 		downloadLinkElement.setAttribute("rel", "describedby");
 		downloadLinkElement.setAttribute("type", "application/lom+xml");
 		downloadLinkElement.setAttribute("href",
-				getMetadataDownloadUri(uriInfo, metadataId));
+				getMetadataDownloadUri(baseUri, metadataId));
 		rootElement.appendChild(downloadLinkElement);
 		Element jsonDownloadLinkElement = XMLDocument.createElement("link");
 		jsonDownloadLinkElement.setAttribute("type", "application/javascript");
 		jsonDownloadLinkElement.setAttribute("rel", "describedby");
 		jsonDownloadLinkElement.setAttribute("href",
-				getMetadataJsonpDownloadUri(uriInfo, metadataId));
+				getMetadataJsonpDownloadUri(baseUri, metadataId));
 		rootElement.appendChild(jsonDownloadLinkElement);
 
 		Element snippetElement = XMLDocument
 				.createElement("apiscol:code-snippet");
 		snippetElement.setAttribute("href",
-				getMetadataSnippetUri(uriInfo, metadataId));
+				getMetadataSnippetUri(baseUri, metadataId));
 		rootElement.appendChild(snippetElement);
 		insertionElement.appendChild(rootElement);
 
@@ -582,7 +583,6 @@ public class XMLRepresentationBuilder extends
 				if (facetGroupName.equals("relation")) {
 					ArrayList<String> segments = SolrRecordsSyntaxAnalyser
 							.dynamicFacetEntrySegments(facet);
-					// TODO si ça ne marche pas
 					facetElement.setAttribute("type", segments.get(0));
 					facetElement.setAttribute("taxon", segments.get(1));
 					facetElement.setTextContent(segments.get(2));
@@ -706,7 +706,6 @@ public class XMLRepresentationBuilder extends
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -724,8 +723,8 @@ public class XMLRepresentationBuilder extends
 	}
 
 	@Override
-	public Document selectMetadataFollowingCriterium(UriInfo uriInfo,
-			final String apiscolInstanceName,
+	public Document selectMetadataFollowingCriterium(URI baseUri,
+			String requestPath, final String apiscolInstanceName,
 			final String apiscolInstanceLabel,
 			ISearchEngineResultHandler handler, int start, int rows,
 			boolean includeDescription,
@@ -737,7 +736,7 @@ public class XMLRepresentationBuilder extends
 				UsedNamespaces.ATOM.getUri(), "feed");
 
 		addFeedInfos(response, feedElement, apiscolInstanceName,
-				apiscolInstanceLabel, uriInfo, version);
+				apiscolInstanceLabel, baseUri, requestPath, version);
 		Element updatedElement = response.createElement("updated");
 		feedElement.appendChild(updatedElement);
 
@@ -760,6 +759,11 @@ public class XMLRepresentationBuilder extends
 		while (it.hasNext()) {
 			String url = it.next();
 			resultId = MetadataKeySyntax.extractMetadataIdFromUrl(url);
+			if (StringUtils.isEmpty(resultId)) {
+				logger.error("Impossible to extract metadata id from provided URI : "
+						+ url);
+				continue;
+			}
 			counter++;
 			if (counter >= rows)
 				break;
@@ -770,14 +774,13 @@ public class XMLRepresentationBuilder extends
 			try {
 				maxUpdated = Math.max(
 						addXMLSubTreeForMetadata(response, feedElement,
-								uriInfo, apiscolInstanceName, resultId,
+								baseUri, apiscolInstanceName, resultId,
 								includeDescription, false,
 								Float.parseFloat(score), resourceDataHandler,
 								editUri), maxUpdated);
 				addXMLSubTreeForResult(response, hitsElement, resultId, score,
 						snippets, apiscolInstanceName);
 			} catch (MetadataNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -807,11 +810,14 @@ public class XMLRepresentationBuilder extends
 
 	private void addFeedInfos(Document response, Element feedElement,
 			String apiscolInstanceName, String apiscolInstanceLabel,
-			UriInfo uriInfo, String version) {
+			URI baseUri, String requestPath, String version) {
 		Element linkElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "link");
 		linkElement.setAttribute("rel", "self");
-		linkElement.setAttribute("href", uriInfo.getRequestUri().toString());
+
+		String requestUri = new StringBuilder().append(baseUri.toString())
+				.append("/").append(requestPath).toString();
+		linkElement.setAttribute("href", requestUri);
 		feedElement.appendChild(linkElement);
 		Element logoElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "logo");
@@ -826,7 +832,7 @@ public class XMLRepresentationBuilder extends
 		feedElement.appendChild(iconElement);
 		Element idElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "id");
-		idElement.setTextContent(uriInfo.getBaseUri().toString());
+		idElement.setTextContent(baseUri.toString().toString());
 		feedElement.appendChild(idElement);
 		Element titleElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "title");
@@ -893,7 +899,7 @@ public class XMLRepresentationBuilder extends
 	}
 
 	@Override
-	public Document getMetadataSuccessfulDestructionReport(UriInfo uriInfo,
+	public Document getMetadataSuccessfulDestructionReport(URI baseUri,
 			String apiscolInstanceName, String metadataId, String warnings) {
 		Document report = createXMLDocument();
 		Element rootElement = report.createElement("status");
@@ -905,7 +911,7 @@ public class XMLRepresentationBuilder extends
 		Element linkElement = report.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "link");
 		linkElement.setAttribute("href",
-				getMetadataHTMLUri(uriInfo, metadataId));
+				getMetadataHTMLUri(baseUri, metadataId));
 		linkElement.setAttribute("type", "text/html");
 		linkElement.setAttribute("rel", "self");
 		Element messageElement = report.createElement("message");
@@ -921,15 +927,15 @@ public class XMLRepresentationBuilder extends
 
 	@Override
 	public Document getSuccessfullOptimizationReport(String requestedFormat,
-			UriInfo uriInfo) {
+			URI baseUri) {
 		Document report = createXMLDocument();
 		Element rootElement = report.createElement("status");
 		Element stateElement = report.createElement("state");
 		stateElement.setTextContent("done");
 		Element linkElement = report.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "link");
-		linkElement.setAttribute("href",
-				uriInfo.getBaseUri() + uriInfo.getPath());
+		linkElement
+				.setAttribute("href", baseUri.toString() + baseUri.getPath());
 		Element messageElement = report.createElement("message");
 		messageElement.setTextContent("Search engine index has been optimized");
 		rootElement.appendChild(stateElement);
@@ -958,7 +964,7 @@ public class XMLRepresentationBuilder extends
 
 	@Override
 	public synchronized Object getMaintenanceRecoveryRepresentation(
-			Integer maintenanceRecoveryId, UriInfo uriInfo,
+			Integer maintenanceRecoveryId, URI baseUri,
 			MaintenanceRegistry maintenanceRegistry, Integer nbLines) {
 		Document report = createXMLDocument();
 		Element rootElement = report.createElement("apiscol:status");
@@ -967,9 +973,10 @@ public class XMLRepresentationBuilder extends
 				.getState(maintenanceRecoveryId);
 		stateElement.setTextContent(parsingState.toString());
 		Element linkElement = report.createElement("link");
+		UriBuilder baseUriBuilder = UriBuilder.fromPath(baseUri.toString());
 		linkElement.setAttribute(
 				"href",
-				getUrlForMaintenanceRecovery(uriInfo.getBaseUriBuilder(),
+				getUrlForMaintenanceRecovery(baseUriBuilder,
 						maintenanceRecoveryId).toString());
 		linkElement.setAttribute("rel", "self");
 		linkElement.setAttribute("type", "application/atom+xml");

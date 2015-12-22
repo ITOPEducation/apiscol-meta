@@ -125,8 +125,8 @@ public class MaintenanceApi extends ApiscolApi {
 				.getRepresentationBuilder(requestedFormat, context);
 		searchEngineQueryHandler.processOptimizationQuery();
 		return Response.ok(
-				rb.getSuccessfullOptimizationReport(requestedFormat, uriInfo),
-				rb.getMediaType()).build();
+				rb.getSuccessfullOptimizationReport(requestedFormat,
+						getExternalUri()), rb.getMediaType()).build();
 	}
 
 	@POST
@@ -213,8 +213,8 @@ public class MaintenanceApi extends ApiscolApi {
 		return Response
 				.ok()
 				.entity(rb.getMaintenanceRecoveryRepresentation(
-						maintenanceRecoveryId, uriInfo, maintenanceRegistry, 0))
-				.build();
+						maintenanceRecoveryId, getExternalUri(),
+						maintenanceRegistry, 0)).build();
 	}
 
 	@GET
@@ -231,7 +231,7 @@ public class MaintenanceApi extends ApiscolApi {
 		return Response
 				.ok()
 				.entity(rb.getMaintenanceRecoveryRepresentation(urlParsingId,
-						uriInfo, maintenanceRegistry, nblines))
+						getExternalUri(), maintenanceRegistry, nblines))
 				.header("Access-Control-Allow-Origin", "*")
 				.type(rb.getMediaType()).build();
 	}

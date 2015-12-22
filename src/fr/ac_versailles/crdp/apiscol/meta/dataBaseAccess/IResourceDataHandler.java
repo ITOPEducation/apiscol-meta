@@ -1,5 +1,6 @@
 package fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +34,10 @@ public interface IResourceDataHandler {
 
 	void deleteMetadataEntry(String metadataId) throws DBAccessException;
 
-	Node getMetadataHierarchyFromRoot(String rootId, UriInfo uriInfo)
+	Node getMetadataHierarchyFromRoot(String rootId, URI baseUri)
 			throws DBAccessException;
 
-	HashMap<String, ArrayList<Modification>> getModificationsToApplyToRelatedResources(String url) throws DBAccessException;
+	HashMap<String, ArrayList<Modification>> getModificationsToApplyToRelatedResources(
+			String url) throws DBAccessException;
 
 }

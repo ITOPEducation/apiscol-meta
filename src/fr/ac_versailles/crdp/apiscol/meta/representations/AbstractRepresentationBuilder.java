@@ -1,9 +1,9 @@
 package fr.ac_versailles.crdp.apiscol.meta.representations;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 
@@ -29,39 +29,38 @@ public abstract class AbstractRepresentationBuilder<T> implements
 	}
 
 	@Override
-	public String getMetadataDownloadUri(UriInfo uriInfo, String metadataId) {
-		return String.format("%slom%s.xml", uriInfo.getBaseUri().toString(),
+	public String getMetadataDownloadUri(URI baseUri, String metadataId) {
+		return String.format("%s/lom%s.xml", baseUri.toString(),
 				FileUtils.getFilePathHierarchy("", metadataId));
 	}
 
 	@Override
-	public String getMetadataSnippetUri(UriInfo uriInfo, String metadataId) {
-		return String.format("%s/snippet", getMetadataUri(uriInfo, metadataId));
+	public String getMetadataSnippetUri(URI baseUri, String metadataId) {
+		return String.format("%s/snippet", getMetadataUri(baseUri, metadataId));
 	}
 
 	@Override
-	public String getMetadataJsonpDownloadUri(UriInfo uriInfo, String metadataId) {
-		return String.format("%slom%s.js", uriInfo.getBaseUri().toString(),
+	public String getMetadataJsonpDownloadUri(URI baseUri, String metadataId) {
+		return String.format("%s/lom%s.js", baseUri.toString().toString(),
 				FileUtils.getFilePathHierarchy("", metadataId));
 	}
 
-	protected String getMetadataAtomXMLUri(UriInfo uriInfo, String metadataId) {
+	protected String getMetadataAtomXMLUri(URI baseUri, String metadataId) {
 		return String.format("%s?format=xml",
-				getMetadataUri(uriInfo, metadataId));
+				getMetadataUri(baseUri, metadataId));
 	}
 
 	@Override
-	public String getMetadataUri(UriInfo uriInfo, String metadataId) {
-		return String.format("%s%s", uriInfo.getBaseUri().toString(),
-				metadataId);
+	public String getMetadataUri(URI baseUri, String metadataId) {
+		return String.format("%s/%s", baseUri.toString(), metadataId);
 	}
 
 	public String getMetadataEditUri(String editUri, String metadataId) {
 		return String.format("%smeta/%s", editUri, metadataId);
 	}
 
-	protected String getMetadataHTMLUri(UriInfo uriInfo, String metadataId) {
-		return getMetadataUri(uriInfo, metadataId);
+	protected String getMetadataHTMLUri(URI baseUri, String metadataId) {
+		return getMetadataUri(baseUri, metadataId);
 	}
 
 	protected String getMetadataUrn(String metadataId,

@@ -73,6 +73,7 @@ import fr.ac_versailles.crdp.apiscol.utils.TimeUtils;
 @Path("/")
 public class MetadataApi extends ApiscolApi {
 
+	private static final int FILE_DELETION_NUMBER_OF_TRIES = 5;
 	@Context
 	UriInfo uriInfo;
 	@Context
@@ -229,7 +230,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		String url = rb.getMetadataUri(uriInfo, metadataId);
+		String url = rb.getMetadataUri(getExternalUri(), metadataId);
 		if (!StringUtils.isEmpty(editUri))
 			MetadataApi.editUri = editUri;
 		try {
@@ -281,7 +282,6 @@ public class MetadataApi extends ApiscolApi {
 			try {
 				ResourceDirectoryInterface.deleteMetadataFile(metadataId);
 			} catch (MetadataNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			throw e1;
@@ -291,7 +291,6 @@ public class MetadataApi extends ApiscolApi {
 			try {
 				ResourceDirectoryInterface.deleteMetadataFile(metadataId);
 			} catch (MetadataNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			throw e1;
@@ -307,7 +306,7 @@ public class MetadataApi extends ApiscolApi {
 					.setParameters(getDbConnexionParameters()).build();
 			return Response
 					.ok()
-					.entity(rb.getMetadataRepresentation(uriInfo,
+					.entity(rb.getMetadataRepresentation(getExternalUri(),
 							apiscolInstanceName, metadataId, true, false,
 							Collections.<String, String> emptyMap(),
 							resourceDataHandler, editUri))
@@ -346,7 +345,7 @@ public class MetadataApi extends ApiscolApi {
 								metadataId));
 				checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
 						metadataId);
-				String url = rb.getMetadataUri(uriInfo, metadataId);
+				String url = rb.getMetadataUri(getExternalUri(), metadataId);
 
 				String filePath = "";
 				try {
@@ -397,9 +396,9 @@ public class MetadataApi extends ApiscolApi {
 							.setParameters(getDbConnexionParameters()).build();
 					response = Response
 							.ok()
-							.entity(rb.getMetadataRepresentation(uriInfo,
-									apiscolInstanceName, metadataId, true,
-									false,
+							.entity(rb.getMetadataRepresentation(
+									getExternalUri(), apiscolInstanceName,
+									metadataId, true, false,
 									Collections.<String, String> emptyMap(),
 									resourceDataHandler, editUri))
 							.type(rb.getMediaType());
@@ -455,7 +454,7 @@ public class MetadataApi extends ApiscolApi {
 								metadataId));
 				checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
 						metadataId);
-				String url = rb.getMetadataUri(uriInfo, metadataId);
+				String url = rb.getMetadataUri(getExternalUri(), metadataId);
 				boolean solrIsWaitingForCommit = false;
 				try {
 					ResourceDirectoryInterface.registerMetadataFile(metadataId,
@@ -590,9 +589,9 @@ public class MetadataApi extends ApiscolApi {
 							.setParameters(getDbConnexionParameters()).build();
 					response = Response
 							.ok()
-							.entity(rb.getMetadataRepresentation(uriInfo,
-									apiscolInstanceName, metadataId, true,
-									false,
+							.entity(rb.getMetadataRepresentation(
+									getExternalUri(), apiscolInstanceName,
+									metadataId, true, false,
 									Collections.<String, String> emptyMap(),
 									resourceDataHandler, editUri))
 							.type(rb.getMediaType());
@@ -629,13 +628,13 @@ public class MetadataApi extends ApiscolApi {
 
 	}
 
-	private Node getMetadataHierarchyFromRoot(String metadataId, UriInfo uriInfo)
+	private Node getMetadataHierarchyFromRoot(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 				.setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		return resourceDataHandler.getMetadataHierarchyFromRoot(metadataId,
-				uriInfo);
+				getExternalUri());
 
 	}
 
@@ -712,10 +711,8 @@ public class MetadataApi extends ApiscolApi {
 					searchEngineQueryHandler.processAddQuery(filePath);
 					searchEngineQueryHandler.processCommitQuery();
 				} catch (SearchEngineCommunicationException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (SearchEngineErrorException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} finally {
@@ -990,10 +987,9 @@ public class MetadataApi extends ApiscolApi {
 					includeDescription);
 		}
 		for (int i = 0; i < supplementsIds.length; i++) {
-			// TODO it's not very useful
 			String metadataId = MetadataKeySyntax
 					.extractMetadataIdFromUrl(supplementsIds[i]);
-			supplementsIds[i] = rb.getMetadataUri(uriInfo, metadataId);
+			supplementsIds[i] = rb.getMetadataUri(getExternalUri(), metadataId);
 		}
 		boolean disableHighlighting = false;
 		if (StringUtils.isBlank(query)) {
@@ -1042,15 +1038,15 @@ public class MetadataApi extends ApiscolApi {
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 			} catch (DBAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		return Response
-				.ok(rb.selectMetadataFollowingCriterium(uriInfo,
-						apiscolInstanceName, apiscolInstanceLabel, handler,
-						start, rows, includeDescription, resourceDataHandler,
-						editUri, version), rb.getMediaType())
+				.ok(rb.selectMetadataFollowingCriterium(getExternalUri(),
+						uriInfo.getPath(), apiscolInstanceName,
+						apiscolInstanceLabel, handler, start, rows,
+						includeDescription, resourceDataHandler, editUri,
+						version), rb.getMediaType())
 				.header("Access-Control-Allow-Origin", "*").build();
 
 	}
@@ -1071,14 +1067,14 @@ public class MetadataApi extends ApiscolApi {
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 			} catch (DBAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		return Response.ok(
-				rb.selectMetadataFollowingCriterium(uriInfo,
-						apiscolInstanceName, apiscolInstanceLabel, handler, 0,
-						1, includeDescription, resourceDataHandler, editUri,
+				rb.selectMetadataFollowingCriterium(getExternalUri(),
+						uriInfo.getPath(), apiscolInstanceName,
+						apiscolInstanceLabel, handler, 0, 1,
+						includeDescription, resourceDataHandler, editUri,
 						version), rb.getMediaType()).build();
 	}
 
@@ -1099,13 +1095,13 @@ public class MetadataApi extends ApiscolApi {
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 			} catch (DBAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		return Response.ok(
-				rb.selectMetadataFollowingCriterium(uriInfo,
-						apiscolInstanceName, apiscolInstanceLabel, handler, 0,
+				rb.selectMetadataFollowingCriterium(getExternalUri(),
+						uriInfo.getPath(), apiscolInstanceName,
+						apiscolInstanceLabel, handler, 0,
 						forcedMetadataIdList.size(), includeDescription,
 						resourceDataHandler, editUri, version),
 				rb.getMediaType()).build();
@@ -1137,8 +1133,7 @@ public class MetadataApi extends ApiscolApi {
 
 	private Response getMetadataRepresentation(HttpServletRequest request,
 			HttpServletResponse httpServletResponse, String metadataId,
-			String format, String style, String device, ServletContext context,
-			UriInfo uriInfo, GetModalities modality,
+			String format, String style, String device, GetModalities modality,
 			boolean includeDescription, boolean includeHierarchy)
 			throws MetadataNotFoundException,
 			IncorrectMetadataKeySyntaxException, DBAccessException {
@@ -1159,7 +1154,7 @@ public class MetadataApi extends ApiscolApi {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 				.setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
-		Object response = rb.getMetadataRepresentation(uriInfo,
+		Object response = rb.getMetadataRepresentation(getExternalUri(),
 				apiscolInstanceName, metadataId, includeDescription,
 				includeHierarchy, params, resourceDataHandler, editUri);
 
@@ -1191,7 +1186,7 @@ public class MetadataApi extends ApiscolApi {
 	) throws MetadataNotFoundException, IncorrectMetadataKeySyntaxException,
 			DBAccessException {
 		return getMetadataRepresentation(request, httpServletResponse,
-				metadataId, format, style, device, context, uriInfo,
+				metadataId, format, style, device,
 				GetModalities.fromString(mode), includeDescription,
 				includeHierarchy);
 
@@ -1212,7 +1207,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		Object response = rb.getMetadataSnippetRepresentation(uriInfo,
+		Object response = rb.getMetadataSnippetRepresentation(getExternalUri(),
 				apiscolInstanceName, metadataId, version);
 
 		String mediaType = rb.getMediaType().toString();
@@ -1247,10 +1242,10 @@ public class MetadataApi extends ApiscolApi {
 					.getResultHandler();
 			handler.parse(result);
 			return Response.ok(
-					rb.selectMetadataFollowingCriterium(uriInfo,
-							apiscolInstanceName, apiscolInstanceLabel, handler,
-							0, 10, false, null, editUri, version),
-					rb.getMediaType()).build();
+					rb.selectMetadataFollowingCriterium(getExternalUri(),
+							uriInfo.getPath(), apiscolInstanceName,
+							apiscolInstanceLabel, handler, 0, 10, false, null,
+							editUri, version), rb.getMediaType()).build();
 		}
 	}
 
@@ -1281,18 +1276,17 @@ public class MetadataApi extends ApiscolApi {
 								metadataId));
 				checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
 						metadataId);
-				String url = rb.getMetadataUri(uriInfo, metadataId);
+				String url = rb.getMetadataUri(getExternalUri(), metadataId);
 				HashMap<String, ArrayList<Modification>> modificationsToApplyToRelatedResources = getModificationsToApplyToRelatedResources(url);
 				ResourceDirectoryInterface.applyChanges(
-						modificationsToApplyToRelatedResources, uriInfo);
+						modificationsToApplyToRelatedResources,
+						getExternalUri());
 				boolean successFullFileDeletion = ResourceDirectoryInterface
 						.deleteMetadataFile(metadataId);
 
 				if (!successFullFileDeletion) {
 					int counter = 0;
-					// FIXME chiffre exagéré
-					// TODO chiffre exagéré
-					while (counter < 5
+					while (counter < FILE_DELETION_NUMBER_OF_TRIES
 							&& ResourceDirectoryInterface
 									.metadataFileExists(metadataId)) {
 						String errorReport = String
@@ -1302,7 +1296,6 @@ public class MetadataApi extends ApiscolApi {
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						successFullFileDeletion = ResourceDirectoryInterface
@@ -1311,8 +1304,7 @@ public class MetadataApi extends ApiscolApi {
 					}
 
 				}
-				refresModifiedMetadataInDatabase(
-						modificationsToApplyToRelatedResources, uriInfo);
+				refresModifiedMetadataInDatabase(modificationsToApplyToRelatedResources);
 				if (successFullFileDeletion) {
 					try {
 						searchEngineQueryHandler.processDeleteQuery(url);
@@ -1347,9 +1339,10 @@ public class MetadataApi extends ApiscolApi {
 				if (response == null) {
 
 					response = Response.ok(rb
-							.getMetadataSuccessfulDestructionReport(uriInfo,
-									apiscolInstanceName, metadataId,
-									warnings.toString()), rb.getMediaType());
+							.getMetadataSuccessfulDestructionReport(
+									getExternalUri(), apiscolInstanceName,
+									metadataId, warnings.toString()), rb
+							.getMediaType());
 
 				}
 
@@ -1444,20 +1437,21 @@ public class MetadataApi extends ApiscolApi {
 
 				Gson gson = gb.create();
 				Node newTree = gson.fromJson(hierarchy, Node.class);
-				Node oldTree = getMetadataHierarchyFromRoot(metadataId, uriInfo);
+				Node oldTree = getMetadataHierarchyFromRoot(metadataId);
 				HierarchyAnalyser.detectChanges(oldTree, newTree);
 
 				HashMap<String, ArrayList<Modification>> modifications = HierarchyAnalyser
 						.getModifications();
-				ResourceDirectoryInterface.applyChanges(modifications, uriInfo);
-				refresModifiedMetadataInDatabase(modifications, uriInfo);
+				ResourceDirectoryInterface.applyChanges(modifications,
+						getExternalUri());
+				refresModifiedMetadataInDatabase(modifications);
 
 				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
-				Object representation = rb.getMetadataRepresentation(uriInfo,
-						apiscolInstanceName, metadataId, false, true,
-						Collections.<String, String> emptyMap(),
+				Object representation = rb.getMetadataRepresentation(
+						getExternalUri(), apiscolInstanceName, metadataId,
+						false, true, Collections.<String, String> emptyMap(),
 						resourceDataHandler, requestedFormat);
 				response = Response.status(Status.OK).entity(representation);
 
@@ -1476,14 +1470,13 @@ public class MetadataApi extends ApiscolApi {
 	}
 
 	private void refresModifiedMetadataInDatabase(
-			HashMap<String, ArrayList<Modification>> modifications,
-			UriInfo uriInfo) throws DBAccessException,
-			MetadataNotFoundException {
+			HashMap<String, ArrayList<Modification>> modifications)
+			throws DBAccessException, MetadataNotFoundException {
 		Iterator<String> metadataIterator = modifications.keySet().iterator();
 		while (metadataIterator.hasNext()) {
 			String metadataUri = (String) metadataIterator.next();
-			String mdid = metadataUri.replaceAll(uriInfo.getBaseUri()
-					.toString(), "");
+			String mdid = metadataUri.replaceAll(getExternalUri().toString(),
+					"");
 			refreshMetadata(mdid, true, false, true);
 		}
 
@@ -1503,10 +1496,8 @@ public class MetadataApi extends ApiscolApi {
 			searchEngineQueryHandler.processDeleteQuery(filePath);
 			searchEngineQueryHandler.processAddQuery(filePath);
 		} catch (SearchEngineErrorException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SearchEngineCommunicationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

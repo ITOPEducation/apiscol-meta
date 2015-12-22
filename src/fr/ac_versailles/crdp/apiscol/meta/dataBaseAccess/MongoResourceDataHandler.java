@@ -1,12 +1,11 @@
 package fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.common.util.Pair;
@@ -24,9 +23,9 @@ import com.mongodb.util.JSON;
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.database.InexistentResourceInDatabaseException;
 import fr.ac_versailles.crdp.apiscol.database.MongoUtils;
+import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser.Differencies;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
-import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser.Differencies;
 import fr.ac_versailles.crdp.apiscol.meta.references.RelationKinds;
 import fr.ac_versailles.crdp.apiscol.utils.JSonUtils;
 
@@ -118,16 +117,16 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 	}
 
 	@Override
-	public Node getMetadataHierarchyFromRoot(String rootId, UriInfo uriInfo)
+	public Node getMetadataHierarchyFromRoot(String rootId, URI baseuri)
 			throws DBAccessException {
-		return getMetadataHierarchyFromRoot(rootId, uriInfo, 0);
+		return getMetadataHierarchyFromRoot(rootId, baseuri, 0);
 	}
 
 	@SuppressWarnings("unchecked")
-	private Node getMetadataHierarchyFromRoot(String rootId, UriInfo uriInfo,
+	private Node getMetadataHierarchyFromRoot(String rootId, URI baseUri,
 			int depth) throws DBAccessException {
 		Node node = new Node();
-		node.setMdid(new StringBuilder().append(uriInfo.getBaseUri())
+		node.setMdid(new StringBuilder().append(baseUri.toString())
 				.append(rootId).toString());
 		DBObject rootMetadataObject = getMetadataById(rootId);
 		if (rootMetadataObject != null
@@ -164,12 +163,12 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 											String childUri = (String) identifierObject
 													.get("entry");
 											String childId = childUri
-													.replaceAll(uriInfo
-															.getBaseUri()
-															.toString(), "");
+													.replaceAll(
+															baseUri.toString(),
+															"");
 											if (depth < TREE_MAX_DEPTH)
 												node.addChild(getMetadataHierarchyFromRoot(
-														childId, uriInfo,
+														childId, baseUri,
 														depth + 1));
 										}
 									}

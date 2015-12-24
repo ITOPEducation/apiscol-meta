@@ -3,9 +3,6 @@ package fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import javax.ws.rs.core.UriInfo;
 
 import org.w3c.dom.Document;
 

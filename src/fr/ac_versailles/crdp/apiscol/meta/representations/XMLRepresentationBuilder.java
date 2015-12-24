@@ -215,8 +215,8 @@ public class XMLRepresentationBuilder extends
 		while (it.hasNext()) {
 			node = it.next();
 
-			String mdid = node.getMdid().replace(baseUri.toString().toString(),
-					"");
+			String mdid = node.getMdid().replace(baseUri.toString(), "")
+					.substring(1);
 			addXMLSubTreeForMetadata(XMLDocument, childrenElement, baseUri,
 					apiscolInstanceName, mdid, includeDescription, true, -1,
 					resourceDataHandler, editUri);

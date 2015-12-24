@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -780,7 +781,7 @@ public class ResourceDirectoryInterface {
 	}
 
 	private static String removeBaseUri(String metadataId, URI baseUri) {
-		return metadataId.replaceAll(baseUri.toString(), "");
+		return metadataId.replaceAll(baseUri.toString(), "").substring(1);
 	}
 
 	private static void deleteRelation(RelationKinds kind, Document doc, URI uri) {

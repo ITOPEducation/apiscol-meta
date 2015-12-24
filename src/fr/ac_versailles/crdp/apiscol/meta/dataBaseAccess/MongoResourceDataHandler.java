@@ -126,7 +126,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 	private Node getMetadataHierarchyFromRoot(String rootId, URI baseUri,
 			int depth) throws DBAccessException {
 		Node node = new Node();
-		node.setMdid(new StringBuilder().append(baseUri.toString())
+		node.setMdid(new StringBuilder().append(baseUri.toString()).append('/')
 				.append(rootId).toString());
 		DBObject rootMetadataObject = getMetadataById(rootId);
 		if (rootMetadataObject != null
@@ -165,7 +165,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 											String childId = childUri
 													.replaceAll(
 															baseUri.toString(),
-															"");
+															"").substring(1);
 											if (depth < TREE_MAX_DEPTH)
 												node.addChild(getMetadataHierarchyFromRoot(
 														childId, baseUri,

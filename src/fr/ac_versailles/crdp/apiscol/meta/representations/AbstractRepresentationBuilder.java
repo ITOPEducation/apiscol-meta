@@ -56,7 +56,7 @@ public abstract class AbstractRepresentationBuilder<T> implements
 	}
 
 	public String getMetadataEditUri(String editUri, String metadataId) {
-		return String.format("%smeta/%s", editUri, metadataId);
+		return String.format("%s/meta/%s", editUri, metadataId);
 	}
 
 	protected String getMetadataHTMLUri(URI baseUri, String metadataId) {

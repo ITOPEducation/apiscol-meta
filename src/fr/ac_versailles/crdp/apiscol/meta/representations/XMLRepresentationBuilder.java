@@ -841,7 +841,7 @@ public class XMLRepresentationBuilder extends
 		Element generatorElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "generator");
 		generatorElement
-				.setTextContent("ApiScol, Dépôt de ressources pédagogiques - CRDP de l'Académie de Versailles");
+				.setTextContent("ApiScol");
 		feedElement.appendChild(generatorElement);
 	}
 

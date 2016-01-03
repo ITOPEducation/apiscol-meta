@@ -433,6 +433,7 @@ public class MetadataApi extends ApiscolApi {
 			@PathParam(value = "mdid") final String metadataId,
 			@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail,
+			@DefaultValue("true") @FormDataParam("enable_concurrency_control") boolean enableConcurencyControl,
 			@DefaultValue("0") @FormDataParam("aggregation_level") int aggregationLevel)
 			throws FileSystemAccessException,
 			InvalidProvidedMetadataFileException, MetadataNotFoundException,
@@ -452,8 +453,11 @@ public class MetadataApi extends ApiscolApi {
 				logger.info(String
 						.format("Entering critical section with mutual exclusion for metadata %s",
 								metadataId));
-				checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
+				if (enableConcurencyControl) {
+					checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
 						metadataId);
+				}
+				
 				String url = rb.getMetadataUri(getExternalUri(), metadataId);
 				boolean solrIsWaitingForCommit = false;
 				try {

@@ -2,6 +2,8 @@ package fr.ac_versailles.crdp.apiscol.meta.searchEngine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,7 +45,10 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 	@Override
 	public Object processSearchQuery(String keywords,
 			String[] supplementsIdentifiers, float fuzzy,
-			List<String> staticFiltersList, List<String> dynamicFiltersList,
+			List<String> staticFiltersList,
+			List<String> additiveStaticFiltersList,
+			List<String> dynamicFiltersList,
+			List<String> additiveDynamicFiltersList,
 			boolean disableHighlighting, Integer start, Integer rows,
 			String sort) throws SearchEngineErrorException {
 		createLogger();
@@ -89,6 +94,47 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 			parameters.addFilterQuery(String.format("{!term f=%s}%s",
 					fieldName.replace(' ', '_'), fieldValue));
 		}
+		int additiveStaticFiltersListSize = additiveStaticFiltersList.size();
+		if (additiveStaticFiltersListSize > 0) {
+			HashMap<String, ArrayList<String>> orderedAdditiveStaticFiltersMap = new HashMap<String, ArrayList<String>>();
+
+			for (int i = 0; i < additiveStaticFiltersListSize; i++) {
+
+				String filter = additiveStaticFiltersList.get(i);
+				if (StringUtils.isEmpty(filter))
+					continue;
+				String[] split = filter.split(FILTERS_DECLARATION_SEPARATOR);
+
+				String fieldName = split[0];
+				String fieldValue = split[1];
+				if (!orderedAdditiveStaticFiltersMap.containsKey(fieldName)) {
+					orderedAdditiveStaticFiltersMap.put(fieldName,
+							new ArrayList<String>());
+				}
+				orderedAdditiveStaticFiltersMap.get(fieldName).add(fieldValue);
+			}
+			Iterator<String> it = orderedAdditiveStaticFiltersMap.keySet()
+					.iterator();
+			while (it.hasNext()) {
+				String fieldName = (String) it.next();
+				ArrayList<String> fieldvalues = orderedAdditiveStaticFiltersMap
+						.get(fieldName);
+				String filterQuery = String.format("{!terms f=%s}",
+						fieldName.replace(' ', '_'));
+				StringBuilder filterQueryBuilder = new StringBuilder()
+						.append(filterQuery);
+				boolean first = true;
+				for (int i = 0; i < fieldvalues.size(); i++) {
+					if (!first) {
+						filterQueryBuilder.append(",");
+					}
+					first = false;
+					filterQueryBuilder.append(fieldvalues.get(i));
+				}
+				parameters.addFilterQuery(filterQueryBuilder.toString());
+			}
+		}
+
 		for (int i = 0; i < dynamicFiltersList.size(); i++) {
 
 			String filter = dynamicFiltersList.get(i);
@@ -99,6 +145,52 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 				parameters.addFilterQuery(String.format(
 						"{!field f=%s-taxon}%s!_!%s(__%s__)", split[0],
 						split[1], split[2], split[3]));
+		}
+
+		int additiveDynamicFiltersListSize = additiveDynamicFiltersList.size();
+		if (additiveDynamicFiltersListSize > 0) {
+			HashMap<String, ArrayList<String>> orderedAdditiveDynamicFiltersMap = new HashMap<String, ArrayList<String>>();
+
+			for (int i = 0; i < additiveDynamicFiltersListSize; i++) {
+
+				String filter = additiveDynamicFiltersList.get(i);
+				if (StringUtils.isEmpty(filter)) {
+					continue;
+				}
+				String[] split = filter.split(FILTERS_DECLARATION_SEPARATOR);
+				if (split.length < 4) {
+					continue;
+				}
+				String fieldName = split[0];
+				String fieldValue = String.format("%s!_!%s(__%s__)", split[1],
+						split[2], split[3]);
+				if (!orderedAdditiveDynamicFiltersMap.containsKey(fieldName)) {
+					orderedAdditiveDynamicFiltersMap.put(fieldName,
+							new ArrayList<String>());
+				}
+				orderedAdditiveDynamicFiltersMap.get(fieldName)
+						.add(fieldValue);
+			}
+			Iterator<String> it = orderedAdditiveDynamicFiltersMap.keySet()
+					.iterator();
+			while (it.hasNext()) {
+				String fieldName = (String) it.next();
+				ArrayList<String> fieldvalues = orderedAdditiveDynamicFiltersMap
+						.get(fieldName);
+				String filterQuery = String.format("{!terms f=%s-taxon}",
+						fieldName.replace(' ', '_'));
+				StringBuilder filterQueryBuilder = new StringBuilder()
+						.append(filterQuery);
+				boolean first = true;
+				for (int i = 0; i < fieldvalues.size(); i++) {
+					if (!first) {
+						filterQueryBuilder.append(",");
+					}
+					first = false;
+					filterQueryBuilder.append(fieldvalues.get(i));
+				}
+				parameters.addFilterQuery(filterQueryBuilder.toString());
+			}
 		}
 
 		switch (sort) {

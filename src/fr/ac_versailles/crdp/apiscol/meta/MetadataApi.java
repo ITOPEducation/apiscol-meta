@@ -455,9 +455,9 @@ public class MetadataApi extends ApiscolApi {
 								metadataId));
 				if (enableConcurencyControl) {
 					checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
-						metadataId);
+							metadataId);
 				}
-				
+
 				String url = rb.getMetadataUri(getExternalUri(), metadataId);
 				boolean solrIsWaitingForCommit = false;
 				try {
@@ -956,6 +956,8 @@ public class MetadataApi extends ApiscolApi {
 			@DefaultValue("0") @QueryParam(value = "fuzzy") final float fuzzy,
 			@DefaultValue("[]") @QueryParam(value = "static-filters") final String staticFilters,
 			@DefaultValue("[]") @QueryParam(value = "dynamic-filters") final String dynamicFilters,
+			@DefaultValue("[]") @QueryParam(value = "additive-static-filters") final String additiveStaticFilters,
+			@DefaultValue("[]") @QueryParam(value = "additive-dynamic-filters") final String additiveDynamicFilters,
 			@DefaultValue("0") @QueryParam(value = "start") final int start,
 			@DefaultValue("10") @QueryParam(value = "rows") final int rows,
 			@DefaultValue("score") @QueryParam(value = "sort") final String sort,
@@ -1015,6 +1017,20 @@ public class MetadataApi extends ApiscolApi {
 			}
 		else
 			staticFiltersList = Collections.emptyList();
+		List<String> additiveStaticFiltersList = null;
+		if (StringUtils.isNotEmpty(additiveStaticFilters))
+			try {
+				additiveStaticFiltersList = new Gson().fromJson(
+						additiveStaticFilters, collectionType);
+			} catch (Exception e) {
+				String message = String
+						.format("The list of additive static filters %s is impossible to parse as JSON",
+								additiveStaticFilters);
+				logger.warn(message);
+				throw new InvalidFilterListException(message);
+			}
+		else
+			additiveStaticFiltersList = Collections.emptyList();
 		List<String> dynamicFiltersList = null;
 		if (StringUtils.isNotEmpty(dynamicFilters))
 			try {
@@ -1029,9 +1045,23 @@ public class MetadataApi extends ApiscolApi {
 			}
 		else
 			dynamicFiltersList = Collections.emptyList();
+		List<String> additiveDynamicFiltersList = null;
+		if (StringUtils.isNotEmpty(additiveDynamicFilters))
+			try {
+				additiveDynamicFiltersList = new Gson().fromJson(
+						additiveDynamicFilters, collectionType);
+			} catch (Exception e) {
+				String message = String
+						.format("The list of additive dynamic filters %s is impossible to parse as JSON",
+								additiveDynamicFilters);
+				logger.warn(message);
+				throw new InvalidFilterListException(message);
+			}
+		else
+			additiveDynamicFiltersList = Collections.emptyList();
 		Object result = searchEngineQueryHandler.processSearchQuery(
-				query.trim(), supplementsIds, fuzzy, staticFiltersList,
-				dynamicFiltersList, disableHighlighting, start, rows, sort);
+				query.trim(), supplementsIds, fuzzy, staticFiltersList, additiveStaticFiltersList,
+				dynamicFiltersList, additiveDynamicFiltersList,  disableHighlighting, start, rows, sort);
 		ISearchEngineResultHandler handler = searchEngineFactory
 				.getResultHandler();
 		handler.parse(result);

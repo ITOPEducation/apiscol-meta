@@ -168,8 +168,7 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 					orderedAdditiveDynamicFiltersMap.put(fieldName,
 							new ArrayList<String>());
 				}
-				orderedAdditiveDynamicFiltersMap.get(fieldName)
-						.add(fieldValue);
+				orderedAdditiveDynamicFiltersMap.get(fieldName).add(fieldValue);
 			}
 			Iterator<String> it = orderedAdditiveDynamicFiltersMap.keySet()
 					.iterator();
@@ -337,9 +336,8 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 		}
 		req.setParam("tr", "scolomfr_import.xsl");
 		req.setParam("resource.name", file.getName());
-		NamedList<Object> result = null;
 		try {
-			result = solr.request(req);
+			solr.request(req);
 		} catch (SolrException e) {
 			String error = String
 					.format("Solr has thrown an exception when he was asked to index file %s whith the message %s",

@@ -1060,8 +1060,10 @@ public class MetadataApi extends ApiscolApi {
 		else
 			additiveDynamicFiltersList = Collections.emptyList();
 		Object result = searchEngineQueryHandler.processSearchQuery(
-				query.trim(), supplementsIds, fuzzy, staticFiltersList, additiveStaticFiltersList,
-				dynamicFiltersList, additiveDynamicFiltersList,  disableHighlighting, start, rows, sort);
+				query.trim(), supplementsIds, fuzzy, staticFiltersList,
+				additiveStaticFiltersList, dynamicFiltersList,
+				additiveDynamicFiltersList, disableHighlighting, start, rows,
+				sort);
 		ISearchEngineResultHandler handler = searchEngineFactory
 				.getResultHandler();
 		handler.parse(result);

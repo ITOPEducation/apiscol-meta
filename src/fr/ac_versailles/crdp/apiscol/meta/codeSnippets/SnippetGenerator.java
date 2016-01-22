@@ -70,7 +70,7 @@ public class SnippetGenerator {
 		case JQUERY:
 			return "<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.js\"></script>";
 		case APISCOL:
-			return "<script src=\"http://apiscol.crdp-versailles.fr/cdn/"+version+"/js/jquery.apiscol.js\"></script>";
+			return "<script src=\"http://apiscol.cdn.local/cdn/"+version+"/js/jquery.apiscol.js\"></script>";
 		}
 		return null;
 	}

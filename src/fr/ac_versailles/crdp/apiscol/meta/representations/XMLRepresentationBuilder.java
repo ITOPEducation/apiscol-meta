@@ -821,12 +821,12 @@ public class XMLRepresentationBuilder extends
 		feedElement.appendChild(linkElement);
 		Element logoElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "logo");
-		logoElement.setTextContent("http://apiscol.crdp-versailles.fr/cdn/"
+		logoElement.setTextContent("http://apiscol.cdn.local/cdn/"
 				+ version + "/img/logo-api.png");
 		feedElement.appendChild(logoElement);
 		Element iconElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "icon");
-		iconElement.setTextContent("http://apiscol.crdp-versailles.fr/cdn/"
+		iconElement.setTextContent("http://apiscol.cdn.local/cdn/"
 				+ version + "/img/logo-api.png");
 
 		feedElement.appendChild(iconElement);

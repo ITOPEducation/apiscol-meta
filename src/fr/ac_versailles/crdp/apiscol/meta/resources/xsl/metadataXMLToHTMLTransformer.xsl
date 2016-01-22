@@ -13,7 +13,7 @@
 	<xsl:output method="html" omit-xml-declaration="yes"
 		encoding="UTF-8" indent="yes" />
 	<xsl:variable name="cdn"
-		select="'http://apiscol.crdp-versailles.fr/cdn/'" />
+		select="'http://apiscol.cdn.local/cdn/'" />
 	<xsl:variable name="icon-base" select="'icons/st0'" />
 	<xsl:template match="/">
 		<xsl:choose>

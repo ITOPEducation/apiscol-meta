@@ -34,13 +34,13 @@ public class JSonPRepresentationBuilder extends
 	public JSONWithPadding getMetadataRepresentation(URI baseUri,
 			String apiscolInstanceName, String resourceId,
 			boolean includeDescription, boolean includeHierarchy,
-			Map<String, String> params,
+			int maxDepth, Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
 
 		Document xmlRepresentation = innerBuilder.getMetadataRepresentation(
 				baseUri, apiscolInstanceName, resourceId, includeDescription,
-				includeHierarchy, params, resourceDataHandler, editUri);
+				includeHierarchy, maxDepth, params, resourceDataHandler, editUri);
 		String jsonSource = JSonUtils.convertXMLToJson(xmlRepresentation);
 		JSONWithPadding metadataResponseJson = new JSONWithPadding(jsonSource,
 				"callback");

@@ -52,22 +52,23 @@ import fr.ac_versailles.crdp.apiscol.utils.XMLUtils;
 public class XMLRepresentationBuilder extends
 		AbstractRepresentationBuilder<Document> {
 
-	private static final int MAX_TREE_DEPTH = 10;
+	private static final int DEFAULT_MAX_TREE_DEPTH = 10;
 	private static SnippetGenerator snippetGenerator = new SnippetGenerator();
 	private static VCardEngine vcardengine = new VCardEngine();
 
 	private int treeDepth;
+	private int maxDepth;
 
 	@Override
 	public Document getMetadataRepresentation(URI baseUri,
 			String apiscolInstanceName, String resourceId,
-			boolean includeDescription, boolean includeHierarchy,
+			boolean includeDescription, boolean includeHierarchy, int maxDepth,
 			Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
 		Document XMLRepresentation = createXMLDocument();
 		if (includeHierarchy) {
-			treeDepth = 0;
+			treeDepth = maxDepth>0?maxDepth:DEFAULT_MAX_TREE_DEPTH;
 		}
 		addXMLSubTreeForMetadata(XMLRepresentation, XMLRepresentation, baseUri,
 				apiscolInstanceName, resourceId, includeDescription,
@@ -497,7 +498,7 @@ public class XMLRepresentationBuilder extends
 		}
 		if (includeHierarchy) {
 			treeDepth++;
-			if (treeDepth < MAX_TREE_DEPTH) {
+			if (treeDepth < maxDepth) {
 				addXMLSubTreeForHierarchy(XMLDocument, rootElement, baseUri,
 						apiscolInstanceName, metadataId, includeDescription,
 						-1, resourceDataHandler, editUri);
@@ -821,13 +822,13 @@ public class XMLRepresentationBuilder extends
 		feedElement.appendChild(linkElement);
 		Element logoElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "logo");
-		logoElement.setTextContent("http://apiscol.cdn.local/cdn/"
-				+ version + "/img/logo-api.png");
+		logoElement.setTextContent("http://apiscol.cdn.local/cdn/" + version
+				+ "/img/logo-api.png");
 		feedElement.appendChild(logoElement);
 		Element iconElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "icon");
-		iconElement.setTextContent("http://apiscol.cdn.local/cdn/"
-				+ version + "/img/logo-api.png");
+		iconElement.setTextContent("http://apiscol.cdn.local/cdn/" + version
+				+ "/img/logo-api.png");
 
 		feedElement.appendChild(iconElement);
 		Element idElement = response.createElementNS(
@@ -840,8 +841,7 @@ public class XMLRepresentationBuilder extends
 		feedElement.appendChild(titleElement);
 		Element generatorElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "generator");
-		generatorElement
-				.setTextContent("ApiScol");
+		generatorElement.setTextContent("ApiScol");
 		feedElement.appendChild(generatorElement);
 	}
 

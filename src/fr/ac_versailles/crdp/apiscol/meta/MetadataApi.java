@@ -307,7 +307,7 @@ public class MetadataApi extends ApiscolApi {
 			return Response
 					.ok()
 					.entity(rb.getMetadataRepresentation(getExternalUri(),
-							apiscolInstanceName, metadataId, true, false,
+							apiscolInstanceName, metadataId, true, false, -1,
 							Collections.<String, String> emptyMap(),
 							resourceDataHandler, editUri))
 					.type(rb.getMediaType()).build();
@@ -398,7 +398,7 @@ public class MetadataApi extends ApiscolApi {
 							.ok()
 							.entity(rb.getMetadataRepresentation(
 									getExternalUri(), apiscolInstanceName,
-									metadataId, true, false,
+									metadataId, true, false, -1,
 									Collections.<String, String> emptyMap(),
 									resourceDataHandler, editUri))
 							.type(rb.getMediaType());
@@ -595,7 +595,7 @@ public class MetadataApi extends ApiscolApi {
 							.ok()
 							.entity(rb.getMetadataRepresentation(
 									getExternalUri(), apiscolInstanceName,
-									metadataId, true, false,
+									metadataId, true, false, -1,
 									Collections.<String, String> emptyMap(),
 									resourceDataHandler, editUri))
 							.type(rb.getMediaType());
@@ -1170,7 +1170,7 @@ public class MetadataApi extends ApiscolApi {
 	private Response getMetadataRepresentation(HttpServletRequest request,
 			HttpServletResponse httpServletResponse, String metadataId,
 			String format, String style, String device, GetModalities modality,
-			boolean includeDescription, boolean includeHierarchy)
+			boolean includeDescription, boolean includeHierarchy, int maxDepth)
 			throws MetadataNotFoundException,
 			IncorrectMetadataKeySyntaxException, DBAccessException {
 		checkMdidSyntax(metadataId);
@@ -1192,7 +1192,7 @@ public class MetadataApi extends ApiscolApi {
 				.setParameters(getDbConnexionParameters()).build();
 		Object response = rb.getMetadataRepresentation(getExternalUri(),
 				apiscolInstanceName, metadataId, includeDescription,
-				includeHierarchy, params, resourceDataHandler, editUri);
+				includeHierarchy, -1, params, resourceDataHandler, editUri);
 
 		String mediaType = rb.getMediaType().toString();
 		return Response
@@ -1217,6 +1217,7 @@ public class MetadataApi extends ApiscolApi {
 			@DefaultValue("") @QueryParam(value = "device") final String device,
 			@DefaultValue("false") @QueryParam(value = "desc") final boolean includeDescription,
 			@DefaultValue("false") @QueryParam(value = "tree") boolean includeHierarchy,
+			@DefaultValue("-1") @QueryParam(value = "maxdepth") int maxDepth,
 			@QueryParam(value = "format") final String format
 
 	) throws MetadataNotFoundException, IncorrectMetadataKeySyntaxException,
@@ -1224,7 +1225,7 @@ public class MetadataApi extends ApiscolApi {
 		return getMetadataRepresentation(request, httpServletResponse,
 				metadataId, format, style, device,
 				GetModalities.fromString(mode), includeDescription,
-				includeHierarchy);
+				includeHierarchy, maxDepth);
 
 	}
 
@@ -1487,7 +1488,8 @@ public class MetadataApi extends ApiscolApi {
 						.setParameters(getDbConnexionParameters()).build();
 				Object representation = rb.getMetadataRepresentation(
 						getExternalUri(), apiscolInstanceName, metadataId,
-						false, true, Collections.<String, String> emptyMap(),
+						false, true, -1,
+						Collections.<String, String> emptyMap(),
 						resourceDataHandler, requestedFormat);
 				response = Response.status(Status.OK).entity(representation);
 

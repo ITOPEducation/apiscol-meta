@@ -68,7 +68,7 @@ public class XMLRepresentationBuilder extends
 			throws MetadataNotFoundException, DBAccessException {
 		Document XMLRepresentation = createXMLDocument();
 		if (includeHierarchy) {
-			treeDepth = maxDepth>0?maxDepth:DEFAULT_MAX_TREE_DEPTH;
+			this.maxDepth = maxDepth>0?maxDepth:DEFAULT_MAX_TREE_DEPTH;
 		}
 		addXMLSubTreeForMetadata(XMLRepresentation, XMLRepresentation, baseUri,
 				apiscolInstanceName, resourceId, includeDescription,

@@ -1192,7 +1192,7 @@ public class MetadataApi extends ApiscolApi {
 				.setParameters(getDbConnexionParameters()).build();
 		Object response = rb.getMetadataRepresentation(getExternalUri(),
 				apiscolInstanceName, metadataId, includeDescription,
-				includeHierarchy, -1, params, resourceDataHandler, editUri);
+				includeHierarchy, maxDepth, params, resourceDataHandler, editUri);
 
 		String mediaType = rb.getMediaType().toString();
 		return Response

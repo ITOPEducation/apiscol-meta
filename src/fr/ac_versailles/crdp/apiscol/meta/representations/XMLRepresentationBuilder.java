@@ -642,31 +642,10 @@ public class XMLRepresentationBuilder extends
 				facetGroupElement.appendChild(taxonElement);
 
 			}
-			// clears identifiers concatenation
-			// would be graceful but query filters very difficult to implement
-			// in solr config
-			// simplifyIdentifiers(facetGroupElement);
 			facetsElement.appendChild(facetGroupElement);
 		}
 
 	}
-
-	// private void simplifyIdentifiers(Element facetGroupElement) {
-	// NodeList entries = facetGroupElement
-	// .getElementsByTagName("apiscol:entry");
-	// for (int i = 0; i < entries.getLength(); i++) {
-	// Element entry = (Element) entries.item(i);
-	// String identifier = entry.getAttribute("identifier");
-	// if (!identifier.contains(SEARCH_ENGINE_CONCATENED_FIELDS_SEPARATOR))
-	// continue;
-	// String newId = identifier.substring(identifier
-	// .lastIndexOf(SEARCH_ENGINE_CONCATENED_FIELDS_SEPARATOR
-	// )+ SEARCH_ENGINE_CONCATENED_FIELDS_SEPARATOR
-	// .length());
-	// entry.setAttribute("identifier", newId);
-	// }
-	//
-	// }
 
 	private void insertIntoTree(Element tree, Element newElement) {
 		String elementId = newElement.getAttribute("identifier");

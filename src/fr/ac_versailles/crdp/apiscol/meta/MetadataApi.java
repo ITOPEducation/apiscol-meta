@@ -93,6 +93,7 @@ public class MetadataApi extends ApiscolApi {
 			initializeResourceDirectoryInterface(context);
 			initializeStaticParameters();
 			createSearchEngineQueryHandler(context);
+			fetchOauthServersProxy(context);
 			staticInitialization = true;
 		}
 	}
@@ -237,38 +238,42 @@ public class MetadataApi extends ApiscolApi {
 			ResourceDirectoryInterface.registerMetadataFile(metadataId,
 					uploadedInputStream, url, apiscolInstanceName);
 		} catch (FileSystemAccessException e) {
-			logger.error(String
-					.format("Registration of file was aborted as a transfer problem occured for metadata %s",
-							metadataId));
+			getLogger()
+					.error(String
+							.format("Registration of file was aborted as a transfer problem occured for metadata %s",
+									metadataId));
 			throw e;
 		} catch (InvalidProvidedMetadataFileException e) {
-			logger.error(String
-					.format("Registration of file was aborted as a transfer problem occured for metadata %s",
-							metadataId));
+			getLogger()
+					.error(String
+							.format("Registration of file was aborted as a transfer problem occured for metadata %s",
+									metadataId));
 			throw e;
 		}
 		try {
 			uploadedInputStream.close();
 		} catch (IOException e) {
-			logger.warn(String
-					.format("A probleme was encountered while closing the input stream for file %s : %s",
-							fileDetail.getFileName(), e.getMessage()));
+			getLogger()
+					.warn(String
+							.format("A probleme was encountered while closing the input stream for file %s : %s",
+									fileDetail.getFileName(), e.getMessage()));
 		}
 		if (!ResourceDirectoryInterface.commitTemporaryMetadataFile(metadataId)) {
 			StringBuilder errors = new StringBuilder();
 			String error1 = String
 					.format("The file for metadata %s was correctly received and parsed but it was impossible to finalize registration",
 							metadataId);
-			logger.error(error1);
+			getLogger().error(error1);
 			errors.append(error1);
 
 			throw new FileSystemAccessException(errors.toString());
 		}
 		if (!ResourceDirectoryInterface
 				.commitTemporaryJsonMetadataFile(metadataId)) {
-			logger.error(String
-					.format("The file for metadata %s was correctly received and parsed but it was impossible to finalize creation of jsonp file",
-							metadataId));
+			getLogger()
+					.error(String
+							.format("The file for metadata %s was correctly received and parsed but it was impossible to finalize creation of jsonp file",
+									metadataId));
 		}
 
 		String filePath = "";
@@ -315,7 +320,7 @@ public class MetadataApi extends ApiscolApi {
 			String message = String
 					.format("The metadata %s has just been registred, but it was impossible to find the file",
 							metadataId);
-			logger.error(message);
+			getLogger().error(message);
 			throw new FileSystemAccessException(message);
 		}
 	}
@@ -340,9 +345,10 @@ public class MetadataApi extends ApiscolApi {
 			keyLock = keyLockManager.getLock(metadataId);
 			keyLock.lock();
 			try {
-				logger.info(String
-						.format("Entering critical section with mutual exclusion for metadata %s",
-								metadataId));
+				getLogger()
+						.info(String
+								.format("Entering critical section with mutual exclusion for metadata %s",
+										metadataId));
 				checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
 						metadataId);
 				String url = rb.getMetadataUri(getExternalUri(), metadataId);
@@ -352,13 +358,15 @@ public class MetadataApi extends ApiscolApi {
 					searchEngineQueryHandler.processDeleteQuery(url);
 
 				} catch (SearchEngineCommunicationException e1) {
-					logger.error(String
-							.format("Connexion problem with the search engine while trying to erase from index doc with id %s, with message %s",
-									url, e1.getMessage()));
+					getLogger()
+							.error(String
+									.format("Connexion problem with the search engine while trying to erase from index doc with id %s, with message %s",
+											url, e1.getMessage()));
 				} catch (SearchEngineErrorException e1) {
-					logger.error(String
-							.format("Exception thrown by the search engine while trying to erase from index doc with id %s, with message %s",
-									url, e1.getMessage()));
+					getLogger()
+							.error(String
+									.format("Exception thrown by the search engine while trying to erase from index doc with id %s, with message %s",
+											url, e1.getMessage()));
 				}
 
 				filePath = ResourceDirectoryInterface.getFilePath(metadataId);
@@ -368,26 +376,30 @@ public class MetadataApi extends ApiscolApi {
 						searchEngineQueryHandler.processAddQuery(filePath);
 
 					} catch (SearchEngineCommunicationException e1) {
-						logger.error(String
-								.format("Connexion problem with the search engine while trying to register metadata file %s, with message %s",
-										filePath, e1.getMessage()));
+						getLogger()
+								.error(String
+										.format("Connexion problem with the search engine while trying to register metadata file %s, with message %s",
+												filePath, e1.getMessage()));
 					} catch (SearchEngineErrorException e1) {
-						logger.error(String
-								.format("Exception thrown by the search engine while trying to register metadata file %s, with message %s",
-										filePath, e1.getMessage()));
+						getLogger()
+								.error(String
+										.format("Exception thrown by the search engine while trying to register metadata file %s, with message %s",
+												filePath, e1.getMessage()));
 					}
 				}
 
 				try {
 					searchEngineQueryHandler.processCommitQuery();
 				} catch (SearchEngineCommunicationException e1) {
-					logger.error(String
-							.format("Connexion problem with the search engine while trying to commit after registering metadata file %s, with message %s",
-									filePath, e1.getMessage()));
+					getLogger()
+							.error(String
+									.format("Connexion problem with the search engine while trying to commit after registering metadata file %s, with message %s",
+											filePath, e1.getMessage()));
 				} catch (SearchEngineErrorException e1) {
-					logger.error(String
-							.format("Exception thrown by the search engine while trying to commit after registering metadata file %s, with message %s",
-									filePath, e1.getMessage()));
+					getLogger()
+							.error(String
+									.format("Exception thrown by the search engine while trying to commit after registering metadata file %s, with message %s",
+											filePath, e1.getMessage()));
 				}
 
 				try {
@@ -406,7 +418,7 @@ public class MetadataApi extends ApiscolApi {
 					String message = String
 							.format("The metadata %s has just been registred, but it was impossible to find the file",
 									metadataId);
-					logger.error(message);
+					getLogger().error(message);
 					throw new FileSystemAccessException(message);
 				}
 
@@ -417,9 +429,10 @@ public class MetadataApi extends ApiscolApi {
 			if (keyLock != null) {
 				keyLock.release();
 			}
-			logger.info(String
-					.format("Leaving critical section with mutual exclusion for metadata %s",
-							metadataId));
+			getLogger()
+					.info(String
+							.format("Leaving critical section with mutual exclusion for metadata %s",
+									metadataId));
 		}
 		return response.build();
 	}
@@ -450,9 +463,10 @@ public class MetadataApi extends ApiscolApi {
 			keyLock = keyLockManager.getLock(metadataId);
 			keyLock.lock();
 			try {
-				logger.info(String
-						.format("Entering critical section with mutual exclusion for metadata %s",
-								metadataId));
+				getLogger()
+						.info(String
+								.format("Entering critical section with mutual exclusion for metadata %s",
+										metadataId));
 				if (enableConcurencyControl) {
 					checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
 							metadataId);
@@ -464,25 +478,29 @@ public class MetadataApi extends ApiscolApi {
 					ResourceDirectoryInterface.registerMetadataFile(metadataId,
 							uploadedInputStream, url, apiscolInstanceName);
 				} catch (FileSystemAccessException e) {
-					logger.error(String
-							.format("Registration of file was aborted as a transfer problem occured for metadata %s",
-									metadataId));
+					getLogger()
+							.error(String
+									.format("Registration of file was aborted as a transfer problem occured for metadata %s",
+											metadataId));
 
 					throw e;
 				} catch (InvalidProvidedMetadataFileException e) {
 
-					logger.error(String
-							.format("Registration of file was aborted as a transfer problem occured for metadata %s",
-									metadataId));
+					getLogger()
+							.error(String
+									.format("Registration of file was aborted as a transfer problem occured for metadata %s",
+											metadataId));
 
 					throw e;
 				}
 				try {
 					uploadedInputStream.close();
 				} catch (IOException e) {
-					logger.warn(String
-							.format("A probleme was encountered while closing the input stream for file %s : %s",
-									fileDetail.getFileName(), e.getMessage()));
+					getLogger()
+							.warn(String
+									.format("A probleme was encountered while closing the input stream for file %s : %s",
+											fileDetail.getFileName(),
+											e.getMessage()));
 				}
 				Map<String, String> propertiesToSave = ResourceDirectoryInterface
 						.extractPropertiesToSave(metadataId);
@@ -496,7 +514,7 @@ public class MetadataApi extends ApiscolApi {
 							.format("Failed to delete file for metadata %s",
 									metadataId);
 					warnings.append(errorReport);
-					logger.error(errorReport);
+					getLogger().error(errorReport);
 					// delete the temporary file
 				}
 				boolean fileCommitSuccessfull = false;
@@ -519,7 +537,7 @@ public class MetadataApi extends ApiscolApi {
 								.format("The file has not been deleted and we failed to  replace it with the new one. Metadata  %s have not changed.",
 										metadataId);
 					warnings.append(errorReport);
-					logger.error(errorReport);
+					getLogger().error(errorReport);
 					// delete the temporary file
 					ResourceDirectoryInterface.deleteMetadataFile(metadataId);
 					throw new FileSystemAccessException(errorReport);
@@ -542,13 +560,15 @@ public class MetadataApi extends ApiscolApi {
 						searchEngineQueryHandler.processDeleteQuery(url);
 						solrIsWaitingForCommit = true;
 					} catch (SearchEngineCommunicationException e1) {
-						logger.error(String
-								.format("Connexion problem with the search engine while trying to erase from index doc with id %s, with message %s",
-										url, e1.getMessage()));
+						getLogger()
+								.error(String
+										.format("Connexion problem with the search engine while trying to erase from index doc with id %s, with message %s",
+												url, e1.getMessage()));
 					} catch (SearchEngineErrorException e1) {
-						logger.error(String
-								.format("Exception thrown by the search engine while trying to erase from index doc with id %s, with message %s",
-										url, e1.getMessage()));
+						getLogger()
+								.error(String
+										.format("Exception thrown by the search engine while trying to erase from index doc with id %s, with message %s",
+												url, e1.getMessage()));
 					}
 
 				}
@@ -562,13 +582,15 @@ public class MetadataApi extends ApiscolApi {
 						solrIsWaitingForCommit = true;
 
 					} catch (SearchEngineCommunicationException e1) {
-						logger.error(String
-								.format("Connexion problem with the search engine while trying to register metadata file %s, with message %s",
-										filePath, e1.getMessage()));
+						getLogger()
+								.error(String
+										.format("Connexion problem with the search engine while trying to register metadata file %s, with message %s",
+												filePath, e1.getMessage()));
 					} catch (SearchEngineErrorException e1) {
-						logger.error(String
-								.format("Exception thrown by the search engine while trying to register metadata file %s, with message %s",
-										filePath, e1.getMessage()));
+						getLogger()
+								.error(String
+										.format("Exception thrown by the search engine while trying to register metadata file %s, with message %s",
+												filePath, e1.getMessage()));
 					}
 				}
 
@@ -576,13 +598,15 @@ public class MetadataApi extends ApiscolApi {
 					try {
 						searchEngineQueryHandler.processCommitQuery();
 					} catch (SearchEngineCommunicationException e1) {
-						logger.error(String
-								.format("Connexion problem with the search engine while trying to commit after registering metadata file %s, with message %s",
-										filePath, e1.getMessage()));
+						getLogger()
+								.error(String
+										.format("Connexion problem with the search engine while trying to commit after registering metadata file %s, with message %s",
+												filePath, e1.getMessage()));
 					} catch (SearchEngineErrorException e1) {
-						logger.error(String
-								.format("Exception thrown by the search engine while trying to commit after registering metadata file %s, with message %s",
-										filePath, e1.getMessage()));
+						getLogger()
+								.error(String
+										.format("Exception thrown by the search engine while trying to commit after registering metadata file %s, with message %s",
+												filePath, e1.getMessage()));
 					}
 
 					updateMetadataEntryInDataBase(metadataId);
@@ -603,7 +627,7 @@ public class MetadataApi extends ApiscolApi {
 					String message = String
 							.format("The metadata %s has just been registred, but it was impossible to find the file",
 									metadataId);
-					logger.error(message);
+					getLogger().error(message);
 					throw new FileSystemAccessException(message);
 				}
 
@@ -614,9 +638,10 @@ public class MetadataApi extends ApiscolApi {
 			if (keyLock != null) {
 				keyLock.release();
 			}
-			logger.info(String
-					.format("Leaving critical section with mutual exclusion for metadata %s",
-							metadataId));
+			getLogger()
+					.info(String
+							.format("Leaving critical section with mutual exclusion for metadata %s",
+									metadataId));
 		}
 		return response.build();
 	}
@@ -696,9 +721,10 @@ public class MetadataApi extends ApiscolApi {
 			keyLock = keyLockManager.getLock(metadataId);
 			keyLock.lock();
 			try {
-				logger.info(String
-						.format("Entering critical section with mutual exclusion for metadata %s",
-								metadataId));
+				getLogger()
+						.info(String
+								.format("Entering critical section with mutual exclusion for metadata %s",
+										metadataId));
 				if (!StringUtils.isEmpty(editUri))
 					MetadataApi.editUri = editUri;
 				checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
@@ -726,9 +752,10 @@ public class MetadataApi extends ApiscolApi {
 			if (keyLock != null) {
 				keyLock.release();
 			}
-			logger.info(String
-					.format("Leaving critical section with mutual exclusion for metadata %s",
-							metadataId));
+			getLogger()
+					.info(String
+							.format("Leaving critical section with mutual exclusion for metadata %s",
+									metadataId));
 		}
 		return Response.ok().build();
 	}
@@ -986,7 +1013,7 @@ public class MetadataApi extends ApiscolApi {
 				String message = String
 						.format("The list of metadataids %s is impossible to parse as JSON",
 								forcedMetadataIds);
-				logger.warn(message);
+				getLogger().warn(message);
 				throw new InvalidMetadataListException(message);
 			}
 			return forcedMetadataListSearch(rb, request, forcedMetadataIdList,
@@ -1012,7 +1039,7 @@ public class MetadataApi extends ApiscolApi {
 				String message = String
 						.format("The list of static filters %s is impossible to parse as JSON",
 								staticFilters);
-				logger.warn(message);
+				getLogger().warn(message);
 				throw new InvalidFilterListException(message);
 			}
 		else
@@ -1026,7 +1053,7 @@ public class MetadataApi extends ApiscolApi {
 				String message = String
 						.format("The list of additive static filters %s is impossible to parse as JSON",
 								additiveStaticFilters);
-				logger.warn(message);
+				getLogger().warn(message);
 				throw new InvalidFilterListException(message);
 			}
 		else
@@ -1040,7 +1067,7 @@ public class MetadataApi extends ApiscolApi {
 				String message = String
 						.format("The list of dynamic filters %s is impossible to parse as JSON",
 								dynamicFilters);
-				logger.warn(message);
+				getLogger().warn(message);
 				throw new InvalidFilterListException(message);
 			}
 		else
@@ -1054,7 +1081,7 @@ public class MetadataApi extends ApiscolApi {
 				String message = String
 						.format("The list of additive dynamic filters %s is impossible to parse as JSON",
 								additiveDynamicFilters);
-				logger.warn(message);
+				getLogger().warn(message);
 				throw new InvalidFilterListException(message);
 			}
 		else
@@ -1192,7 +1219,8 @@ public class MetadataApi extends ApiscolApi {
 				.setParameters(getDbConnexionParameters()).build();
 		Object response = rb.getMetadataRepresentation(getExternalUri(),
 				apiscolInstanceName, metadataId, includeDescription,
-				includeHierarchy, maxDepth, params, resourceDataHandler, editUri);
+				includeHierarchy, maxDepth, params, resourceDataHandler,
+				editUri);
 
 		String mediaType = rb.getMediaType().toString();
 		return Response
@@ -1308,9 +1336,10 @@ public class MetadataApi extends ApiscolApi {
 			keyLock = keyLockManager.getLock(metadataId);
 			keyLock.lock();
 			try {
-				logger.info(String
-						.format("Entering critical section with mutual exclusion for metadata %s",
-								metadataId));
+				getLogger()
+						.info(String
+								.format("Entering critical section with mutual exclusion for metadata %s",
+										metadataId));
 				checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
 						metadataId);
 				String url = rb.getMetadataUri(getExternalUri(), metadataId);
@@ -1329,7 +1358,7 @@ public class MetadataApi extends ApiscolApi {
 						String errorReport = String
 								.format("New attempt to delete file for metadata %s after 1 second",
 										metadataId);
-						logger.error(errorReport);
+						getLogger().error(errorReport);
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
@@ -1347,13 +1376,15 @@ public class MetadataApi extends ApiscolApi {
 						searchEngineQueryHandler.processDeleteQuery(url);
 						searchEngineQueryHandler.processCommitQuery();
 					} catch (SearchEngineCommunicationException e1) {
-						logger.error(String
-								.format("Connexion problem with the search engine while trying to erase from index doc with id %s, with message %s",
-										url, e1.getMessage()));
+						getLogger()
+								.error(String
+										.format("Connexion problem with the search engine while trying to erase from index doc with id %s, with message %s",
+												url, e1.getMessage()));
 					} catch (SearchEngineErrorException e1) {
-						logger.error(String
-								.format("Exception thrown by the search engine while trying to erase from index doc with id %s, with message %s",
-										url, e1.getMessage()));
+						getLogger()
+								.error(String
+										.format("Exception thrown by the search engine while trying to erase from index doc with id %s, with message %s",
+												url, e1.getMessage()));
 					}
 
 				} else {
@@ -1361,7 +1392,7 @@ public class MetadataApi extends ApiscolApi {
 							.format("Failed to delete file for metadata %s",
 									metadataId);
 					warnings.append(errorReport);
-					logger.error(errorReport);
+					getLogger().error(errorReport);
 					if (response == null)
 						response = Response
 								.status(Status.INTERNAL_SERVER_ERROR)
@@ -1390,9 +1421,10 @@ public class MetadataApi extends ApiscolApi {
 			if (keyLock != null) {
 				keyLock.release();
 			}
-			logger.info(String
-					.format("Leaving critical section with mutual exclusion for metadata %s",
-							metadataId));
+			getLogger()
+					.info(String
+							.format("Leaving critical section with mutual exclusion for metadata %s",
+									metadataId));
 		}
 
 		return response.build();
@@ -1463,8 +1495,9 @@ public class MetadataApi extends ApiscolApi {
 			keyLock = keyLockManager.getLock(KeyLockManager.GLOBAL_LOCK_KEY);
 			keyLock.lock();
 			try {
-				logger.info(String
-						.format("Passing through mutual exclusion for all the content service"));
+				getLogger()
+						.info(String
+								.format("Passing through mutual exclusion for all the content service"));
 
 				checkFreshness(request.getHeader(HttpHeaders.IF_MATCH),
 						metadataId);
@@ -1500,9 +1533,10 @@ public class MetadataApi extends ApiscolApi {
 			if (keyLock != null) {
 				keyLock.release();
 			}
-			logger.info(String
-					.format("Leaving critical section with mutual exclusion for whole repository",
-							metadataId));
+			getLogger()
+					.info(String
+							.format("Leaving critical section with mutual exclusion for whole repository",
+									metadataId));
 		}
 		return response.build();
 	}

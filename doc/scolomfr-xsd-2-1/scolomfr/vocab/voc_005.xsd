@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <!-- Vocabulaire scolomfr-voc-005 (TypologieGénérale) -->
+  <xs:annotation>
+    <xs:documentation>
+		Licence
+		Ce travail est placé sous licence Creative commons Attribution Partage à l'Identique 3.0 France.
+		Pour plus d'information, consulter le fichier "licence_scolomfr.txt" à la racine de ce package, ou le site http://creativecommons.org/licenses/by-sa/3.0/fr/
+	</xs:documentation>
+    <xs:documentation>
+	  Copyright
+      ScoLOMFRv2.1, schémas XSD (mars 2016)
+      © 2015 Direction du Numérique pour l'Éducation - Ministère de l'Éducation nationale, de l'enseignement supérieur et de la Recherche / Réseau Canopé
+	</xs:documentation>
+    <xs:documentation>
+	  Nature
+		Ce fichier est un élément de l'ensemble des schémas XSD nécessaires à la mise en œuvre de ScoLOMFR 2.1 (mars 2016).
+		ScoLOMFR est un profil d'application de LOM et LOMFR.
+		La version 2.1 des schémas intègre la validation de l'ensemble des vocabulaires définis à cette date, et comprend les ajouts suivants :
+		- intégration d'un élément complexe 4.3.1 "localisation étendue", destiné à fournir les éléments nécessaires pour un accès à la ressource via des plates-formes de gestion des accès ;
+		- intégration des URI comme identifiants de tous les concepts utilisés, dans une évolution vers le web sémantique ;
+		- ajout d'un élément "label" à tous les éléments déclinés du lom, et définis comme des paires (source, value).
+		           - Le champ "source" devient SCOLOMv2.1 ;
+		           - le champ "value" porte l'URI du concept, tel que défini dans les vocabulaires publiés ;
+		           - le champ "label" permet de saisir un libellé (par défaut le libellé du terme préférentiel du concept).
+		  Les présents schémas XSD présentent une compatibilité ascendante avec les fichiers conformes à LOMv1.0, LOMFR et ScoLOMFRv1.x.
+		  Toutes les valeurs de termes ayant été valides dans les schémas et vocabulaires publiés pour ces différentes version sont valides au sens des schémas ScoLOMFRv2.1.
+		 Toutefois, le présent package propose aussi un outil de migration permettant de migrer les fichiers LOM, LOMFR et ScoLOMFRv1.x en un format "strict" ScoLOMFRv2.1, dans lequel tous les éléments liés à des vocabulaires sont identifiés par leurs URI de concepts.
+		 Une version ultérieure des schémas permettra de passer dans une version ScoLOMFR dans laquelle tous les éléments liés à des vocabulaires seront identifiés par les URI de concepts.
+		 L'ensemble des vocabulaires, de la documentation et des éléments de cyce de vie de ScoLOMFR sont publiés sur le site http://www.lom-fr.fr/scolomfr/.
+	  </xs:documentation>
+    <xs:documentation>
+	    Ce  fichier énumère, pour le vocabulaire scolomfr-voc-005 (TypologieGénérale), les valeurs valides du champ correspondant.
+		Afin de pouvoir valider toutes notices réalisées antérieurement, ce schéma définit un format dit "ScoLOMFRv2.1_lax", qui permet l'utilisation de toutes les valeurs ayant été utilisées dans les versions antérieures.
+		Les valeurs valides au sens des schémas ScoLOMFRv2.1 comportent :
+		- les URI nominaux des concepts du vocabulaire
+		- tous les ID ayant été utilisés dans une des versions antérieurement publiées
+		- dans un souci de compatibilité maximale, il comporte également tous les libellés correspondants.
+		Il est vivement conseillé de procéder à la migration des anciens fichiers, afin que les éléments relevant de vocabulaires contrôlés portent tous des identifiants URI nominaux des concepts. Ce format, dit "Scolomfrv2.1_strict", sera rendu obligatoire dans la version 3.0.
+	  </xs:documentation>
+  </xs:annotation>
+  <xs:simpleType name="voc005Values">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="actes de conférence"/>
+      <xs:enumeration value="annuaire"/>
+      <xs:enumeration value="anthologie"/>
+      <xs:enumeration value="archives"/>
+      <xs:enumeration value="article"/>
+      <xs:enumeration value="atlas"/>
+      <xs:enumeration value="autobiographie"/>
+      <xs:enumeration value="baladodiffusion"/>
+      <xs:enumeration value="bande dessinée"/>
+      <xs:enumeration value="banque d'images"/>
+      <xs:enumeration value="banque de documents"/>
+      <xs:enumeration value="banque de sons"/>
+      <xs:enumeration value="banque de vidéos"/>
+      <xs:enumeration value="base de données"/>
+      <xs:enumeration value="bibliographie"/>
+      <xs:enumeration value="bibliographie / sitographie"/>
+      <xs:enumeration value="biographie"/>
+      <xs:enumeration value="bloc-notes"/>
+      <xs:enumeration value="blog"/>
+      <xs:enumeration value="captation audiovisuelle"/>
+      <xs:enumeration value="caricature"/>
+      <xs:enumeration value="carte"/>
+      <xs:enumeration value="carte conceptuelle"/>
+      <xs:enumeration value="carte géographique"/>
+      <xs:enumeration value="carte heuristique et conceptuelle"/>
+      <xs:enumeration value="carte mentale"/>
+      <xs:enumeration value="catalogue"/>
+      <xs:enumeration value="catalogue de ressources"/>
+      <xs:enumeration value="catalogue documentaire"/>
+      <xs:enumeration value="chanson"/>
+      <xs:enumeration value="chronologie"/>
+      <xs:enumeration value="collection de documents"/>
+      <xs:enumeration value="collection de données"/>
+      <xs:enumeration value="collection de références"/>
+      <xs:enumeration value="communication de conférence"/>
+      <xs:enumeration value="compte rendu"/>
+      <xs:enumeration value="conférence"/>
+      <xs:enumeration value="conte"/>
+      <xs:enumeration value="court-métrage"/>
+      <xs:enumeration value="croquis"/>
+      <xs:enumeration value="datavisualisation"/>
+      <xs:enumeration value="dessin"/>
+      <xs:enumeration value="diagramme"/>
+      <xs:enumeration value="diaporama"/>
+      <xs:enumeration value="document de norme"/>
+      <xs:enumeration value="document historique"/>
+      <xs:enumeration value="document normatif"/>
+      <xs:enumeration value="dossier administratif"/>
+      <xs:enumeration value="dossier artistique"/>
+      <xs:enumeration value="dossier documentaire"/>
+      <xs:enumeration value="dossier technique"/>
+      <xs:enumeration value="e-book"/>
+      <xs:enumeration value="enregistrement audiovisuel d'une conférence"/>
+      <xs:enumeration value="enregistrement sonore"/>
+      <xs:enumeration value="enregistrement sonore d'une conférence"/>
+      <xs:enumeration value="exposition"/>
+      <xs:enumeration value="exposition virtuelle"/>
+      <xs:enumeration value="feuille de calcul"/>
+      <xs:enumeration value="figure"/>
+      <xs:enumeration value="film"/>
+      <xs:enumeration value="film d'animation"/>
+      <xs:enumeration value="film documentaire"/>
+      <xs:enumeration value="fonds photographique"/>
+      <xs:enumeration value="fonds sonore"/>
+      <xs:enumeration value="fonds vidéo"/>
+      <xs:enumeration value="forum"/>
+      <xs:enumeration value="graphique"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-001"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-002"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-003"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-004"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-005"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-006"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-007"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-008"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-009"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-010"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-011"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-012"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-013"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-014"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-015"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-016"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-017"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-018"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-019"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-020"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-021"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-022"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-023"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-024"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-025"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-026"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-027"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-028"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-029"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-030"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-031"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-032"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-033"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-034"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-035"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-036"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-037"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-038"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-039"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-040"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-041"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-042"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-043"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-044"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-045"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-046"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-047"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-048"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-049"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-050"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-051"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-055"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-056"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-058"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-059"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-060"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-061"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-062"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-005-num-063"/>
+      <xs:enumeration value="illustration"/>
+      <xs:enumeration value="image de synthèse"/>
+      <xs:enumeration value="image de télédétection"/>
+      <xs:enumeration value="image interactive"/>
+      <xs:enumeration value="image numérique"/>
+      <xs:enumeration value="image satellitaire"/>
+      <xs:enumeration value="image scientifique"/>
+      <xs:enumeration value="image, animation 3D"/>
+      <xs:enumeration value="jeu de données"/>
+      <xs:enumeration value="livre"/>
+      <xs:enumeration value="livre numérique"/>
+      <xs:enumeration value="long-métrage"/>
+      <xs:enumeration value="magazine"/>
+      <xs:enumeration value="maquette"/>
+      <xs:enumeration value="maquette / prototype"/>
+      <xs:enumeration value="maquette virtuelle"/>
+      <xs:enumeration value="mash-up"/>
+      <xs:enumeration value="monographie"/>
+      <xs:enumeration value="montage sonorisé"/>
+      <xs:enumeration value="norme"/>
+      <xs:enumeration value="note"/>
+      <xs:enumeration value="nouvelle"/>
+      <xs:enumeration value="objet 3D"/>
+      <xs:enumeration value="objet physique"/>
+      <xs:enumeration value="objet tridimensionnel"/>
+      <xs:enumeration value="organigramme"/>
+      <xs:enumeration value="ouvrage"/>
+      <xs:enumeration value="page Web"/>
+      <xs:enumeration value="partition musicale"/>
+      <xs:enumeration value="photo"/>
+      <xs:enumeration value="photographie"/>
+      <xs:enumeration value="pièce de théâtre"/>
+      <xs:enumeration value="podcast"/>
+      <xs:enumeration value="portail"/>
+      <xs:enumeration value="poème"/>
+      <xs:enumeration value="profil d'application"/>
+      <xs:enumeration value="programme d'enseignement"/>
+      <xs:enumeration value="programme scolaire"/>
+      <xs:enumeration value="programme éducatif"/>
+      <xs:enumeration value="prototype"/>
+      <xs:enumeration value="présentation multimédia"/>
+      <xs:enumeration value="publicité"/>
+      <xs:enumeration value="périodique"/>
+      <xs:enumeration value="rapport"/>
+      <xs:enumeration value="rapport de jury"/>
+      <xs:enumeration value="rapport de recherche"/>
+      <xs:enumeration value="rapport officiel"/>
+      <xs:enumeration value="recueil de contes"/>
+      <xs:enumeration value="recueil de nouvelles"/>
+      <xs:enumeration value="revue"/>
+      <xs:enumeration value="revue de presse"/>
+      <xs:enumeration value="roman"/>
+      <xs:enumeration value="réalité augmentée"/>
+      <xs:enumeration value="réalité virtuelle"/>
+      <xs:enumeration value="référentiel de compétences"/>
+      <xs:enumeration value="répertoire"/>
+      <xs:enumeration value="résumé"/>
+      <xs:enumeration value="saynète"/>
+      <xs:enumeration value="schéma / graphique"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0001"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0002"/>
+      <xs:enumeration value="scolomfr-voc-005-num-001"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0011"/>
+      <xs:enumeration value="scolomfr-voc-005-num-002"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0021"/>
+      <xs:enumeration value="scolomfr-voc-005-num-003"/>
+      <xs:enumeration value="scolomfr-voc-005-num-004"/>
+      <xs:enumeration value="scolomfr-voc-005-num-005"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0051"/>
+      <xs:enumeration value="scolomfr-voc-005-num-006"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0061"/>
+      <xs:enumeration value="scolomfr-voc-005-num-007"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0071"/>
+      <xs:enumeration value="scolomfr-voc-005-num-008"/>
+      <xs:enumeration value="scolomfr-voc-005-num-009"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0091"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0092"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0093"/>
+      <xs:enumeration value="scolomfr-voc-005-num-010"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0101"/>
+      <xs:enumeration value="scolomfr-voc-005-num-011"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0111"/>
+      <xs:enumeration value="scolomfr-voc-005-num-012"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0121"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0122"/>
+      <xs:enumeration value="scolomfr-voc-005-num-013"/>
+      <xs:enumeration value="scolomfr-voc-005-num-014"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0141"/>
+      <xs:enumeration value="scolomfr-voc-005-num-015"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0151"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0152"/>
+      <xs:enumeration value="scolomfr-voc-005-num-016"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0161"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0162"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0163"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0164"/>
+      <xs:enumeration value="scolomfr-voc-005-num-017"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0171"/>
+      <xs:enumeration value="scolomfr-voc-005-num-018"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0181"/>
+      <xs:enumeration value="scolomfr-voc-005-num-019"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0191"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0192"/>
+      <xs:enumeration value="scolomfr-voc-005-num-020"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0201"/>
+      <xs:enumeration value="scolomfr-voc-005-num-021"/>
+      <xs:enumeration value="scolomfr-voc-005-num-022"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0221"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0222"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0223"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0224"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0225"/>
+      <xs:enumeration value="scolomfr-voc-005-num-023"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0231"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0232"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0233"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0234"/>
+      <xs:enumeration value="scolomfr-voc-005-num-024"/>
+      <xs:enumeration value="scolomfr-voc-005-num-025"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0251"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0252"/>
+      <xs:enumeration value="scolomfr-voc-005-num-026"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0261"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0262"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0263"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0264"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0265"/>
+      <xs:enumeration value="scolomfr-voc-005-num-027"/>
+      <xs:enumeration value="scolomfr-voc-005-num-028"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0281"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0282"/>
+      <xs:enumeration value="scolomfr-voc-005-num-029"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0291"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0292"/>
+      <xs:enumeration value="scolomfr-voc-005-num-030"/>
+      <xs:enumeration value="scolomfr-voc-005-num-031"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0311"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0312"/>
+      <xs:enumeration value="scolomfr-voc-005-num-032"/>
+      <xs:enumeration value="scolomfr-voc-005-num-033"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0331"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0332"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0333"/>
+      <xs:enumeration value="scolomfr-voc-005-num-034"/>
+      <xs:enumeration value="scolomfr-voc-005-num-035"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0351"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0352"/>
+      <xs:enumeration value="scolomfr-voc-005-num-036"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0361"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0362"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0363"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0364"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0365"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0367"/>
+      <xs:enumeration value="scolomfr-voc-005-num-037"/>
+      <xs:enumeration value="scolomfr-voc-005-num-038"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0381"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0382"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0383"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0384"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0385"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0386"/>
+      <xs:enumeration value="scolomfr-voc-005-num-039"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0391"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0392"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0393"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0394"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0395"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0396"/>
+      <xs:enumeration value="scolomfr-voc-005-num-040"/>
+      <xs:enumeration value="scolomfr-voc-005-num-041"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0411"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0412"/>
+      <xs:enumeration value="scolomfr-voc-005-num-042"/>
+      <xs:enumeration value="scolomfr-voc-005-num-043"/>
+      <xs:enumeration value="scolomfr-voc-005-num-044"/>
+      <xs:enumeration value="scolomfr-voc-005-num-045"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0451"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0452"/>
+      <xs:enumeration value="scolomfr-voc-005-num-046"/>
+      <xs:enumeration value="scolomfr-voc-005-num-047"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0471"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0472"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0473"/>
+      <xs:enumeration value="scolomfr-voc-005-num-048"/>
+      <xs:enumeration value="scolomfr-voc-005-num-049"/>
+      <xs:enumeration value="scolomfr-voc-005-num-050"/>
+      <xs:enumeration value="scolomfr-voc-005-num-051"/>
+      <xs:enumeration value="scolomfr-voc-005-num-052"/>
+      <xs:enumeration value="scolomfr-voc-005-num-053"/>
+      <xs:enumeration value="scolomfr-voc-005-num-054"/>
+      <xs:enumeration value="scolomfr-voc-005-num-055"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0551"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0552"/>
+      <xs:enumeration value="scolomfr-voc-005-num-056"/>
+      <xs:enumeration value="scolomfr-voc-005-num-058"/>
+      <xs:enumeration value="scolomfr-voc-005-num-059"/>
+      <xs:enumeration value="scolomfr-voc-005-num-060"/>
+      <xs:enumeration value="scolomfr-voc-005-num-061"/>
+      <xs:enumeration value="scolomfr-voc-005-num-062"/>
+      <xs:enumeration value="scolomfr-voc-005-num-063"/>
+      <xs:enumeration value="scolomfr-voc-005-num-0631"/>
+      <xs:enumeration value="site Web"/>
+      <xs:enumeration value="sitographie"/>
+      <xs:enumeration value="sketch"/>
+      <xs:enumeration value="standard"/>
+      <xs:enumeration value="synthèse"/>
+      <xs:enumeration value="tableau (art)"/>
+      <xs:enumeration value="tableaux"/>
+      <xs:enumeration value="traitement de données"/>
+      <xs:enumeration value="téléfilm"/>
+      <xs:enumeration value="vidéo interactive"/>
+      <xs:enumeration value="web TV"/>
+      <xs:enumeration value="web documentaire"/>
+      <xs:enumeration value="web média"/>
+      <xs:enumeration value="web radio"/>
+      <xs:enumeration value="étude"/>
+      <xs:enumeration value="étude comparative"/>
+      <xs:enumeration value="œuvre picturale"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

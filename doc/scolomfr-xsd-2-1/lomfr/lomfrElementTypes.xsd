@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/LOMFR" xmlns:ag="http://www.lom-fr.fr/xsd/LOMFR/unique" xmlns:lom="http://ltsc.ieee.org/xsd/LOM" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ex="http://ltsc.ieee.org/xsd/LOM/extend" targetNamespace="http://www.lom-fr.fr/xsd/LOMFR" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:documentation>
+        14/01/2016 - Adaptations ScoLOMFRv2.0 : l'élément "credit" passe en LangString
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:import namespace="http://ltsc.ieee.org/xsd/LOM"/>
+  <xs:import namespace="http://www.lom-fr.fr/xsd/LOMFR/unique"/>
+  <xs:import namespace="http://ltsc.ieee.org/xsd/LOM/extend"/>
+
+  <xs:complexType name="documentType">
+    <xs:complexContent>
+      <xs:extension base="documentTypeVocab">
+        <xs:attributeGroup ref="ag:documentType"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="activity">
+    <xs:complexContent>
+      <xs:extension base="activityVocab">
+        <xs:attributeGroup ref="ag:activity"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="credit" mixed="true">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="string" type="lom:LangString"/>
+      <xs:group ref="ex:customElements"/>
+    </xs:choice>
+    <xs:attributeGroup ref="ex:customAttributes"/>
+  </xs:complexType>
+  
+</xs:schema>

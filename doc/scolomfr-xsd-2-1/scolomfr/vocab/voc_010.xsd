@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <!-- Vocabulaire scolomfr-voc-010 (TypePédagogique) -->
+  <xs:annotation>
+    <xs:documentation>
+		Licence
+		Ce travail est placé sous licence Creative commons Attribution Partage à l'Identique 3.0 France.
+		Pour plus d'information, consulter le fichier "licence_scolomfr.txt" à la racine de ce package, ou le site http://creativecommons.org/licenses/by-sa/3.0/fr/
+	</xs:documentation>
+    <xs:documentation>
+	  Copyright
+      ScoLOMFRv2.1, schémas XSD (mars 2016)
+      © 2015 Direction du Numérique pour l'Éducation - Ministère de l'Éducation nationale, de l'enseignement supérieur et de la Recherche / Réseau Canopé
+	</xs:documentation>
+    <xs:documentation>
+	  Nature
+		Ce fichier est un élément de l'ensemble des schémas XSD nécessaires à la mise en œuvre de ScoLOMFR 2.1 (mars 2016).
+		ScoLOMFR est un profil d'application de LOM et LOMFR.
+		La version 2.1 des schémas intègre la validation de l'ensemble des vocabulaires définis à cette date, et comprend les ajouts suivants :
+		- intégration d'un élément complexe 4.3.1 "localisation étendue", destiné à fournir les éléments nécessaires pour un accès à la ressource via des plates-formes de gestion des accès ;
+		- intégration des URI comme identifiants de tous les concepts utilisés, dans une évolution vers le web sémantique ;
+		- ajout d'un élément "label" à tous les éléments déclinés du lom, et définis comme des paires (source, value).
+		           - Le champ "source" devient SCOLOMv2.1 ;
+		           - le champ "value" porte l'URI du concept, tel que défini dans les vocabulaires publiés ;
+		           - le champ "label" permet de saisir un libellé (par défaut le libellé du terme préférentiel du concept).
+		  Les présents schémas XSD présentent une compatibilité ascendante avec les fichiers conformes à LOMv1.0, LOMFR et ScoLOMFRv1.x.
+		  Toutes les valeurs de termes ayant été valides dans les schémas et vocabulaires publiés pour ces différentes version sont valides au sens des schémas ScoLOMFRv2.1.
+		 Toutefois, le présent package propose aussi un outil de migration permettant de migrer les fichiers LOM, LOMFR et ScoLOMFRv1.x en un format "strict" ScoLOMFRv2.1, dans lequel tous les éléments liés à des vocabulaires sont identifiés par leurs URI de concepts.
+		 Une version ultérieure des schémas permettra de passer dans une version ScoLOMFR dans laquelle tous les éléments liés à des vocabulaires seront identifiés par les URI de concepts.
+		 L'ensemble des vocabulaires, de la documentation et des éléments de cyce de vie de ScoLOMFR sont publiés sur le site http://www.lom-fr.fr/scolomfr/.
+	  </xs:documentation>
+    <xs:documentation>
+	    Ce  fichier énumère, pour le vocabulaire scolomfr-voc-010 (TypePédagogique), les valeurs valides du champ correspondant.
+		Afin de pouvoir valider toutes notices réalisées antérieurement, ce schéma définit un format dit "ScoLOMFRv2.1_lax", qui permet l'utilisation de toutes les valeurs ayant été utilisées dans les versions antérieures.
+		Les valeurs valides au sens des schémas ScoLOMFRv2.1 comportent :
+		- les URI nominaux des concepts du vocabulaire
+		- tous les ID ayant été utilisés dans une des versions antérieurement publiées
+		- dans un souci de compatibilité maximale, il comporte également tous les libellés correspondants.
+		Il est vivement conseillé de procéder à la migration des anciens fichiers, afin que les éléments relevant de vocabulaires contrôlés portent tous des identifiants URI nominaux des concepts. Ce format, dit "Scolomfrv2.1_strict", sera rendu obligatoire dans la version 3.0.
+	  </xs:documentation>
+  </xs:annotation>
+  <xs:simpleType name="voc010Values">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="QCM (question à choix multiples)"/>
+      <xs:enumeration value="QROC (question à réponse ouverte et courte)"/>
+      <xs:enumeration value="activité pédagogique"/>
+      <xs:enumeration value="animation"/>
+      <xs:enumeration value="annales"/>
+      <xs:enumeration value="autoévaluation"/>
+      <xs:enumeration value="cahier des charges"/>
+      <xs:enumeration value="carnet de bord"/>
+      <xs:enumeration value="compte rendu de lecture"/>
+      <xs:enumeration value="corrigé d'exercice"/>
+      <xs:enumeration value="cours / présentation"/>
+      <xs:enumeration value="cyberquête"/>
+      <xs:enumeration value="cycle d'activités pédagogiques"/>
+      <xs:enumeration value="diagnostic"/>
+      <xs:enumeration value="diagnostic de rentrée scolaire"/>
+      <xs:enumeration value="dictionnaire"/>
+      <xs:enumeration value="didacticiel"/>
+      <xs:enumeration value="document de référence"/>
+      <xs:enumeration value="démonstration"/>
+      <xs:enumeration value="encyclopédie"/>
+      <xs:enumeration value="enquête"/>
+      <xs:enumeration value="exam"/>
+      <xs:enumeration value="examen"/>
+      <xs:enumeration value="exercice"/>
+      <xs:enumeration value="exercise"/>
+      <xs:enumeration value="experiment"/>
+      <xs:enumeration value="exposé d'élève"/>
+      <xs:enumeration value="expérience"/>
+      <xs:enumeration value="expérimentation"/>
+      <xs:enumeration value="fiche d'exercice"/>
+      <xs:enumeration value="fiche pédagogique"/>
+      <xs:enumeration value="glossaire"/>
+      <xs:enumeration value="guide"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/exam"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/exercise"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/experiment"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/lecture"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/problem_statement"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/questionnaire"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-001"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-004"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-006"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-007"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-0082"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-011"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-012"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-013"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-014"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-015"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-016"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-017"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-018"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-020"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-022"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-023"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-024"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-025"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-026"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-027"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-028"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-010-num-029"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/self_assessment"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/simulation"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/table"/>
+      <xs:enumeration value="jeu sérieux"/>
+      <xs:enumeration value="jeu éducatif"/>
+      <xs:enumeration value="journal scolaire"/>
+      <xs:enumeration value="lecture"/>
+      <xs:enumeration value="lecture / présentation"/>
+      <xs:enumeration value="leçon"/>
+      <xs:enumeration value="manuel d'enseignement"/>
+      <xs:enumeration value="manuel scolaire"/>
+      <xs:enumeration value="matériel de référence"/>
+      <xs:enumeration value="modélisation"/>
+      <xs:enumeration value="méthode d'apprentissage"/>
+      <xs:enumeration value="méthode de langues"/>
+      <xs:enumeration value="méthodologie"/>
+      <xs:enumeration value="outil"/>
+      <xs:enumeration value="outil de production pédagogique"/>
+      <xs:enumeration value="plan"/>
+      <xs:enumeration value="portfolio"/>
+      <xs:enumeration value="problem statement"/>
+      <xs:enumeration value="production d'élève"/>
+      <xs:enumeration value="préparation à l'examen"/>
+      <xs:enumeration value="question à trou"/>
+      <xs:enumeration value="questionnaire"/>
+      <xs:enumeration value="recueil d'exercices"/>
+      <xs:enumeration value="scolomfr-voc-010-num-001"/>
+      <xs:enumeration value="scolomfr-voc-010-num-002"/>
+      <xs:enumeration value="scolomfr-voc-010-num-003"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0031"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0032"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0033"/>
+      <xs:enumeration value="scolomfr-voc-010-num-004"/>
+      <xs:enumeration value="scolomfr-voc-010-num-005"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0051"/>
+      <xs:enumeration value="scolomfr-voc-010-num-006"/>
+      <xs:enumeration value="scolomfr-voc-010-num-007"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0071"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0072"/>
+      <xs:enumeration value="scolomfr-voc-010-num-008"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0081"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0082"/>
+      <xs:enumeration value="scolomfr-voc-010-num-009"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0091"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0092"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0093"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0094"/>
+      <xs:enumeration value="scolomfr-voc-010-num-010"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0101"/>
+      <xs:enumeration value="scolomfr-voc-010-num-011"/>
+      <xs:enumeration value="scolomfr-voc-010-num-012"/>
+      <xs:enumeration value="scolomfr-voc-010-num-013"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0131"/>
+      <xs:enumeration value="scolomfr-voc-010-num-014"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0141"/>
+      <xs:enumeration value="scolomfr-voc-010-num-015"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0151"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0152"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0153"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0154"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0155"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0156"/>
+      <xs:enumeration value="scolomfr-voc-010-num-016"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0161"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0162"/>
+      <xs:enumeration value="scolomfr-voc-010-num-017"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0171"/>
+      <xs:enumeration value="scolomfr-voc-010-num-018"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0181"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0182"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0183"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0184"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0186"/>
+      <xs:enumeration value="scolomfr-voc-010-num-019"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0191"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0192"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0193"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0194"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0195"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0196"/>
+      <xs:enumeration value="scolomfr-voc-010-num-020"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0201"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0202"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0203"/>
+      <xs:enumeration value="scolomfr-voc-010-num-021"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0211"/>
+      <xs:enumeration value="scolomfr-voc-010-num-022"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0221"/>
+      <xs:enumeration value="scolomfr-voc-010-num-023"/>
+      <xs:enumeration value="scolomfr-voc-010-num-024"/>
+      <xs:enumeration value="scolomfr-voc-010-num-025"/>
+      <xs:enumeration value="scolomfr-voc-010-num-026"/>
+      <xs:enumeration value="scolomfr-voc-010-num-027"/>
+      <xs:enumeration value="scolomfr-voc-010-num-028"/>
+      <xs:enumeration value="scolomfr-voc-010-num-029"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0291"/>
+      <xs:enumeration value="scolomfr-voc-010-num-0292"/>
+      <xs:enumeration value="scénario pédagogique"/>
+      <xs:enumeration value="self assessment"/>
+      <xs:enumeration value="simulation"/>
+      <xs:enumeration value="sondage"/>
+      <xs:enumeration value="sujet d'examen et de concours"/>
+      <xs:enumeration value="support de cours"/>
+      <xs:enumeration value="support méthodologique"/>
+      <xs:enumeration value="séance pédagogique"/>
+      <xs:enumeration value="séquence pédagogique"/>
+      <xs:enumeration value="table"/>
+      <xs:enumeration value="tableau"/>
+      <xs:enumeration value="test de niveau"/>
+      <xs:enumeration value="texte officiel"/>
+      <xs:enumeration value="tutoriel"/>
+      <xs:enumeration value="témoignage pédagogique"/>
+      <xs:enumeration value="vidéo annotée"/>
+      <xs:enumeration value="énoncé d'exercice"/>
+      <xs:enumeration value="énoncé d'une problématique"/>
+      <xs:enumeration value="énoncé de problème"/>
+      <xs:enumeration value="étude de cas"/>
+      <xs:enumeration value="évaluation"/>
+      <xs:enumeration value="évaluation de niveau"/>
+      <xs:enumeration value="évaluation formative"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:vocfr="http://www.lom-fr.fr/xsd/LOMFR/vocab" xmlns:vocscolomfr="http://www.lom-fr.fr/xsd/SCOLOMFR/vocab" xmlns:lom="http://ltsc.ieee.org/xsd/LOM" xmlns:scolom="http://ltsc.ieee.org/xsd/SCOLOM" xmlns:ag="http://ltsc.ieee.org/xsd/LOM/unique" xmlns:ex="http://ltsc.ieee.org/xsd/LOM/extend" xmlns:voc="http://ltsc.ieee.org/xsd/LOM/vocab" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified" version="SCOLOMFR v1.1 10/2011">
+  <xs:annotation>
+	<xs:documentation>
+		Licence
+		Ce travail est placé sous licence Creative commons Attribution Partage à l'Identique 3.0 France.
+		Pour plus d'information, consulter le fichier "licence_scolomfr.txt" à la racine de ce package, ou le site http://creativecommons.org/licenses/by-sa/3.0/fr/
+	</xs:documentation>
+    <xs:documentation>
+	  Copyright
+      ScoLOMFRv2.0, schémas XSD (février 2016)
+      © 2015 Direction du Numérique pour l’Éducation - Ministère de l'Éducation nationale, de l'enseignement supérieur et de la Recherche / Réseau Canopé
+	</xs:documentation>
+	<xs:documentation>
+	  Nature
+		Ce fichier est un élément de l'ensemble des schémas XSD nécessaires à la mise en œuvre de ScoLOMFR 2.0 (février 2016).
+		ScoLOMFR est un profil d'application de LOM et LOMFR.
+		La version 2.0 des schémas intègre la validation de l'ensemble des vocabulaires définis à cette date, et comprend les ajouts suivants :
+		- intégration d'un élément complexe 4.3.1 "localisation étendue", destiné à fournir les éléments nécessaires pour un accès à la ressource via des plates-formes de gestion des accès ;
+		- intégration des URI comme identifiants de tous les concepts utilisés, dans une évolution vers le web sémantique ;
+		- ajout d'un élément "label" à tous les éléments déclinés du lom, et définis comme des paires (source, value).
+		           - Le champ "source" devient SCOLOMv2.0 ;
+		           - le champ "value" porte l'URI du concept, tel que défini dans les vocabulaires publiés ;
+		           - le champ "label" permet de saisir un libellé (par défaut le libellé du terme préférentiel du concept).
+		  Les présents schémas XSD présentent une compatibilité ascendante avec les fichiers conformes à LOMv1.0, LOMFR et ScoLOMFRv1.x.
+		  Toutes les valeurs de termes ayant été valides dans les schémas et vocabulaires publiés pour ces différentes version sont valides au sens des schémas ScoLOMFRv2.0.
+		 Toutefois, le présent package propose aussi un outil de migration permettant de migrer les fichiers LOM, LOMFR et ScoLOMFRv1.x en un format "strict" ScoLOMFRv2.0, dans lequel tous les éléments liés à des vocabulaires sont identifiés par leurs URI de concepts.
+		 Une version ultérieure des schémas permettra de passer dans une version ScoLOMFR dans laquelle tous les éléments liés à des vocabulaires seront identifiés par les URI de concepts.
+		 L'ensemble des vocabulaires, de la documentation et des éléments de cyce de vie de ScoLOMFR sont publiés sur le site http://www.lom-fr.fr/scolomfr/.
+	  </xs:documentation>
+	  <xs:documentation>
+	    Ce composant est appelé par scolomfrCustom.xsd (include)
+		Il définit les types de vocabulaires pour les éléments spécifiques scolomfr.
+		Ajout pour extendedLocation, platform, personalDataProcessType, description
+	  </xs:documentation>
+
+      <xs:documentation>
+        14/01/2016 - Adaptations ScoLOMFRv2.0
+        ajout de l'élément 4.3.1 ExtendedLocation
+        ajout de la balise "label" pour les éléments :
+           - 1.10 General Resource Type
+           - 4.3.1.3 personalDataProcessType
+           - 5.14 Place
+           - 5.15 Educational Method
+           - 5.16 Tool
+      </xs:documentation>
+  </xs:annotation>
+
+  <xs:import namespace="http://www.lom-fr.fr/xsd/SCOLOMFR/vocab"/>
+  <xs:import namespace="http://ltsc.ieee.org/xsd/LOM"/>
+  <xs:import namespace="http://ltsc.ieee.org/xsd/LOM/unique"/>
+  <xs:import namespace="http://ltsc.ieee.org/xsd/LOM/extend"/>
+  <!-- Vocabulary type declarations -->
+  <!-- 1.10 General Resource Type -->
+  <xs:complexType name="generalResourceTypeVocab">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="source" type="lom:sourceValue"/>
+      <xs:element name="value" type="generalResourceTypeValue"/>
+      <xs:element name="label" type="lom:CharacterString"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="generalResourceTypeValue">
+    <xs:simpleContent>
+      <xs:extension base="vocscolomfr:generalResourceType">
+        <xs:attributeGroup ref="ag:value"/>
+        <xs:attributeGroup ref="ex:customAttributes"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- 4.3.1.3 personalDataProcessType -->
+  <xs:complexType name="personalDataProcessTypeVocab">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="source" type="lom:sourceValue"/>
+      <xs:element name="value" type="personalDataProcessTypeValue"/>
+      <xs:element name="label" type="lom:CharacterString"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="personalDataProcessTypeValue">
+    <xs:simpleContent>
+      <xs:extension base="vocscolomfr:personalDataProcessType">
+        <xs:attributeGroup ref="ag:value"/>
+        <xs:attributeGroup ref="ex:customAttributes"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- 5.14 Place -->
+  <xs:complexType name="placeVocab">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="source" type="lom:sourceValue"/>
+      <xs:element name="value" type="placeValue"/>
+      <xs:element name="label" type="lom:CharacterString"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="placeValue">
+    <xs:simpleContent>
+      <xs:extension base="vocscolomfr:place">
+        <xs:attributeGroup ref="ag:value"/>
+        <xs:attributeGroup ref="ex:customAttributes"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- 5.15 Educational Method -->
+  <xs:complexType name="educationalMethodVocab">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="source" type="lom:sourceValue"/>
+      <xs:element name="value" type="educationalMethodValue"/>
+      <xs:element name="label" type="lom:CharacterString"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="educationalMethodValue">
+    <xs:simpleContent>
+      <xs:extension base="vocscolomfr:educationalMethod">
+        <xs:attributeGroup ref="ag:value"/>
+        <xs:attributeGroup ref="ex:customAttributes"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- 5.16 Tool -->
+  <xs:complexType name="toolVocab">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="source" type="lom:sourceValue"/>
+      <xs:element name="value" type="toolValue"/>
+      <xs:element name="label" type="lom:CharacterString"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="toolValue">
+    <xs:simpleContent>
+      <xs:extension base="vocscolomfr:tool">
+        <xs:attributeGroup ref="ag:value"/>
+        <xs:attributeGroup ref="ex:customAttributes"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

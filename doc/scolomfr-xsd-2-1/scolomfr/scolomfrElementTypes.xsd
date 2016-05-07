@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:scoag="http://www.lom-fr.fr/xsd/SCOLOMFR/unique" xmlns:lom="http://ltsc.ieee.org/xsd/LOM" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified">
+  <xs:annotation>
+	<xs:documentation>
+		Licence
+		Ce travail est placé sous licence Creative commons Attribution Partage à l'Identique 3.0 France.
+		Pour plus d'information, consulter le fichier "licence_scolomfr.txt" à la racine de ce package, ou le site http://creativecommons.org/licenses/by-sa/3.0/fr/
+	</xs:documentation>
+    <xs:documentation>
+	  Copyright
+      ScoLOMFRv2.0, schémas XSD (février 2016)
+      © 2015 Direction du Numérique pour l’Éducation - Ministère de l'Éducation nationale, de l'enseignement supérieur et de la Recherche / Réseau Canopé
+	</xs:documentation>
+	<xs:documentation>
+	  Nature
+		Ce fichier est un élément de l'ensemble des schémas XSD nécessaires à la mise en œuvre de ScoLOMFR 2.0 (février 2016).
+		ScoLOMFR est un profil d'application de LOM et LOMFR.
+		La version 2.0 des schémas intègre la validation de l'ensemble des vocabulaires définis à cette date, et comprend les ajouts suivants :
+		- intégration d'un élément complexe 4.3.1 "localisation étendue", destiné à fournir les éléments nécessaires pour un accès à la ressource via des plates-formes de gestion des accès ;
+		- intégration des URI comme identifiants de tous les concepts utilisés, dans une évolution vers le web sémantique ;
+		- ajout d'un élément "label" à tous les éléments déclinés du lom, et définis comme des paires (source, value).
+		           - Le champ "source" devient SCOLOMv2.0 ;
+		           - le champ "value" porte l'URI du concept, tel que défini dans les vocabulaires publiés ;
+		           - le champ "label" permet de saisir un libellé (par défaut le libellé du terme préférentiel du concept).
+		  Les présents schémas XSD présentent une compatibilité ascendante avec les fichiers conformes à LOMv1.0, LOMFR et ScoLOMFRv1.x.
+		  Toutes les valeurs de termes ayant été valides dans les schémas et vocabulaires publiés pour ces différentes version sont valides au sens des schémas ScoLOMFRv2.0.
+		 Toutefois, le présent package propose aussi un outil de migration permettant de migrer les fichiers LOM, LOMFR et ScoLOMFRv1.x en un format "strict" ScoLOMFRv2.0, dans lequel tous les éléments liés à des vocabulaires sont identifiés par leurs URI de concepts.
+		 Une version ultérieure des schémas permettra de passer dans une version ScoLOMFR dans laquelle tous les éléments liés à des vocabulaires seront identifiés par les URI de concepts.
+		 L'ensemble des vocabulaires, de la documentation et des éléments de cyce de vie de ScoLOMFR sont publiés sur le site http://www.lom-fr.fr/scolomfr/.
+	  </xs:documentation>
+	  <xs:documentation>
+	    Ce composant est appelé par scolomfrCustom.xsd (include).
+		Il fournit les éléments de définition des types de vocabulaires pour les ajouts scolomfr, en particulier des types complexes fondés sur des triplets (source, value, label)..
+		Indication éventuelle de la cardinalité pour les éléments non uniques.
+	  </xs:documentation>
+
+      <xs:documentation>
+          14/01/2016 - Adaptations ScoLOMFRv2.0 : ajout de l'élément 4.3.1 "Localisation étendue"
+      </xs:documentation>
+  </xs:annotation>
+
+  <xs:import namespace="http://ltsc.ieee.org/xsd/LOM"/>
+  <xs:import namespace="http://www.lom-fr.fr/xsd/SCOLOMFR/unique"/>
+  <!-- 1.10 GeneralResourceType -->
+  <xs:complexType name="generalResourceType">
+    <xs:complexContent>
+      <xs:extension base="generalResourceTypeVocab">
+        <xs:attributeGroup ref="scoag:generalResourceType"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- 4.3.1 extendedLocation -->
+  <xs:complexType name="extendedLocation">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="location"/>
+      <xs:group ref="platform"/>
+      <xs:group ref="personalDataProcessType"/>
+      <xs:group ref="lom:description" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attributeGroup ref="scoag:extendedLocation"/>
+    <!--<xs:attributeGroup ref="ex:customAttributes"/>-->
+  </xs:complexType>
+  <!-- 4.3.1.1 location -->
+  <xs:complexType name="location">
+    <xs:simpleContent>
+      <xs:extension base="lom:location">
+        <xs:attributeGroup ref="scoag:location"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- 4.3.1.2 platform -->
+  <xs:complexType name="platform">
+    <xs:simpleContent>
+      <xs:extension base="xs:anyURI">
+        <xs:attributeGroup ref="scoag:platform"/>
+      </xs:extension>
+      <!--<xs:attributeGroup ref="ex:customAttributes"/>-->
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- 4.3.1.3 personalDataProcessType -->
+  <xs:complexType name="personalDataProcessType">
+    <xs:complexContent>
+      <xs:extension base="personalDataProcessTypeVocab">
+        <xs:attributeGroup ref="scoag:personalDataProcessType"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- 4.3.1.4 description
+  <xs:complexType name="description">
+    <xs:complexContent>
+      <xs:extension base="LanguageString">
+        <xs:attributeGroup ref="ag:description"/>
+        <xs:attributeGroup ref="ex:customAttributes"/>
+      </xs:extension>
+    </xs:complexContent>
+</xs:complexType> -->
+  <!-- 5.14 Place -->
+  <xs:complexType name="place">
+    <xs:complexContent>
+      <xs:extension base="placeVocab">
+        <xs:attributeGroup ref="scoag:place"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- 5.15 EducationalMethod -->
+  <xs:complexType name="educationalMethod">
+    <xs:complexContent>
+      <xs:extension base="educationalMethodVocab">
+        <xs:attributeGroup ref="scoag:educationalMethod"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- 5.16 Tool -->
+  <xs:complexType name="tool">
+    <xs:complexContent>
+      <xs:extension base="toolVocab">
+        <xs:attributeGroup ref="scoag:tool"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <!-- Vocabulaire scolomfr-voc-003 (RôleContributeur) -->
+  <xs:annotation>
+    <xs:documentation>
+		Licence
+		Ce travail est placé sous licence Creative commons Attribution Partage à l'Identique 3.0 France.
+		Pour plus d'information, consulter le fichier "licence_scolomfr.txt" à la racine de ce package, ou le site http://creativecommons.org/licenses/by-sa/3.0/fr/
+	</xs:documentation>
+    <xs:documentation>
+	  Copyright
+      ScoLOMFRv2.1, schémas XSD (mars 2016)
+      © 2015 Direction du Numérique pour l'Éducation - Ministère de l'Éducation nationale, de l'enseignement supérieur et de la Recherche / Réseau Canopé
+	</xs:documentation>
+    <xs:documentation>
+	  Nature
+		Ce fichier est un élément de l'ensemble des schémas XSD nécessaires à la mise en œuvre de ScoLOMFR 2.1 (mars 2016).
+		ScoLOMFR est un profil d'application de LOM et LOMFR.
+		La version 2.1 des schémas intègre la validation de l'ensemble des vocabulaires définis à cette date, et comprend les ajouts suivants :
+		- intégration d'un élément complexe 4.3.1 "localisation étendue", destiné à fournir les éléments nécessaires pour un accès à la ressource via des plates-formes de gestion des accès ;
+		- intégration des URI comme identifiants de tous les concepts utilisés, dans une évolution vers le web sémantique ;
+		- ajout d'un élément "label" à tous les éléments déclinés du lom, et définis comme des paires (source, value).
+		           - Le champ "source" devient SCOLOMv2.1 ;
+		           - le champ "value" porte l'URI du concept, tel que défini dans les vocabulaires publiés ;
+		           - le champ "label" permet de saisir un libellé (par défaut le libellé du terme préférentiel du concept).
+		  Les présents schémas XSD présentent une compatibilité ascendante avec les fichiers conformes à LOMv1.0, LOMFR et ScoLOMFRv1.x.
+		  Toutes les valeurs de termes ayant été valides dans les schémas et vocabulaires publiés pour ces différentes version sont valides au sens des schémas ScoLOMFRv2.1.
+		 Toutefois, le présent package propose aussi un outil de migration permettant de migrer les fichiers LOM, LOMFR et ScoLOMFRv1.x en un format "strict" ScoLOMFRv2.1, dans lequel tous les éléments liés à des vocabulaires sont identifiés par leurs URI de concepts.
+		 Une version ultérieure des schémas permettra de passer dans une version ScoLOMFR dans laquelle tous les éléments liés à des vocabulaires seront identifiés par les URI de concepts.
+		 L'ensemble des vocabulaires, de la documentation et des éléments de cyce de vie de ScoLOMFR sont publiés sur le site http://www.lom-fr.fr/scolomfr/.
+	  </xs:documentation>
+    <xs:documentation>
+	    Ce  fichier énumère, pour le vocabulaire scolomfr-voc-003 (RôleContributeur), les valeurs valides du champ correspondant.
+		Afin de pouvoir valider toutes notices réalisées antérieurement, ce schéma définit un format dit "ScoLOMFRv2.1_lax", qui permet l'utilisation de toutes les valeurs ayant été utilisées dans les versions antérieures.
+		Les valeurs valides au sens des schémas ScoLOMFRv2.1 comportent :
+		- les URI nominaux des concepts du vocabulaire
+		- tous les ID ayant été utilisés dans une des versions antérieurement publiées
+		- dans un souci de compatibilité maximale, il comporte également tous les libellés correspondants.
+		Il est vivement conseillé de procéder à la migration des anciens fichiers, afin que les éléments relevant de vocabulaires contrôlés portent tous des identifiants URI nominaux des concepts. Ce format, dit "Scolomfrv2.1_strict", sera rendu obligatoire dans la version 3.0.
+	  </xs:documentation>
+  </xs:annotation>
+  <xs:simpleType name="voc003Values">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="auteur"/>
+      <xs:enumeration value="author"/>
+      <xs:enumeration value="concepteur graphique"/>
+      <xs:enumeration value="concepteur pédagogique"/>
+      <xs:enumeration value="content provider"/>
+      <xs:enumeration value="contributeur"/>
+      <xs:enumeration value="diffuseur / distributeur"/>
+      <xs:enumeration value="directeur de la publication"/>
+      <xs:enumeration value="développeur informatique"/>
+      <xs:enumeration value="editor"/>
+      <xs:enumeration value="educational validator"/>
+      <xs:enumeration value="expert du domaine"/>
+      <xs:enumeration value="fournisseur de contenu"/>
+      <xs:enumeration value="graphical designer"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/author"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/content_provider"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/editor"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/educational_validator"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/graphical_designer"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/initiator"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/instructional_designer"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/publisher"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-003-num-005"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-003-num-017"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-003-num-019"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-003-num-021"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/script_writer"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/subject_matter_expert"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/technical_implementer"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/technical_validator"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/terminator"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/unknown"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/validator_2"/>
+      <xs:enumeration value="implémenteur technique"/>
+      <xs:enumeration value="inconnu"/>
+      <xs:enumeration value="initiateur"/>
+      <xs:enumeration value="initiator"/>
+      <xs:enumeration value="instructional designer"/>
+      <xs:enumeration value="logiciel de conversion"/>
+      <xs:enumeration value="logiciel de conversion de métadonnées"/>
+      <xs:enumeration value="logiciel de saisie"/>
+      <xs:enumeration value="logiciel de saisie de métadonnées"/>
+      <xs:enumeration value="publisher"/>
+      <xs:enumeration value="rédacteur de scénario"/>
+      <xs:enumeration value="scolomfr-voc-003-num-001"/>
+      <xs:enumeration value="scolomfr-voc-003-num-002"/>
+      <xs:enumeration value="scolomfr-voc-003-num-003"/>
+      <xs:enumeration value="scolomfr-voc-003-num-004"/>
+      <xs:enumeration value="scolomfr-voc-003-num-005"/>
+      <xs:enumeration value="scolomfr-voc-003-num-006"/>
+      <xs:enumeration value="scolomfr-voc-003-num-007"/>
+      <xs:enumeration value="scolomfr-voc-003-num-008"/>
+      <xs:enumeration value="scolomfr-voc-003-num-009"/>
+      <xs:enumeration value="scolomfr-voc-003-num-010"/>
+      <xs:enumeration value="scolomfr-voc-003-num-011"/>
+      <xs:enumeration value="scolomfr-voc-003-num-012"/>
+      <xs:enumeration value="scolomfr-voc-003-num-013"/>
+      <xs:enumeration value="scolomfr-voc-003-num-0131"/>
+      <xs:enumeration value="scolomfr-voc-003-num-014"/>
+      <xs:enumeration value="scolomfr-voc-003-num-015"/>
+      <xs:enumeration value="scolomfr-voc-003-num-016"/>
+      <xs:enumeration value="scolomfr-voc-003-num-017"/>
+      <xs:enumeration value="scolomfr-voc-003-num-019"/>
+      <xs:enumeration value="scolomfr-voc-003-num-020"/>
+      <xs:enumeration value="scolomfr-voc-003-num-022"/>
+      <xs:enumeration value="scolomfr-voc-003-num-023"/>
+      <xs:enumeration value="scolomfr-voc-003-num-024"/>
+      <xs:enumeration value="script writer"/>
+      <xs:enumeration value="subject matter expert"/>
+      <xs:enumeration value="technical implementer"/>
+      <xs:enumeration value="technical validator"/>
+      <xs:enumeration value="terminateur"/>
+      <xs:enumeration value="terminator"/>
+      <xs:enumeration value="unknown"/>
+      <xs:enumeration value="validator"/>
+      <xs:enumeration value="valideur"/>
+      <xs:enumeration value="valideur juridique"/>
+      <xs:enumeration value="valideur pédagogique"/>
+      <xs:enumeration value="valideur technique"/>
+      <xs:enumeration value="éditeur"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

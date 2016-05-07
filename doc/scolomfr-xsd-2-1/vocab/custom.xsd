@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<xs:schema xmlns="http://ltsc.ieee.org/xsd/LOM/vocab" xmlns:lom="http://ltsc.ieee.org/xsd/LOM" xmlns:lx="http://www.lom-fr.fr/xsd/LOMFR" xmlns:scolx="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://ltsc.ieee.org/xsd/LOM/vocab" elementFormDefault="qualified" version="LOMFR NF Z 76-040 12/2006">
+  <xs:annotation>
+    <xs:documentation>
+         This work is licensed under the Creative Commons Attribution-ShareAlike
+         License.  To view a copy of this license, see the file license.txt,
+         visit http://creativecommons.org/licenses/by-sa/2.0 or send a letter to
+         Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
+      </xs:documentation>
+    <xs:documentation>
+         This component schema definition provides simple type declarations for LOM
+         data elements that are defined as Vocabulary data types.
+
+         This component schema definition enforces that vocabulary values are only
+         those specified in 1484.12.3 or in a custom vocabulary.  This component
+         schema definition enforces adherence to the combined use of 1484.12.3
+         defined vocabulary values and custom vocabulary values by checking that both
+         sources and values are taken from either the token set defined in 1484.12.3 or
+         from a custom vocabulary.
+
+         Organizations are free to define their own namespace for the custom vocabulary
+         extensions.  For completeness this XSD is set up to use a namespace defined
+         as xmlns:lx="http://ltsc.ieee.org/xsd/LOM/custom"
+      </xs:documentation>
+    <xs:documentation>
+        *****************************************************************************
+        **                                                                         **
+        ** NOTE THIS CHANGE HISTORY IS USED TO DOCUMENT CHANGES TO THE XML SCHEMA  **
+        ** DEFINITION DURING THE BALLOTING PROCESS.  THIS CHANGE HISTORY WILL BE   **
+        ** REMOVED ONCE THE FINAL VERSION OF THE STANDARD IS PUBLISHED.  A NEW     **
+        ** CHANGE HISTORY WILL BE INCLUDED TO INDICATE THE INITIAL RELEASE THAT    **
+        ** MAPS TO THE FINAL STANDARD.                                             **
+        **                                                                         **
+        *****************************************************************************
+        **                            CHANGE HISTORY                               **
+        *****************************************************************************
+        ** 03/15/2004:  1)Updated annoation describing purpose and design of the   **
+        **                XSD.                                                     **
+        **                                                                         **
+        ** 09/27/2004   1)Updated file documentation to correspond with working    **
+        **                draft 3.                                                 **
+        **              2)Updated the Creative Commons Licensing agreement to      **
+        **                reference the Attribution-ShareAlike 2.0                 **
+        *****************************************************************************
+      </xs:documentation>
+    <xs:documentation>
+        14/01/2016 - Adaptations ScoLOMFRv2.0 : 
+            - Ajout du vocabulaire personalDataProcessType (pour l'élément 4.3.1 extendedLocation) 
+            - On ne prend plus que les valeurs du ScoLOMFR
+    </xs:documentation>
+  </xs:annotation>
+  <xs:import namespace="http://ltsc.ieee.org/xsd/LOM"/>
+  <xs:import namespace="http://www.lom-fr.fr/xsd/LOMFR"/>
+  <xs:import namespace="http://www.lom-fr.fr/xsd/SCOLOMFR"/>
+  <!-- Vocabulary data type declarations -->
+  <!-- Source -->
+  <xs:simpleType name="source">
+    <xs:union memberTypes="scolx:sourceValues"/>
+  </xs:simpleType>
+  <!-- 1.7 Structure -->
+  <xs:simpleType name="structure">
+    <xs:union memberTypes="scolx:structureValues"/>
+  </xs:simpleType>
+  <!-- 1.8 Aggregation Level -->
+  <xs:simpleType name="aggregationLevel">
+    <xs:union memberTypes="scolx:aggregationLevelValues"/>
+  </xs:simpleType>
+  <!-- 1.9 documentType -->
+  <xs:simpleType name="documentType">
+    <xs:union memberTypes="scolx:documentTypeValues"/>
+  </xs:simpleType>
+  <!-- 2.2 Status -->
+  <xs:simpleType name="status">
+    <xs:union memberTypes="scolx:statusValues"/>
+  </xs:simpleType>
+  <!-- 2.3.1 Role -->
+  <xs:simpleType name="role">
+    <xs:union memberTypes="scolx:roleValues"/>
+  </xs:simpleType>
+  <!-- 3.2.1 Role -->
+  <xs:simpleType name="roleMeta">
+    <xs:union memberTypes="scolx:roleMetaValues"/>
+  </xs:simpleType>
+
+  <!-- 4.3.1 extendedLocation / personalDataProcessType -->
+  <xs:simpleType name="personalDataProcessType">
+    <xs:union memberTypes="scolx:personalDataProcessTypeValues"/>
+  </xs:simpleType>
+
+  <!-- 4.4.1.1 Type -->
+  <xs:simpleType name="type">
+    <xs:union memberTypes="scolx:typeValues"/>
+  </xs:simpleType>
+  <!-- 4.4.1.2 Name -->
+  <xs:simpleType name="name">
+    <xs:union memberTypes="scolx:nameValues"/>
+  </xs:simpleType>
+  <!-- 5.1 Interactivity Type -->
+  <xs:simpleType name="interactivityType">
+    <xs:union memberTypes="scolx:interactivityTypeValues"/>
+  </xs:simpleType>
+  <!-- 5.2 Learning Resource Type -->
+  <xs:simpleType name="learningResourceType">
+    <xs:union memberTypes="scolx:learningResourceTypeValues"/>
+  </xs:simpleType>
+  <!-- 5.3 Interactivity Level -->
+  <xs:simpleType name="interactivityLevel">
+    <xs:union memberTypes="scolx:interactivityLevelValues"/>
+  </xs:simpleType>
+  <!-- 5.4 Semantic Density -->
+  <xs:simpleType name="semanticDensity">
+    <xs:union memberTypes="scolx:semanticDensityValues"/>
+  </xs:simpleType>
+  <!-- 5.5 Intended End User Role -->
+  <xs:simpleType name="intendedEndUserRole">
+    <xs:union memberTypes="scolx:intendedEndUserRoleValues"/>
+  </xs:simpleType>
+  <!-- 5.6 Context -->
+  <xs:simpleType name="context">
+    <xs:union memberTypes="scolx:contextValues"/>
+  </xs:simpleType>
+  <!-- 5.8 Difficulty -->
+  <xs:simpleType name="difficulty">
+    <xs:union memberTypes="scolx:difficultyValues"/>
+  </xs:simpleType>
+  <!-- 5.12 Activity -->
+  <xs:simpleType name="activity">
+    <xs:union memberTypes="scolx:activityValues"/>
+  </xs:simpleType>
+  <!-- 6.1 Cost -->
+  <xs:simpleType name="cost">
+    <xs:union memberTypes="scolx:costValues"/>
+  </xs:simpleType>
+  <!-- 6.2 Copyright and Other Restrictions -->
+  <xs:simpleType name="copyrightAndOtherRestrictions">
+    <xs:union memberTypes="scolx:copyrightAndOtherRestrictionsValues"/>
+  </xs:simpleType>
+  <!-- 7.1 Kind -->
+  <xs:simpleType name="kind">
+    <xs:union memberTypes="scolx:kindValues"/>
+  </xs:simpleType>
+  <!-- 9.1 Purpose -->
+  <xs:simpleType name="purpose">
+    <xs:union memberTypes="scolx:purposeValues"/>
+  </xs:simpleType>
+</xs:schema>

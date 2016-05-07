@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified" version="SCOLOMFR v1.1 10/2011">
+  <xs:annotation>
+	<xs:documentation>
+		Licence
+		Ce travail est placé sous licence Creative commons Attribution Partage à l'Identique 3.0 France.
+		Pour plus d'information, consulter le fichier "licence_scolomfr.txt" à la racine de ce package, ou le site http://creativecommons.org/licenses/by-sa/3.0/fr/
+	</xs:documentation>
+    <xs:documentation>
+	  Copyright
+      ScoLOMFRv2.0, schémas XSD (février 2016)
+      © 2015 Direction du Numérique pour l’Éducation - Ministère de l'Éducation nationale, de l'enseignement supérieur et de la Recherche / Réseau Canopé
+	</xs:documentation>
+	<xs:documentation>
+	  Nature
+		Ce fichier est un élément de l'ensemble des schémas XSD nécessaires à la mise en œuvre de ScoLOMFR 2.0 (février 2016).
+		ScoLOMFR est un profil d'application de LOM et LOMFR.
+		La version 2.0 des schémas intègre la validation de l'ensemble des vocabulaires définis à cette date, et comprend les ajouts suivants :
+		- intégration d'un élément complexe 4.3.1 "localisation étendue", destiné à fournir les éléments nécessaires pour un accès à la ressource via des plates-formes de gestion des accès ;
+		- intégration des URI comme identifiants de tous les concepts utilisés, dans une évolution vers le web sémantique ;
+		- ajout d'un élément "label" à tous les éléments déclinés du lom, et définis comme des paires (source, value).
+		           - Le champ "source" devient SCOLOMv2.0 ;
+		           - le champ "value" porte l'URI du concept, tel que défini dans les vocabulaires publiés ;
+		           - le champ "label" permet de saisir un libellé (par défaut le libellé du terme préférentiel du concept).
+		  Les présents schémas XSD présentent une compatibilité ascendante avec les fichiers conformes à LOMv1.0, LOMFR et ScoLOMFRv1.x.
+		  Toutes les valeurs de termes ayant été valides dans les schémas et vocabulaires publiés pour ces différentes version sont valides au sens des schémas ScoLOMFRv2.0.
+		 Toutefois, le présent package propose aussi un outil de migration permettant de migrer les fichiers LOM, LOMFR et ScoLOMFRv1.x en un format "strict" ScoLOMFRv2.0, dans lequel tous les éléments liés à des vocabulaires sont identifiés par leurs URI de concepts.
+		 Une version ultérieure des schémas permettra de passer dans une version ScoLOMFR dans laquelle tous les éléments liés à des vocabulaires seront identifiés par les URI de concepts.
+		 L'ensemble des vocabulaires, de la documentation et des éléments de cyce de vie de ScoLOMFR sont publiés sur le site http://www.lom-fr.fr/scolomfr/.
+	  </xs:documentation>
+	  <xs:documentation>
+	    Ce composant est appelé par scolomfrCustom.xsd (include)
+	    Il fournit des éléments de déclaration pour les groupes generalResourceType, place, educationalMethod, tool.
+	    Il s’appuie sur les types et groupes d’attributs generalResourceType, place, EducationalMethod, tool définis par scolomfrUnique.xsd et scolomfrVocab.xsd.
+	    Les groupes generalResourceType, place, EducationalMethod, tool comprennent en particulier une contrainte de cohérence globale (xs :unique) portant sur chacun des éléments.
+	    Il s’agit d’une contrainte d’unicité qui doit être respectée sur l’ensemble du document validé.
+	    Ce fichier comporte également les éléments de déclaration pour extendedLocation (localisation étendue, 4.3.1),  location (llocalisation étendue.localisation, 4.3.1.1) et personalDataProcessType (localisation étendue.type de gestion des données à caractère personnel, 4.3.1.3).
+	  </xs:documentation>
+
+      <xs:documentation>
+          14/01/2016 - Adaptations ScoLOMFRv2.0 : ajout de l'élément 4.3.1 "Localisation étendue"
+      </xs:documentation>
+  </xs:annotation>
+
+  <!-- Element declarations -->
+  <!-- 1.10 GeneralResourceType -->
+  <xs:group name="generalResourceType">
+    <xs:sequence>
+      <xs:element name="generalResourceType" type="generalResourceType">
+        <xs:unique name="generalResourceTypeUnique">
+          <xs:selector xpath="*"/>
+          <xs:field xpath="@uniqueElementName"/>
+        </xs:unique>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <!-- 4.3.1 extendedLocation -->
+  <xs:group name="extendedLocation">
+    <xs:sequence>
+      <xs:element name="extendedLocation" type="extendedLocation">
+        <xs:unique name="extendedLocationUnique">
+          <xs:selector xpath="location|platform|personalDataProcessType"/>
+          <xs:field xpath="@uniqueElementName"/>
+        </xs:unique>
+      </xs:element>
+    </xs:sequence>
+</xs:group>
+  <!-- 4.3.1.1 location -->
+  <xs:group name="location">
+    <xs:sequence>
+      <xs:element name="location" type="xs:string"/>
+    </xs:sequence>
+</xs:group>
+  <!-- 4.3.1.2 platform-->
+  <xs:group name="platform">
+    <xs:sequence>
+      <xs:element name="platform" type="xs:anyURI"/>
+    </xs:sequence>
+  </xs:group>
+  <!-- 4.3.1.3 personalDataProcessType-->
+  <xs:group name="personalDataProcessType">
+    <xs:sequence>
+      <xs:element name="personalDataProcessType" type="personalDataProcessType">
+        <xs:unique name="personalDataProcessTypeUnique">
+          <xs:selector xpath="*"/>
+          <xs:field xpath="@uniqueElementName"/>
+        </xs:unique>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <!-- 5.14 Place -->
+  <xs:group name="place">
+    <xs:sequence>
+      <xs:element name="place" type="place">
+        <xs:unique name="placeUnique">
+          <xs:selector xpath="*"/>
+          <xs:field xpath="@uniqueElementName"/>
+        </xs:unique>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <!-- 5.15 EducationalMethod -->
+  <xs:group name="educationalMethod">
+    <xs:sequence>
+      <xs:element name="educationalMethod" type="educationalMethod">
+        <xs:unique name="educationalMethodUnique">
+          <xs:selector xpath="*"/>
+          <xs:field xpath="@uniqueElementName"/>
+        </xs:unique>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <!-- 5.16 Tool  -->
+  <xs:group name="tool">
+    <xs:sequence>
+      <xs:element name="tool" type="tool">
+        <xs:unique name="toolUnique">
+          <xs:selector xpath="*"/>
+          <xs:field xpath="@uniqueElementName"/>
+        </xs:unique>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+</xs:schema>

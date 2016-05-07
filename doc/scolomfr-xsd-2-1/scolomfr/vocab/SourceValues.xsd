@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<xs:schema xmlns="http://ltsc.ieee.org/xsd/LOM/vocab" xmlns:lom="http://ltsc.ieee.org/xsd/LOM" xmlns:lx="http://www.lom-fr.fr/xsd/LOMFR" xmlns:scolx="http://www.lom-fr.fr/xsd/SCOLOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/SCOLOMFR" elementFormDefault="qualified" version="LOMFR NF Z 76-040 12/2006">
+  <xs:annotation>
+	<xs:documentation>
+		Licence
+		Ce travail est placé sous licence Creative commons Attribution Partage à l'Identique 3.0 France.
+		Pour plus d'information, consulter le fichier "licence_scolomfr.txt" à la racine de ce package, ou le site http://creativecommons.org/licenses/by-sa/3.0/fr/
+	</xs:documentation>
+    <xs:documentation>
+	  Copyright
+      ScoLOMFRv2.0, schémas XSD (février 2016)
+      © 2015 Direction du Numérique pour l'Éducation - Ministère de l'Éducation nationale, de l'enseignement supérieur et de la Recherche / Réseau Canopé
+	</xs:documentation>
+	<xs:documentation>
+	  Nature
+		Ce fichier est un élément de l'ensemble des schémas XSD nécessaires à la mise en œuvre de ScoLOMFR 2.0 (février 2016).
+		ScoLOMFR est un profil d'application de LOM et LOMFR.
+		La version 2.0 des schémas intègre la validation de l'ensemble des vocabulaires définis à cette date, et comprend les ajouts suivants :
+		- intégration d'un élément complexe 4.3.1 "localisation étendue", destiné à fournir les éléments nécessaires pour un accès à la ressource via des plates-formes de gestion des accès ;
+		- intégration des URI comme identifiants de tous les concepts utilisés, dans une évolution vers le web sémantique ;
+		- ajout d'un élément "label" à tous les éléments déclinés du lom, et définis comme des paires (source, value). 
+		           - Le champ "source" devient SCOLOMv2.0 ;
+		           - le champ "value" porte l'URI du concept, tel que défini dans les vocabulaires publiés ;
+		           - le champ "label" permet de saisir un libellé (par défaut le libellé du terme préférentiel du concept).
+		  Les présents schémas XSD présentent une compatibilité ascendante avec les fichiers conformes à LOMv1.0, LOMFR et ScoLOMFRv1.x. 
+		  Toutes les valeurs de termes ayant été valides dans les schémas et vocabulaires publiés pour ces différentes version sont valides au sens des schémas ScoLOMFRv2.0.
+		 Toutefois, le présent package propose aussi un outil de migration permettant de migrer les fichiers LOM, LOMFR et ScoLOMFRv1.x en un format "strict" ScoLOMFRv2.0, dans lequel tous les éléments liés à des vocabulaires sont identifiés par leurs URI de concepts.
+		 Une version ultérieure des schémas permettra de passer dans une version ScoLOMFR dans laquelle tous les éléments liés à des vocabulaires seront identifiés par les URI de concepts.
+		 L'ensemble des vocabulaires, de la documentation et des éléments de cyce de vie de ScoLOMFR sont publiés sur le site http://www.lom-fr.fr/scolomfr/. 
+	  </xs:documentation>
+	  <xs:documentation>
+	    Ce  fichier énumère, les valeurs valides du champ "source".
+		Afin de pouvoir valider toutes notices réalisées antérieurement, ce schéma définit un format dit "ScoLOMFRv2.0_lax", qui permet l'utilisation de toutes les valeurs ayant été utilisées dans les versions antérieures.
+		Les valeurs valides au sens des schémas ScoLOMFRv2.0 comportent :
+		- les URI nominaux des concepts du vocabulaire
+		- tous les ID ayant été utilisés dans une des versions antérieurement publiées
+		- dans un souci de compatibilité maximale, il comporte également tous les libellés correspondants.
+		Il est vivement conseillé de procéder à la migration des anciens fichiers, afin que les éléments relevant de vocabulaires contrôlés portent tous des identifiants URI nominaux des concepts. Ce format, dit "Scolomfrv2.0_strict", sera rendu obligatoire dans la version 3.0.
+	  </xs:documentation>
+  </xs:annotation>
+
+  <xs:import namespace="http://ltsc.ieee.org/xsd/LOM"/>
+  <xs:import namespace="http://www.lom-fr.fr/xsd/LOMFR"/>
+  <xs:simpleType name="sourceValuesList">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="LOMv1.0"/>
+      <xs:enumeration value="LOMFRv1.0"/>
+      <xs:enumeration value="SCOLOMFRv1.0"/>
+      <xs:enumeration value="SCOLOMFRv1.1"/>
+      <xs:enumeration value="SCOLOMFRv2.0"/>
+      <xs:enumeration value="SCOLOMFRv2.1"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

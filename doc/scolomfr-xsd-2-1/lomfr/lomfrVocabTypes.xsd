@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/LOMFR" xmlns:vocfr="http://www.lom-fr.fr/xsd/LOMFR/vocab" xmlns:lom="http://ltsc.ieee.org/xsd/LOM" xmlns:ag="http://ltsc.ieee.org/xsd/LOM/unique" xmlns:ex="http://ltsc.ieee.org/xsd/LOM/extend" xmlns:voc="http://ltsc.ieee.org/xsd/LOM/vocab" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/LOMFR" elementFormDefault="qualified" version="LOMFR NF Z 76-040 12/2006">
+  <xs:annotation>
+    <xs:documentation>
+        14/01/2016 - Adaptations ScoLOMFRv2.0 : Les types source/value passent en source/value/label
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:import namespace="http://www.lom-fr.fr/xsd/LOMFR/vocab"/>
+  <xs:import namespace="http://ltsc.ieee.org/xsd/LOM"/>
+  <xs:import namespace="http://ltsc.ieee.org/xsd/LOM/unique"/>
+  <xs:import namespace="http://ltsc.ieee.org/xsd/LOM/extend"/>
+  <!-- Vocabulary type declarations -->
+  <!-- 1.9 Document Type -->
+  <xs:complexType name="documentTypeVocab">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="source" type="lom:sourceValue"/>
+      <xs:element name="value" type="documentTypeValue"/>
+      <xs:element name="label" type="lom:CharacterString"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="documentTypeValue">
+    <xs:simpleContent>
+      <xs:extension base="vocfr:documentType">
+        <xs:attributeGroup ref="ag:value"/>
+        <xs:attributeGroup ref="ex:customAttributes"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- 5.12 Activity-->
+  <xs:complexType name="activityVocab">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="source" type="lom:sourceValue"/>
+      <xs:element name="value" type="activityValue"/>
+      <xs:element name="label" type="lom:CharacterString"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="activityValue">
+    <xs:simpleContent>
+      <xs:extension base="vocfr:activity">
+        <xs:attributeGroup ref="ag:value"/>
+        <xs:attributeGroup ref="ex:customAttributes"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

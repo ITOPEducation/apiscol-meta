@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/LOMFR/vocab" xmlns:lomfr="http://www.lom-fr.fr/xsd/LOMFR" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/LOMFR/vocab" elementFormDefault="qualified" version="LOMFR NF Z 76-040 12/2006">
+  <xs:annotation>
+    <xs:documentation>
+        14/01/2016 - Adaptations ScoLOMFRv2.0 : Nettoyage : Les valeurs du vocabulaire "activityValues"
+            ne sont plus importées du ScoLOMFR
+    </xs:documentation>
+  </xs:annotation>
+  <xs:import namespace="http://www.lom-fr.fr/xsd/LOMFR"/>
+  
+  <xs:simpleType name="documentType">
+    <xs:union memberTypes="lomfr:documentTypeValues"/>
+  </xs:simpleType>
+  <xs:simpleType name="activity">
+    <xs:union memberTypes="lomfr:activityValues"/>
+  </xs:simpleType>
+</xs:schema>

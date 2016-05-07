@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<xs:schema xmlns="http://www.lom-fr.fr/xsd/LOMFR/unique" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.lom-fr.fr/xsd/LOMFR/unique" elementFormDefault="qualified" version="LOMFR NF Z 76-040 12/2006">
+  <xs:attributeGroup name="documentType"/>
+  <xs:attributeGroup name="activity"/>
+  <xs:attributeGroup name="credit"/>
+</xs:schema>

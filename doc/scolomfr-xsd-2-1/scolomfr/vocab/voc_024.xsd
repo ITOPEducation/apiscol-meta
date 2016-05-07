@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <!-- Vocabulaire scolomfr-voc-024 (NomTechnique) -->
+  <xs:annotation>
+    <xs:documentation>
+		Licence
+		Ce travail est placé sous licence Creative commons Attribution Partage à l'Identique 3.0 France.
+		Pour plus d'information, consulter le fichier "licence_scolomfr.txt" à la racine de ce package, ou le site http://creativecommons.org/licenses/by-sa/3.0/fr/
+	</xs:documentation>
+    <xs:documentation>
+	  Copyright
+      ScoLOMFRv2.1, schémas XSD (mars 2016)
+      © 2015 Direction du Numérique pour l'Éducation - Ministère de l'Éducation nationale, de l'enseignement supérieur et de la Recherche / Réseau Canopé
+	</xs:documentation>
+    <xs:documentation>
+	  Nature
+		Ce fichier est un élément de l'ensemble des schémas XSD nécessaires à la mise en œuvre de ScoLOMFR 2.1 (mars 2016).
+		ScoLOMFR est un profil d'application de LOM et LOMFR.
+		La version 2.1 des schémas intègre la validation de l'ensemble des vocabulaires définis à cette date, et comprend les ajouts suivants :
+		- intégration d'un élément complexe 4.3.1 "localisation étendue", destiné à fournir les éléments nécessaires pour un accès à la ressource via des plates-formes de gestion des accès ;
+		- intégration des URI comme identifiants de tous les concepts utilisés, dans une évolution vers le web sémantique ;
+		- ajout d'un élément "label" à tous les éléments déclinés du lom, et définis comme des paires (source, value).
+		           - Le champ "source" devient SCOLOMv2.1 ;
+		           - le champ "value" porte l'URI du concept, tel que défini dans les vocabulaires publiés ;
+		           - le champ "label" permet de saisir un libellé (par défaut le libellé du terme préférentiel du concept).
+		  Les présents schémas XSD présentent une compatibilité ascendante avec les fichiers conformes à LOMv1.0, LOMFR et ScoLOMFRv1.x.
+		  Toutes les valeurs de termes ayant été valides dans les schémas et vocabulaires publiés pour ces différentes version sont valides au sens des schémas ScoLOMFRv2.1.
+		 Toutefois, le présent package propose aussi un outil de migration permettant de migrer les fichiers LOM, LOMFR et ScoLOMFRv1.x en un format "strict" ScoLOMFRv2.1, dans lequel tous les éléments liés à des vocabulaires sont identifiés par leurs URI de concepts.
+		 Une version ultérieure des schémas permettra de passer dans une version ScoLOMFR dans laquelle tous les éléments liés à des vocabulaires seront identifiés par les URI de concepts.
+		 L'ensemble des vocabulaires, de la documentation et des éléments de cyce de vie de ScoLOMFR sont publiés sur le site http://www.lom-fr.fr/scolomfr/.
+	  </xs:documentation>
+    <xs:documentation>
+	    Ce  fichier énumère, pour le vocabulaire scolomfr-voc-024 (NomTechnique), les valeurs valides du champ correspondant.
+		Afin de pouvoir valider toutes notices réalisées antérieurement, ce schéma définit un format dit "ScoLOMFRv2.1_lax", qui permet l'utilisation de toutes les valeurs ayant été utilisées dans les versions antérieures.
+		Les valeurs valides au sens des schémas ScoLOMFRv2.1 comportent :
+		- les URI nominaux des concepts du vocabulaire
+		- tous les ID ayant été utilisés dans une des versions antérieurement publiées
+		- dans un souci de compatibilité maximale, il comporte également tous les libellés correspondants.
+		Il est vivement conseillé de procéder à la migration des anciens fichiers, afin que les éléments relevant de vocabulaires contrôlés portent tous des identifiants URI nominaux des concepts. Ce format, dit "Scolomfrv2.1_strict", sera rendu obligatoire dans la version 3.0.
+	  </xs:documentation>
+  </xs:annotation>
+  <xs:simpleType name="voc024Values">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="Chrome OS"/>
+      <xs:enumeration value="Debian"/>
+      <xs:enumeration value="Fedora"/>
+      <xs:enumeration value="Fennec"/>
+      <xs:enumeration value="Firefox mobile"/>
+      <xs:enumeration value="GNU/Linux"/>
+      <xs:enumeration value="Google mobile"/>
+      <xs:enumeration value="Internet explorer mobile"/>
+      <xs:enumeration value="Mac OS"/>
+      <xs:enumeration value="Microbrowser"/>
+      <xs:enumeration value="Microsoft Edge"/>
+      <xs:enumeration value="Microsoft Windows"/>
+      <xs:enumeration value="Multi-OS"/>
+      <xs:enumeration value="Opera Mobile"/>
+      <xs:enumeration value="Red Hat"/>
+      <xs:enumeration value="Suse"/>
+      <xs:enumeration value="Symbian OS"/>
+      <xs:enumeration value="Ubuntu"/>
+      <xs:enumeration value="Windows mobile"/>
+      <xs:enumeration value="amaya"/>
+      <xs:enumeration value="android"/>
+      <xs:enumeration value="any"/>
+      <xs:enumeration value="aucun"/>
+      <xs:enumeration value="autre"/>
+      <xs:enumeration value="autre système d'exploitation"/>
+      <xs:enumeration value="blackberry"/>
+      <xs:enumeration value="blackberry OS"/>
+      <xs:enumeration value="firefox"/>
+      <xs:enumeration value="google chrome"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/amaya"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/any"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/ms-internet_explorer"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/ms-windows"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/netscape_communicator"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/none"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/opera"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/pc-dos"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-002"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-010"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-014"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-016"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-017"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-019"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-021"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-022"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-023"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-024"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-025"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-026"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-027"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-028"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-029"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-030"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-031"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-032"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-024-num-047"/>
+      <xs:enumeration value="http://data.education.fr/voc/scolomfr/concept/unix"/>
+      <xs:enumeration value="iPhone OS"/>
+      <xs:enumeration value="indifférent"/>
+      <xs:enumeration value="ios"/>
+      <xs:enumeration value="linux"/>
+      <xs:enumeration value="macos"/>
+      <xs:enumeration value="mozilla firefox"/>
+      <xs:enumeration value="ms-internet explorer"/>
+      <xs:enumeration value="ms-windows"/>
+      <xs:enumeration value="multi-os"/>
+      <xs:enumeration value="navigateur"/>
+      <xs:enumeration value="navigateur mobile"/>
+      <xs:enumeration value="netscape"/>
+      <xs:enumeration value="netscape communicator"/>
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="opera"/>
+      <xs:enumeration value="pc-dos"/>
+      <xs:enumeration value="safari"/>
+      <xs:enumeration value="scolomfr-voc-024-num-001"/>
+      <xs:enumeration value="scolomfr-voc-024-num-002"/>
+      <xs:enumeration value="scolomfr-voc-024-num-003"/>
+      <xs:enumeration value="scolomfr-voc-024-num-004"/>
+      <xs:enumeration value="scolomfr-voc-024-num-005"/>
+      <xs:enumeration value="scolomfr-voc-024-num-006"/>
+      <xs:enumeration value="scolomfr-voc-024-num-007"/>
+      <xs:enumeration value="scolomfr-voc-024-num-008"/>
+      <xs:enumeration value="scolomfr-voc-024-num-009"/>
+      <xs:enumeration value="scolomfr-voc-024-num-010"/>
+      <xs:enumeration value="scolomfr-voc-024-num-011"/>
+      <xs:enumeration value="scolomfr-voc-024-num-012"/>
+      <xs:enumeration value="scolomfr-voc-024-num-013"/>
+      <xs:enumeration value="scolomfr-voc-024-num-014"/>
+      <xs:enumeration value="scolomfr-voc-024-num-016"/>
+      <xs:enumeration value="scolomfr-voc-024-num-017"/>
+      <xs:enumeration value="scolomfr-voc-024-num-018"/>
+      <xs:enumeration value="scolomfr-voc-024-num-019"/>
+      <xs:enumeration value="scolomfr-voc-024-num-020"/>
+      <xs:enumeration value="scolomfr-voc-024-num-021"/>
+      <xs:enumeration value="scolomfr-voc-024-num-022"/>
+      <xs:enumeration value="scolomfr-voc-024-num-023"/>
+      <xs:enumeration value="scolomfr-voc-024-num-024"/>
+      <xs:enumeration value="scolomfr-voc-024-num-025"/>
+      <xs:enumeration value="scolomfr-voc-024-num-026"/>
+      <xs:enumeration value="scolomfr-voc-024-num-027"/>
+      <xs:enumeration value="scolomfr-voc-024-num-028"/>
+      <xs:enumeration value="scolomfr-voc-024-num-029"/>
+      <xs:enumeration value="scolomfr-voc-024-num-030"/>
+      <xs:enumeration value="scolomfr-voc-024-num-031"/>
+      <xs:enumeration value="scolomfr-voc-024-num-032"/>
+      <xs:enumeration value="scolomfr-voc-024-num-033"/>
+      <xs:enumeration value="scolomfr-voc-024-num-034"/>
+      <xs:enumeration value="scolomfr-voc-024-num-035"/>
+      <xs:enumeration value="scolomfr-voc-024-num-036"/>
+      <xs:enumeration value="scolomfr-voc-024-num-037"/>
+      <xs:enumeration value="scolomfr-voc-024-num-038"/>
+      <xs:enumeration value="scolomfr-voc-024-num-039"/>
+      <xs:enumeration value="scolomfr-voc-024-num-040"/>
+      <xs:enumeration value="scolomfr-voc-024-num-041"/>
+      <xs:enumeration value="scolomfr-voc-024-num-042"/>
+      <xs:enumeration value="scolomfr-voc-024-num-043"/>
+      <xs:enumeration value="scolomfr-voc-024-num-044"/>
+      <xs:enumeration value="scolomfr-voc-024-num-045"/>
+      <xs:enumeration value="scolomfr-voc-024-num-046"/>
+      <xs:enumeration value="scolomfr-voc-024-num-047"/>
+      <xs:enumeration value="système d'exploitation"/>
+      <xs:enumeration value="unix"/>
+      <xs:enumeration value="windows internet explorer"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

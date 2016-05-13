@@ -507,14 +507,29 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 	}
 
 	private String getStringInUserLanguage(DBObject langStringObject) {
+		String string = "";
 		if (langStringObject.containsField("string")) {
-			DBObject stringObject = (DBObject) langStringObject.get("string");
-			if (stringObject.containsField("#text")) {
-				return (String) stringObject.get("#text");
+
+			try {
+				string = (String) langStringObject.get("string");
+			} catch (ClassCastException e1) {
+				DBObject stringObject;
+				try {
+					stringObject = (DBObject) langStringObject.get("string");
+
+				} catch (ClassCastException e2) {
+					BasicDBList stringObjects = (BasicDBList) langStringObject
+							.get("string");
+					stringObject = (DBObject) stringObjects.get(0);
+				}
+				if (stringObject != null && stringObject.containsField("#text")) {
+					string = (String) stringObject.get("#text");
+				}
 			}
+
 		}
 
-		return "";
+		return string;
 	}
 
 	private DBObject getMetadataById(String metadataId)

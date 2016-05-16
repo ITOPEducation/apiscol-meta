@@ -515,12 +515,11 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 			} catch (ClassCastException e1) {
 				DBObject stringObject;
 				try {
-					stringObject = (DBObject) langStringObject.get("string");
-
-				} catch (ClassCastException e2) {
 					BasicDBList stringObjects = (BasicDBList) langStringObject
 							.get("string");
 					stringObject = (DBObject) stringObjects.get(0);
+				} catch (ClassCastException e2) {
+					stringObject = (DBObject) langStringObject.get("string");
 				}
 				if (stringObject != null && stringObject.containsField("#text")) {
 					string = (String) stringObject.get("#text");

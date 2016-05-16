@@ -12,8 +12,11 @@
 	<xsl:param name="device" select="'auto'" />
 	<xsl:output method="html" omit-xml-declaration="yes"
 		encoding="UTF-8" indent="yes" />
-	<xsl:variable name="cdn"
-		select="'http://apiscol.cdn.local/cdn/'" />
+	<xsl:variable name="cdn" select="'http://apiscol.cdn.local/cdn/'" />
+	<xsl:variable name="a_pour_aperçu_relation"
+		select="'http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-009-num-023'"></xsl:variable>
+	<xsl:variable name="a_pour_vignette_relation"
+		select="'http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-009-num-021'"></xsl:variable>
 	<xsl:variable name="icon-base" select="'icons/st0'" />
 	<xsl:template match="/">
 		<xsl:choose>
@@ -359,7 +362,7 @@
 							</xsl:attribute>
 
 						<xsl:apply-templates select="*[local-name()='relation']">
-							<xsl:with-param name="kind" select="'a pour vignette'" />
+							<xsl:with-param name="kind" select="$a_pour_vignette_relation" />
 						</xsl:apply-templates>
 						<xsl:element name="span" namespace="">
 							<xsl:attribute name="class">
@@ -387,7 +390,7 @@
 								<xsl:value-of select="'height:0'"></xsl:value-of>
 							</xsl:attribute>
 							<xsl:apply-templates select="*[local-name()='relation']">
-								<xsl:with-param name="kind" select="'a pour aperçu'" />
+								<xsl:with-param name="kind" select="$a_pour_aperçu_relation" />
 							</xsl:apply-templates>
 						</xsl:element>
 					</xsl:element>
@@ -1016,7 +1019,7 @@
 		<xsl:param name="kind"></xsl:param>
 		<xsl:choose>
 			<xsl:when
-				test="*[local-name()='kind']/*[local-name()='value']='a pour vignette' and $kind='a pour vignette'">
+				test="*[local-name()='kind']/*[local-name()='value']=$a_pour_vignette_relation and $kind=$a_pour_vignette_relation">
 				<xsl:variable name="thumbsrc">
 					<xsl:value-of
 						select="*[local-name()='resource']/*[local-name()='identifier']/*[local-name()='entry']"></xsl:value-of>
@@ -1036,7 +1039,7 @@
 
 			</xsl:when>
 			<xsl:when
-				test="*[local-name()='kind']/*[local-name()='value']='a pour aperçu' and $kind='a pour aperçu'">
+				test="*[local-name()='kind']/*[local-name()='value']=$a_pour_aperçu_relation and $kind=$a_pour_aperçu_relation">
 				<xsl:element name="a" namespace="">
 					<xsl:attribute name="href"><xsl:value-of
 						select="*[local-name()='resource']/*[local-name()='identifier']/*[local-name()='entry']"></xsl:value-of> </xsl:attribute>

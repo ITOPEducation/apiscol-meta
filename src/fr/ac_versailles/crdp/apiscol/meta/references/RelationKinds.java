@@ -3,9 +3,13 @@ package fr.ac_versailles.crdp.apiscol.meta.references;
 import org.apache.commons.lang.StringUtils;
 
 public enum RelationKinds {
-	VIGNETTE("a pour vignette"), APERCU("a pour aperçu"), CONTIENT("contient"), FAIT_PARTIE_DE(
-			"est une partie de"), REQUIERT("requiert"), EST_REQUIS_PAR(
-			"est requis par");
+	VIGNETTE(
+			"http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-009-num-021"), APERCU(
+			"http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-009-num-023"), CONTIENT(
+			"http://purl.org/dc/terms/hasPart"), FAIT_PARTIE_DE(
+			"http://purl.org/dc/terms/isPartOf"), REQUIERT(
+			"http://purl.org/dc/terms/requires"), EST_REQUIS_PAR(
+			"http://purl.org/dc/terms/isRequiredBy");
 	private String value;
 
 	private RelationKinds(String value) {

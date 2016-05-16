@@ -304,7 +304,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 								.get("kind");
 						if (kindObject.containsField("value")) {
 							String value = (String) kindObject.get("value");
-							if (StringUtils.equals(value, "a pour vignette")) {
+							if (StringUtils.equals(value, RelationKinds.VIGNETTE.toString())) {
 								if (relationObject.containsField("resource")) {
 									DBObject resourceObject = (DBObject) relationObject
 											.get("resource");

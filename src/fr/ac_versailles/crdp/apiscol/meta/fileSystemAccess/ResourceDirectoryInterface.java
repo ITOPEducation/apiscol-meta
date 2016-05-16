@@ -39,10 +39,12 @@ import org.jdom2.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
 import fr.ac_versailles.crdp.apiscol.UsedNamespaces;
+import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.AbstractResourcesDataHandler.MetadataProperties;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser.Differencies;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.references.RelationKinds;
 import fr.ac_versailles.crdp.apiscol.meta.references.Source;
+import fr.ac_versailles.crdp.apiscol.meta.representations.SemanticUriProvider;
 import fr.ac_versailles.crdp.apiscol.utils.FileUtils;
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
 
@@ -642,7 +644,8 @@ public class ResourceDirectoryInterface {
 			if (StringUtils.isNotEmpty(technicalLocation))
 				technicalLocationElem.setText(technicalLocation);
 			if (StringUtils.isNotEmpty(format))
-				formatElem.setText(format);
+				formatElem.setText(SemanticUriProvider.convertToUri(
+						SemanticUriProvider.MIME_TYPE_VOCABULARY, format));
 			if (StringUtils.isNotEmpty(language))
 				languageElem.setText(language);
 			setLomIdentifier(rootNode, apiscolInstance, location);

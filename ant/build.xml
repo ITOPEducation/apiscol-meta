@@ -60,6 +60,7 @@
 			<fileset dir="${src.dir}">
 				<include name="**/*.xsd" />
 				<include name="**/*.xsl" />
+				<include name="**/*.skos" />
 			</fileset>
 		</copy>
 	</target>

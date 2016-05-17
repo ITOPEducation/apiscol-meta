@@ -45,6 +45,7 @@ import com.sun.jersey.multipart.FormDataParam;
 
 import fr.ac_versailles.crdp.apiscol.ApiscolApi;
 import fr.ac_versailles.crdp.apiscol.ParametersKeys;
+import fr.ac_versailles.crdp.apiscol.auth.oauth.OauthServersProxy;
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessBuilder;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessBuilder.DBTypes;
@@ -66,6 +67,8 @@ import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineQueryHandler
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineResultHandler;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.SearchEngineCommunicationException;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.SearchEngineErrorException;
+import fr.ac_versailles.crdp.apiscol.meta.semantic.SkosVocabulary;
+import fr.ac_versailles.crdp.apiscol.meta.semantic.SkosVocabularyInitializer;
 import fr.ac_versailles.crdp.apiscol.transactions.KeyLock;
 import fr.ac_versailles.crdp.apiscol.transactions.KeyLockManager;
 import fr.ac_versailles.crdp.apiscol.utils.TimeUtils;
@@ -78,6 +81,7 @@ public class MetadataApi extends ApiscolApi {
 	UriInfo uriInfo;
 	@Context
 	ServletContext context;
+	private static SkosVocabulary skosVocabulary;
 
 	private static boolean staticInitialization = false;
 	private static String apiscolInstanceName;
@@ -90,11 +94,13 @@ public class MetadataApi extends ApiscolApi {
 			throws FileSystemAccessException {
 		super(context);
 		if (!staticInitialization) {
+			fetchSkosVocabulary(context);
 			initializeResourceDirectoryInterface(context);
 			initializeStaticParameters();
 			createSearchEngineQueryHandler(context);
 			fetchOauthServersProxy(context);
 			staticInitialization = true;
+			SkosVocabularyInitializer s;
 		}
 	}
 
@@ -106,7 +112,8 @@ public class MetadataApi extends ApiscolApi {
 					getProperty(ParametersKeys.fileRepoPath, context),
 					getProperty(ParametersKeys.systemDefaultLanguage, context),
 					getProperty(ParametersKeys.scolomfrXsdRepoPath, context),
-					getProperty(ParametersKeys.temporaryFilesPrefix, context));
+					getProperty(ParametersKeys.temporaryFilesPrefix, context),
+					skosVocabulary);
 			if (!success)
 				throw new FileSystemAccessException(
 						"File System access initialization failure : check log files.");
@@ -1573,6 +1580,19 @@ public class MetadataApi extends ApiscolApi {
 			e.printStackTrace();
 		}
 
+	}
+
+	protected void fetchSkosVocabulary(ServletContext context) {
+		skosVocabulary = (SkosVocabulary) context
+				.getAttribute(SkosVocabulary.ENVIRONMENT_PARAMETER_KEY);
+		System.out.println("*******************************************");
+		System.out.println(skosVocabulary);
+		if (!(skosVocabulary instanceof SkosVocabulary)) {
+			getLogger()
+					.error("Impossible to fetch instance of SkosVocabulary from servlet context");
+		}
+		getLogger()
+				.info("Successfully feteched instance of SkosVocabulary from servlet context");
 	}
 
 }

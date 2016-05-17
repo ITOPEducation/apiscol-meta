@@ -45,6 +45,7 @@ import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.references.RelationKinds;
 import fr.ac_versailles.crdp.apiscol.meta.references.Source;
 import fr.ac_versailles.crdp.apiscol.meta.representations.SemanticUriProvider;
+import fr.ac_versailles.crdp.apiscol.meta.semantic.SkosVocabulary;
 import fr.ac_versailles.crdp.apiscol.utils.FileUtils;
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
 
@@ -67,11 +68,15 @@ public class ResourceDirectoryInterface {
 
 	private static HashMap<String, File> temporaryFiles;
 
+	private static SkosVocabulary skosVocabulary;
+
 	public static boolean initialize(String fileRepoPath,
-			String defaultLanguage, String xsdPath, String temporaryFilesPrefix) {
+			String defaultLanguage, String xsdPath,
+			String temporaryFilesPrefix, SkosVocabulary skosVocabulary) {
 		ResourceDirectoryInterface.fileRepoPath = fileRepoPath;
 		ResourceDirectoryInterface.defaultLanguage = defaultLanguage;
 		ResourceDirectoryInterface.temporaryFilesPrefix = temporaryFilesPrefix;
+		ResourceDirectoryInterface.skosVocabulary = skosVocabulary;
 		initializeLogger();
 		boolean validatorCreationSuccess = createValidator(xsdPath);
 		if (!validatorCreationSuccess)
@@ -845,6 +850,9 @@ public class ResourceDirectoryInterface {
 		sourceElement.setText(source.toString());
 		Element valueElement = getOrCreateChild(kindElement, "value", lomNs);
 		valueElement.setText(kind.toString());
+		Element labelElement = getOrCreateChild(kindElement, "label", lomNs);
+		labelElement
+				.setText(skosVocabulary.getPrefLabelForUri(kind.toString()));
 		Element resourceElement = getOrCreateChild(relation, "resource", lomNs);
 		Element relIdentifierElement = getOrCreateChild(resourceElement,
 				"identifier", lomNs);

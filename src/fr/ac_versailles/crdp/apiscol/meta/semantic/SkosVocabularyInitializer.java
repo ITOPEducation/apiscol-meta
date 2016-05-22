@@ -9,11 +9,14 @@ import java.io.Reader;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import fr.ac_versailles.crdp.apiscol.meta.resources.ResourcesLoader;
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
@@ -31,16 +34,19 @@ public class SkosVocabularyInitializer implements ServletContextListener {
 		InputStream stream = ResourcesLoader.loadResource("skos/scolomfr.skos");
 		Reader reader = new BufferedReader(new InputStreamReader(stream));
 
-		SAXBuilder builder = new SAXBuilder();
-		Document skosXml;
+		InputSource is = new InputSource(reader);
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
+		DocumentBuilder builder = null;
+		Document doc = null;
 		try {
-			skosXml = builder.build(reader);
-		} catch (JDOMException | IOException e) {
-			throw new RuntimeException(
-					"Impossible to read scolomfr skos file :" + e.getMessage());
+			builder = factory.newDocumentBuilder();
+			doc = builder.parse(is);
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			logger.info("Error while loading skos file " + e.getMessage());
 		}
 		logger.info("Skos file succesfully read");
-		return skosXml;
+		return doc;
 	}
 
 	@Override

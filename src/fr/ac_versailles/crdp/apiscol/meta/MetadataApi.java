@@ -45,7 +45,6 @@ import com.sun.jersey.multipart.FormDataParam;
 
 import fr.ac_versailles.crdp.apiscol.ApiscolApi;
 import fr.ac_versailles.crdp.apiscol.ParametersKeys;
-import fr.ac_versailles.crdp.apiscol.auth.oauth.OauthServersProxy;
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessBuilder;
 import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.DBAccessBuilder.DBTypes;
@@ -67,8 +66,6 @@ import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineQueryHandler
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineResultHandler;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.SearchEngineCommunicationException;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.SearchEngineErrorException;
-import fr.ac_versailles.crdp.apiscol.meta.semantic.SkosVocabulary;
-import fr.ac_versailles.crdp.apiscol.meta.semantic.SkosVocabularyInitializer;
 import fr.ac_versailles.crdp.apiscol.transactions.KeyLock;
 import fr.ac_versailles.crdp.apiscol.transactions.KeyLockManager;
 import fr.ac_versailles.crdp.apiscol.utils.TimeUtils;
@@ -81,8 +78,6 @@ public class MetadataApi extends ApiscolApi {
 	UriInfo uriInfo;
 	@Context
 	ServletContext context;
-	private static SkosVocabulary skosVocabulary;
-
 	private static boolean staticInitialization = false;
 	private static String apiscolInstanceName;
 	private static String apiscolInstanceLabel;
@@ -100,7 +95,6 @@ public class MetadataApi extends ApiscolApi {
 			createSearchEngineQueryHandler(context);
 			fetchOauthServersProxy(context);
 			staticInitialization = true;
-			SkosVocabularyInitializer s;
 		}
 	}
 
@@ -314,6 +308,7 @@ public class MetadataApi extends ApiscolApi {
 
 		try {
 			IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
+					.setSkosVocabulary(skosVocabulary)
 					.setDbType(DBTypes.mongoDB)
 					.setParameters(getDbConnexionParameters()).build();
 			return Response
@@ -411,6 +406,7 @@ public class MetadataApi extends ApiscolApi {
 
 				try {
 					IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
+							.setSkosVocabulary(skosVocabulary)
 							.setDbType(DBTypes.mongoDB)
 							.setParameters(getDbConnexionParameters()).build();
 					response = Response
@@ -620,6 +616,7 @@ public class MetadataApi extends ApiscolApi {
 				}
 				try {
 					IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
+							.setSkosVocabulary(skosVocabulary)
 							.setDbType(DBTypes.mongoDB)
 							.setParameters(getDbConnexionParameters()).build();
 					response = Response
@@ -656,7 +653,7 @@ public class MetadataApi extends ApiscolApi {
 	private void updateMetadataEntryInDataBase(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-				.setDbType(DBTypes.mongoDB)
+				.setSkosVocabulary(skosVocabulary).setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		Document metadata = ResourceDirectoryInterface
 				.getMetadataAsDocument(metadataId);
@@ -667,7 +664,7 @@ public class MetadataApi extends ApiscolApi {
 	private Node getMetadataHierarchyFromRoot(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-				.setDbType(DBTypes.mongoDB)
+				.setSkosVocabulary(skosVocabulary).setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		return resourceDataHandler.getMetadataHierarchyFromRoot(metadataId,
 				getExternalUri());
@@ -677,7 +674,7 @@ public class MetadataApi extends ApiscolApi {
 	private void createMetadataEntryInDatabase(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-				.setDbType(DBTypes.mongoDB)
+				.setSkosVocabulary(skosVocabulary).setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		Document metadata = ResourceDirectoryInterface
 				.getMetadataAsDocument(metadataId);
@@ -688,7 +685,7 @@ public class MetadataApi extends ApiscolApi {
 	private void deleteMetadataEntryInDatabase(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-				.setDbType(DBTypes.mongoDB)
+				.setSkosVocabulary(skosVocabulary).setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		resourceDataHandler.deleteMetadataEntry(metadataId);
 
@@ -697,7 +694,7 @@ public class MetadataApi extends ApiscolApi {
 	private HashMap<String, ArrayList<Modification>> getModificationsToApplyToRelatedResources(
 			String url) throws DBAccessException, MetadataNotFoundException {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-				.setDbType(DBTypes.mongoDB)
+				.setSkosVocabulary(skosVocabulary).setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		return resourceDataHandler
 				.getModificationsToApplyToRelatedResources(url);
@@ -1105,6 +1102,7 @@ public class MetadataApi extends ApiscolApi {
 		if (includeDescription) {
 			try {
 				resourceDataHandler = new DBAccessBuilder()
+						.setSkosVocabulary(skosVocabulary)
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 			} catch (DBAccessException e) {
@@ -1134,6 +1132,7 @@ public class MetadataApi extends ApiscolApi {
 		if (includeDescription) {
 			try {
 				resourceDataHandler = new DBAccessBuilder()
+						.setSkosVocabulary(skosVocabulary)
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 			} catch (DBAccessException e) {
@@ -1162,6 +1161,7 @@ public class MetadataApi extends ApiscolApi {
 		if (includeDescription) {
 			try {
 				resourceDataHandler = new DBAccessBuilder()
+						.setSkosVocabulary(skosVocabulary)
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 			} catch (DBAccessException e) {
@@ -1222,7 +1222,7 @@ public class MetadataApi extends ApiscolApi {
 		if (StringUtils.isNotEmpty(device))
 			params.put("device", device);
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-				.setDbType(DBTypes.mongoDB)
+				.setSkosVocabulary(skosVocabulary).setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		Object response = rb.getMetadataRepresentation(getExternalUri(),
 				apiscolInstanceName, metadataId, includeDescription,
@@ -1524,6 +1524,7 @@ public class MetadataApi extends ApiscolApi {
 				refresModifiedMetadataInDatabase(modifications);
 
 				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
+						.setSkosVocabulary(skosVocabulary)
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 				Object representation = rb.getMetadataRepresentation(
@@ -1580,19 +1581,6 @@ public class MetadataApi extends ApiscolApi {
 			e.printStackTrace();
 		}
 
-	}
-
-	protected void fetchSkosVocabulary(ServletContext context) {
-		skosVocabulary = (SkosVocabulary) context
-				.getAttribute(SkosVocabulary.ENVIRONMENT_PARAMETER_KEY);
-		System.out.println("*******************************************");
-		System.out.println(skosVocabulary);
-		if (!(skosVocabulary instanceof SkosVocabulary)) {
-			getLogger()
-					.error("Impossible to fetch instance of SkosVocabulary from servlet context");
-		}
-		getLogger()
-				.info("Successfully feteched instance of SkosVocabulary from servlet context");
 	}
 
 }

@@ -53,21 +53,6 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 
 	}
 
-	public enum AggregationLevels {
-		UNKNOWN("unknown"), LEARNING_OBJECT("learning object"), LESSON("lesson"), COURSE(
-				"course"), CURRICULUM("curriculum");
-		private String value;
-
-		private AggregationLevels(String value) {
-			this.value = value;
-		}
-
-		@Override
-		public String toString() {
-			return value;
-		}
-	}
-
 	private static final String DB_NAME = "apiscol";
 	private static final String COLLECTION_NAME = "metadata";
 	private static final int TREE_MAX_DEPTH = 14;
@@ -264,23 +249,10 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 				DBObject aggregationLevelObject = (DBObject) generalObject
 						.get("aggregationLevel");
 				if (aggregationLevelObject.containsField("value")) {
-					int aggregationLevelInt = 0;
-					try {
-						aggregationLevelInt = Integer
-								.parseInt((String) aggregationLevelObject
-										.get("value"));
-						if (aggregationLevelInt >= 0
-								&& aggregationLevelInt <= 4) {
-							aggregationLevel = AggregationLevels.values()[aggregationLevelInt]
-									.toString();
-						}
-
-					} catch (NumberFormatException e) {
-						logger.error("The ressource "
-								+ metadataId
-								+ " has the following data as aggregation Level "
-								+ (String) aggregationLevelObject.get("value"));
-					}
+					String aggregationLevelUri = (String) aggregationLevelObject
+							.get("value");
+					aggregationLevel = skosVocabulary
+							.getPrefLabelForUri(aggregationLevelUri);
 
 				}
 			}
@@ -304,7 +276,8 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 								.get("kind");
 						if (kindObject.containsField("value")) {
 							String value = (String) kindObject.get("value");
-							if (StringUtils.equals(value, RelationKinds.VIGNETTE.toString())) {
+							if (StringUtils.equals(value,
+									RelationKinds.VIGNETTE.toString())) {
 								if (relationObject.containsField("resource")) {
 									DBObject resourceObject = (DBObject) relationObject
 											.get("resource");

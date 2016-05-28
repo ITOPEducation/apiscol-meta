@@ -49,7 +49,6 @@ public class MaintenanceApi extends ApiscolApi {
 	private static KeyLockManager keyLockManager;
 	private static ISearchEngineFactory searchEngineFactory;
 	private static MaintenanceRegistry maintenanceRegistry;
-
 	@Context
 	UriInfo uriInfo;
 	@Context
@@ -59,6 +58,7 @@ public class MaintenanceApi extends ApiscolApi {
 			throws FileSystemAccessException {
 		super(context);
 		if (!staticInitialization) {
+			fetchSkosVocabulary(context);
 			MetadataApi.initializeResourceDirectoryInterface(context);
 			createLogger();
 			createKeyLockManager();
@@ -146,6 +146,7 @@ public class MaintenanceApi extends ApiscolApi {
 				ResourceDirectoryInterface.deleteAllFiles();
 				searchEngineQueryHandler.deleteIndex();
 				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
+						.setSkosVocabulary(skosVocabulary)
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 				resourceDataHandler.deleteAllDocuments();
@@ -185,6 +186,7 @@ public class MaintenanceApi extends ApiscolApi {
 			keyLock.lock();
 			try {
 				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
+						.setSkosVocabulary(skosVocabulary)
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 

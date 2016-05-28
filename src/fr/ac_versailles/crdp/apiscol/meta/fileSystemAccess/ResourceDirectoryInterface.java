@@ -45,7 +45,7 @@ import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.references.RelationKinds;
 import fr.ac_versailles.crdp.apiscol.meta.references.Source;
 import fr.ac_versailles.crdp.apiscol.meta.representations.SemanticUriProvider;
-import fr.ac_versailles.crdp.apiscol.meta.semantic.SkosVocabulary;
+import fr.ac_versailles.crdp.apiscol.semantic.SkosVocabulary;
 import fr.ac_versailles.crdp.apiscol.utils.FileUtils;
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
 

@@ -10,6 +10,7 @@ import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.database.InexistentResourceInDatabaseException;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
+import fr.ac_versailles.crdp.apiscol.semantic.SkosVocabulary;
 
 public interface IResourceDataHandler {
 
@@ -36,5 +37,7 @@ public interface IResourceDataHandler {
 
 	HashMap<String, ArrayList<Modification>> getModificationsToApplyToRelatedResources(
 			String url) throws DBAccessException;
+
+	void setSkosVocabulary(SkosVocabulary skosVocabulary);
 
 }

@@ -1,7 +1,7 @@
 package fr.ac_versailles.crdp.apiscol.meta.references;
 
 public enum Source {
-	LOMV10("LOMv1.0"),SCOLOMFRv10("SCOLOMFRv1.0");
+	LOM("LOMv1.0"), SCOLOMFR("SCOLOMFRv2.1");
 	private String value;
 
 	private Source(String value) {

@@ -687,7 +687,7 @@ public class ResourceDirectoryInterface {
 					e.printStackTrace();
 					return;
 				}
-				modifyRelation(thumbRelation, Source.SCOLOMFRv10,
+				modifyRelation(thumbRelation, Source.SCOLOMFR,
 						RelationKinds.VIGNETTE, thumbUri);
 			}
 			if (StringUtils.isNotEmpty(preview)) {
@@ -720,7 +720,7 @@ public class ResourceDirectoryInterface {
 					e.printStackTrace();
 					return;
 				}
-				modifyRelation(previewRelation, Source.SCOLOMFRv10,
+				modifyRelation(previewRelation, Source.SCOLOMFR,
 						RelationKinds.APERCU, previewUri);
 
 			}
@@ -789,7 +789,10 @@ public class ResourceDirectoryInterface {
 	}
 
 	private static String removeBaseUri(String metadataId, URI baseUri) {
-		return metadataId.replaceAll(baseUri.toString(), "").substring(1);
+		if (metadataId.contains(baseUri.toString())) {
+			return metadataId.replaceAll(baseUri.toString(), "").substring(1);
+		}
+		return metadataId;
 	}
 
 	private static void deleteRelation(RelationKinds kind, Document doc, URI uri) {
@@ -890,7 +893,7 @@ public class ResourceDirectoryInterface {
 				"aggregationLevel", lomNs);
 		Element sourceElement = getOrCreateChild(aggregationLevel, "source",
 				lomNs);
-		sourceElement.setText(Source.LOMV10.toString());
+		sourceElement.setText(Source.LOM.toString());
 		Element valueElement = getOrCreateChild(aggregationLevel, "value",
 				lomNs);
 		valueElement.setText(String.valueOf(level));
@@ -973,7 +976,7 @@ public class ResourceDirectoryInterface {
 				}
 				if (modification.getDifferency().toString()
 						.equals(Differencies.added.toString())) {
-					addRelation(modification.getRelation(), Source.LOMV10,
+					addRelation(modification.getRelation(), Source.LOM,
 							xmlDocument, targetMetadataUri);
 				}
 			}

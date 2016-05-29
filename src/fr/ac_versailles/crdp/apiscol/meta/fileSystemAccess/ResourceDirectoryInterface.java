@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -39,7 +38,6 @@ import org.jdom2.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
 import fr.ac_versailles.crdp.apiscol.UsedNamespaces;
-import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.AbstractResourcesDataHandler.MetadataProperties;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser.Differencies;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.references.RelationKinds;
@@ -428,7 +426,7 @@ public class ResourceDirectoryInterface {
 			Element identifier = getOrCreateChild(metaMeta, "identifier", lomNs);
 			Element catalog = getOrCreateChild(identifier, "catalog", lomNs);
 			Element entry = getOrCreateChild(identifier, "entry", lomNs);
-			catalog.setText("Apiscol :" + apiscolInstanceName);
+			catalog.setText("URI");
 			entry.setText(url);
 			Element generalElement = getOrCreateChild(rootNode, "general",
 					lomNs);
@@ -653,7 +651,7 @@ public class ResourceDirectoryInterface {
 						SemanticUriProvider.MIME_TYPE_VOCABULARY, format));
 			if (StringUtils.isNotEmpty(language))
 				languageElem.setText(language);
-			setLomIdentifier(rootNode, apiscolInstance, location);
+			setLomIdentifier(rootNode, "URI", location);
 
 			if (StringUtils.isNotEmpty(thumb)) {
 				Iterator<Element> relationsIt = rootNode.getChildren(

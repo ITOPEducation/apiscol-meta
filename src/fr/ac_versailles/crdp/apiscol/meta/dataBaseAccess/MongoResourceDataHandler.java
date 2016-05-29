@@ -222,8 +222,27 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 					&& generalObject.containsField("identifier")) {
 				DBObject identifierObject = (DBObject) generalObject
 						.get("identifier");
-				if (identifierObject.containsField("entry")) {
-					contentRestUrl = (String) identifierObject.get("entry");
+				if (identifierObject instanceof BasicDBList) {
+					BasicDBList identifierList = (BasicDBList) identifierObject;
+					identifierObject = null;
+					Iterator<Object> iterator = identifierList.iterator();
+					while (iterator.hasNext()) {
+						identifierObject = (BasicDBObject) iterator.next();
+						String catalog = (String) identifierObject
+								.get("catalog");
+						if (catalog != null && catalog.equals("URI")) {
+							break;
+						}
+					}
+
+				}
+				if (identifierObject != null
+						&& identifierObject.containsField("entry")) {
+					String catalog = (String) identifierObject.get("catalog");
+					if (catalog != null && catalog.equals("URI")) {
+						contentRestUrl = (String) identifierObject.get("entry");
+					}
+
 				}
 			}
 			if (generalObject != null && generalObject.containsField("keyword")) {

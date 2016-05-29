@@ -68,7 +68,7 @@ public class XMLRepresentationBuilder extends
 			throws MetadataNotFoundException, DBAccessException {
 		Document XMLRepresentation = createXMLDocument();
 		if (includeHierarchy) {
-			this.maxDepth = maxDepth>0?maxDepth:DEFAULT_MAX_TREE_DEPTH;
+			this.maxDepth = maxDepth > 0 ? maxDepth : DEFAULT_MAX_TREE_DEPTH;
 		}
 		addXMLSubTreeForMetadata(XMLRepresentation, XMLRepresentation, baseUri,
 				apiscolInstanceName, resourceId, includeDescription,
@@ -216,8 +216,10 @@ public class XMLRepresentationBuilder extends
 		while (it.hasNext()) {
 			node = it.next();
 
-			String mdid = node.getMdid().replace(baseUri.toString(), "")
-					.substring(1);
+			String mdid = node.getMdid();
+			if (mdid.contains(baseUri.toString())) {
+				mdid = mdid.replace(baseUri.toString(), "").substring(1);
+			}
 			addXMLSubTreeForMetadata(XMLDocument, childrenElement, baseUri,
 					apiscolInstanceName, mdid, includeDescription, true, -1,
 					resourceDataHandler, editUri);

@@ -1555,9 +1555,11 @@ public class MetadataApi extends ApiscolApi {
 		Iterator<String> metadataIterator = modifications.keySet().iterator();
 		while (metadataIterator.hasNext()) {
 			String metadataUri = (String) metadataIterator.next();
-			String mdid = metadataUri.replaceAll(getExternalUri().toString(),
-					"").substring(1);
-			refreshMetadata(mdid, true, false, true);
+			if (metadataUri.contains(getExternalUri().toString())) {
+				metadataUri = metadataUri.replaceAll(
+						getExternalUri().toString(), "").substring(1);
+			}
+			refreshMetadata(metadataUri, true, false, true);
 		}
 
 	}

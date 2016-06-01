@@ -17,8 +17,10 @@ public abstract class AbstractResourcesDataHandler implements
 		title("title"), description("description"), keyword("keyword"), contentUrl(
 				"content-url"), contentRestUrl("content-rest-url"), contentMime(
 				"content-mime"), icon("icon"), author("author"), contributor(
-				"contributor"), aggregationLevel("agregation-level"), educationalResourceType(
-				"educational_resource_type"), separator("::::");
+				"contributor"), aggregationLevel("agregation-level"), aggregationLevelLabel(
+				"agregation-level-label"), educationalResourceType(
+				"educational_resource_type"), educationalResourceTypeTitle(
+				"educational_resource_type_title"), separator("::::");
 		private String value;
 
 		private MetadataProperties(String value) {

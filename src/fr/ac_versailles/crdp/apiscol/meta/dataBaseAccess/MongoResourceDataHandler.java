@@ -198,7 +198,8 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		String title = "";
 		String description = "";
 		String icon = "";
-		String aggregationLevel = "";
+		String aggregationLevelLabel = "";
+		String aggregationLevelUri = "";
 		String contentUrl = "";
 		String contentRestUrl = "";
 		String contentMime = "";
@@ -268,11 +269,11 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 				DBObject aggregationLevelObject = (DBObject) generalObject
 						.get("aggregationLevel");
 				if (aggregationLevelObject.containsField("value")) {
-					String aggregationLevelUri = (String) aggregationLevelObject
+					aggregationLevelUri = (String) aggregationLevelObject
 							.get("value");
-					aggregationLevel = skosVocabulary
-							.getPrefLabelForUri(aggregationLevelUri);
 
+					aggregationLevelLabel = skosVocabulary
+							.getPrefLabelForUri(aggregationLevelUri);
 				}
 			}
 		}
@@ -466,9 +467,15 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		mdProperties
 				.put(MetadataProperties.description.toString(), description);
 		for (int i = 0; i < educationalResourceTypes.size(); i++) {
+			String educationalresourceType = educationalResourceTypes.get(i);
 			mdProperties.put(
 					MetadataProperties.educationalResourceType.toString() + i,
-					educationalResourceTypes.get(i));
+					educationalresourceType);
+			String educationalResourceTypeTiTle = skosVocabulary
+					.getPrefLabelForUri(educationalresourceType);
+			mdProperties.put(
+					MetadataProperties.educationalResourceTypeTitle.toString()
+							+ i, educationalResourceTypeTiTle);
 		}
 		for (int i = 0; i < keywords.size(); i++) {
 			mdProperties.put(MetadataProperties.keyword.toString() + i,
@@ -481,15 +488,23 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		mdProperties.put(MetadataProperties.contentRestUrl.toString(),
 				contentRestUrl);
 		mdProperties.put(MetadataProperties.aggregationLevel.toString(),
-				aggregationLevel);
+				aggregationLevelUri);
+
+		mdProperties.put(MetadataProperties.aggregationLevelLabel.toString(),
+				aggregationLevelLabel);
 		for (int i = 0; i < authors.size(); i++) {
 			mdProperties.put(MetadataProperties.author.toString() + i,
 					authors.get(i));
 		}
 		for (int i = 0; i < contributors.size(); i++) {
 			Pair<String, String> contributor = contributors.get(i);
-			String inlineContributor = new StringBuilder()
-					.append(contributor.getKey())
+			String roleUri = contributor.getKey();
+			String roleLabel = skosVocabulary.getPrefLabelForUri(roleUri);
+			if (StringUtils.isEmpty(roleLabel)) {
+				roleLabel = roleUri;
+			}
+			String inlineContributor = new StringBuilder().append(roleUri)
+					.append(MetadataProperties.separator).append(roleLabel)
 					.append(MetadataProperties.separator)
 					.append(contributor.getValue()).toString();
 			mdProperties.put(MetadataProperties.contributor.toString() + i,

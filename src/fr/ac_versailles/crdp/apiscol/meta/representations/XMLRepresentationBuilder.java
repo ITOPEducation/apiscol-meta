@@ -286,6 +286,9 @@ public class XMLRepresentationBuilder extends
 							mdProperties
 									.get(MetadataProperties.aggregationLevel
 											.toString()));
+					categoryElement.setAttribute("label", mdProperties
+							.get(MetadataProperties.aggregationLevelLabel
+									.toString()));
 					rootElement.appendChild(categoryElement);
 				}
 				if (!StringUtils.isBlank(mdProperties
@@ -356,6 +359,12 @@ public class XMLRepresentationBuilder extends
 					educationalresourceTypeElement
 							.setTextContent(mdProperties
 									.get(MetadataProperties.educationalResourceType
+											.toString()
+											+ educationalResourceTypeNumber));
+					educationalresourceTypeElement
+							.setAttribute(
+									"title",
+									mdProperties.get(MetadataProperties.educationalResourceTypeTitle
 											.toString()
 											+ educationalResourceTypeNumber));
 					rootElement.appendChild(educationalresourceTypeElement);
@@ -435,7 +444,7 @@ public class XMLRepresentationBuilder extends
 									+ contributorNumber);
 					String[] splitted = inlineContributor
 							.split(MetadataProperties.separator.toString());
-					if (splitted.length != 2)
+					if (splitted.length != 3)
 						continue;
 					Element contributorElement = XMLDocument
 							.createElement("contributor");
@@ -444,9 +453,11 @@ public class XMLRepresentationBuilder extends
 					Element roleElement = XMLDocument
 							.createElement("apiscol:role");
 					contributorElement.appendChild(roleElement);
-					String role = splitted[0];
-					String inlineVcard = splitted[1];
-					roleElement.setTextContent(role);
+					String roleUri = splitted[0];
+					String roleLabel = splitted[1];
+					String inlineVcard = splitted[2];
+					roleElement.setTextContent(roleUri);
+					roleElement.setAttribute("title", roleLabel);
 					try {
 						VCard vcardParsed = parseVCard(inlineVcard);
 

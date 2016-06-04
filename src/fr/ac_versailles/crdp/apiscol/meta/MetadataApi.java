@@ -232,6 +232,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
+		rb.setSkosVocabulary(skosVocabulary);
 		String url = rb.getMetadataUri(getExternalUri(), metadataId);
 		if (!StringUtils.isEmpty(editUri))
 			MetadataApi.editUri = editUri;
@@ -340,6 +341,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
+		rb.setSkosVocabulary(skosVocabulary);
 		takeAndReleaseGlobalLock();
 		ResponseBuilder response = null;
 		KeyLock keyLock = null;
@@ -457,6 +459,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
+		rb.setSkosVocabulary(skosVocabulary);
 		StringBuilder warnings = new StringBuilder();
 		takeAndReleaseGlobalLock();
 		ResponseBuilder response = null;
@@ -1003,6 +1006,7 @@ public class MetadataApi extends ApiscolApi {
 
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
+		rb.setSkosVocabulary(skosVocabulary);
 		if (rb instanceof XHTMLRepresentationBuilder)
 			includeDescription = true;
 		if (StringUtils.isNotEmpty(forcedMetadataId))
@@ -1212,6 +1216,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
+		rb.setSkosVocabulary(skosVocabulary);
 		Map<String, String> params = new HashMap<String, String>();
 		if (StringUtils.isNotEmpty(version))
 			params.put("version", version);
@@ -1279,6 +1284,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
+		rb.setSkosVocabulary(skosVocabulary);
 		Object response = rb.getMetadataSnippetRepresentation(getExternalUri(),
 				apiscolInstanceName, metadataId, version);
 
@@ -1302,6 +1308,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
+		rb.setSkosVocabulary(skosVocabulary);
 		if (StringUtils.isBlank(query))
 			return Response
 					.status(Status.BAD_REQUEST)
@@ -1335,6 +1342,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
+		rb.setSkosVocabulary(skosVocabulary);
 		ResponseBuilder response = null;
 		StringBuilder warnings = new StringBuilder();
 		takeAndReleaseGlobalLock();
@@ -1496,6 +1504,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
+		rb.setSkosVocabulary(skosVocabulary);
 		KeyLock keyLock = null;
 		ResponseBuilder response = null;
 		try {

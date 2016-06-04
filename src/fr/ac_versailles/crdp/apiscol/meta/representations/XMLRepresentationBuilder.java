@@ -601,6 +601,12 @@ public class XMLRepresentationBuilder extends
 					facetElement.setAttribute("taxon", segments.get(1));
 					facetElement.setTextContent(segments.get(2));
 				} else {
+					if (null != skosVocabulary) {
+						String prefLabel = skosVocabulary
+								.getPrefLabelForUri(facet);
+
+						facetElement.setAttribute("title", prefLabel);
+					}
 
 					facetElement.setTextContent(facet);
 
@@ -619,13 +625,19 @@ public class XMLRepresentationBuilder extends
 			HashMap<String, HashMap<String, HashMap<String, ArrayList<String>>>> dynamicFacetsGroups) {
 		Iterator<String> it = dynamicFacetsGroups.keySet().iterator();
 		while (it.hasNext()) {
-			String facetGroupName = (String) it.next();
+			String facetGroupNameValue = (String) it.next();
 			Element facetGroupElement = response
 					.createElement("apiscol:dynamic-facets");
-			facetGroupElement.setAttribute("name", facetGroupName);
+			if (null != skosVocabulary) {
+				String prefLabel = skosVocabulary
+						.getPrefLabelForUri(facetGroupNameValue);
+
+				facetGroupElement.setAttribute("name", prefLabel);
+			}
+			facetGroupElement.setAttribute("value", facetGroupNameValue);
 			facetsElement.appendChild(facetGroupElement);
 			HashMap<String, HashMap<String, ArrayList<String>>> facetGroup = dynamicFacetsGroups
-					.get(facetGroupName);
+					.get(facetGroupNameValue);
 			Iterator<String> it2 = facetGroup.keySet().iterator();
 			while (it2.hasNext()) {
 				String taxonIdentifier = (String) it2.next();
@@ -814,13 +826,15 @@ public class XMLRepresentationBuilder extends
 		feedElement.appendChild(linkElement);
 		Element logoElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "logo");
-		logoElement.setTextContent("https://rawgit.com/ITOPEducation/apiscol-cdn/master/" + version
-				+ "/img/logo-api.png");
+		logoElement
+				.setTextContent("https://rawgit.com/ITOPEducation/apiscol-cdn/master/"
+						+ version + "/img/logo-api.png");
 		feedElement.appendChild(logoElement);
 		Element iconElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "icon");
-		iconElement.setTextContent("https://rawgit.com/ITOPEducation/apiscol-cdn/master/" + version
-				+ "/img/logo-api.png");
+		iconElement
+				.setTextContent("https://rawgit.com/ITOPEducation/apiscol-cdn/master/"
+						+ version + "/img/logo-api.png");
 
 		feedElement.appendChild(iconElement);
 		Element idElement = response.createElementNS(

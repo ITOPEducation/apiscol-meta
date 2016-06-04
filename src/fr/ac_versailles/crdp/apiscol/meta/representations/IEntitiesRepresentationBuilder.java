@@ -10,6 +10,7 @@ import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.IResourceDataHandler;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundException;
 import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRegistry;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineResultHandler;
+import fr.ac_versailles.crdp.apiscol.semantic.SkosVocabulary;
 
 public interface IEntitiesRepresentationBuilder<T> {
 
@@ -55,5 +56,7 @@ public interface IEntitiesRepresentationBuilder<T> {
 	Object getMaintenanceRecoveryRepresentation(Integer maintenanceRecoveryId,
 			URI baseUri, MaintenanceRegistry maintenanceRegistry,
 			Integer nbLines);
+
+	void setSkosVocabulary(SkosVocabulary skosVocabulary);
 
 }

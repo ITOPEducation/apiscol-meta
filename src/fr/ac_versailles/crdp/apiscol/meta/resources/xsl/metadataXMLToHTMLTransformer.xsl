@@ -1152,7 +1152,7 @@
 			<xsl:when test="$key='general.scolomfr:generalResourceType.film'">
 				<xsl:value-of select="'Vidéo'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='educational.learningResourceType.exercise'">
+			<xsl:when test="$key='educational.learningResourceType.exercice'">
 				<xsl:value-of select="'Exercice'"></xsl:value-of>
 			</xsl:when>
 			<xsl:when test="$key='educational.learningResourceType.lecture'">
@@ -1188,59 +1188,59 @@
 				<xsl:value-of select="'Tablette numérique
 			'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.text/html'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/text/html'">
 				<xsl:value-of select="'Page web'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.text/rtf'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/text/rtf'">
 				<xsl:value-of select="'RTF'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.application/vnd.ms-powerpoint'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/application/vnd.ms-powerpoint'">
 				<xsl:value-of select="'PowerPoint
 			'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.application/pdf'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/application/pdf'">
 				<xsl:value-of select="'PDF'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.application/x-uniboard+zip'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/application/x-uniboard+zip'">
 				<xsl:value-of select="'Open Sankoré
 			'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.image/jpeg'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/image/jpeg'">
 				<xsl:value-of select="'Image JPEG
 			'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.image/gif'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/image/gif'">
 				<xsl:value-of select="'Image GIF'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.image/png'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/image/png'">
 				<xsl:value-of select="'Image PNG'"></xsl:value-of>
 			</xsl:when>
 
-			<xsl:when test="$key='technical.format.image/bmp'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/image/bmp'">
 				<xsl:value-of select="'Image BMP'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.image/tiff'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/image/tiff'">
 				<xsl:value-of select="'Image TIFF'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.image/svg'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/image/svg'">
 				<xsl:value-of select="'Image SVG'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.video/flv'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/video/flv'">
 				<xsl:value-of select="'Video FLV'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.video/mpeg'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/video/mpeg'">
 				<xsl:value-of select="'Video MPEG'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.video/x-ms-asf'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/video/x-ms-asf'">
 				<xsl:value-of select="'Video ASF'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.video/avi'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/video/avi'">
 				<xsl:value-of select="'Video AVI'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.video/ogv'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/video/ogv'">
 				<xsl:value-of select="'Video OGV'"></xsl:value-of>
 			</xsl:when>
-			<xsl:when test="$key='technical.format.video/mp4'">
+			<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/video/mp4'">
 				<xsl:value-of select="'Video MP4'"></xsl:value-of>
 			</xsl:when>
 			<xsl:when test="$key='technical.size'">
@@ -1297,7 +1297,7 @@
 			'"></xsl:value-of>
 
 				</xsl:when>
-				<xsl:when test="$key='educational.learningResourceType.exercise'">
+				<xsl:when test="$key='educational.learningResourceType.exercice'">
 
 					<xsl:value-of
 						select="'/educational/learningresourcetype/exercise.png
@@ -1367,111 +1367,111 @@
 			'"></xsl:value-of>
 
 				</xsl:when>
-				<xsl:when test="$key='technical.format.text/html'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/text/html'">
 
 					<xsl:value-of select="'/technical/format/text%20html.png'"></xsl:value-of>
 
 				</xsl:when>
-				<xsl:when test="$key='technical.format.text/rtf'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/text/rtf'">
 
 					<xsl:value-of select="'/technical/format/text%20rtf.png'"></xsl:value-of>
 
 				</xsl:when>
-				<xsl:when test="$key='technical.format.application/vnd.ms-powerpoint'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/application/vnd.ms-powerpoint'">
 
 					<xsl:value-of
 						select="'/technical/format/application%20vnd.ms-powerpoint.png
 			'"></xsl:value-of>
 
 				</xsl:when>
-				<xsl:when test="$key='technical.format.application/pdf'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/application/pdf'">
 
 					<xsl:value-of select="'/technical/format/application%20pdf.png'"></xsl:value-of>
 
 				</xsl:when>
-				<xsl:when test="$key='technical.format.application/x-uniboard+zip'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/application/x-uniboard+zip'">
 
 					<xsl:value-of
 						select="'/technical/format/application%20x-uniboard+zip.png
 			'"></xsl:value-of>
 
 				</xsl:when>
-				<xsl:when test="$key='technical.format.image/jpeg'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/image/jpeg'">
 
 					<xsl:value-of select="'/technical/format/image%20jpeg.png'"></xsl:value-of>
 
 				</xsl:when>
-				<xsl:when test="$key='technical.format.image/gif'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/image/gif'">
 
 					<xsl:value-of select="'/technical/format/image%20gif.png'"></xsl:value-of>
 
 				</xsl:when>
-				<xsl:when test="$key='technical.format.image/png'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/image/png'">
 
 					<xsl:value-of select="'/technical/format/image%20png.png'"></xsl:value-of>
 
 				</xsl:when>
 
-				<xsl:when test="$key='technical.format.image/bmp'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/image/bmp'">
 
 
 					<xsl:value-of select="'/technical/format/image%20bmp.png'"></xsl:value-of>
 
 				</xsl:when>
 
-				<xsl:when test="$key='technical.format.image/tiff'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/image/tiff'">
 
 
 					<xsl:value-of select="'/technical/format/image%20tiff.png'"></xsl:value-of>
 
 				</xsl:when>
 
-				<xsl:when test="$key='technical.format.image/svg'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/image/svg'">
 
 
 					<xsl:value-of select="'/technical/format/image%20svg.png'"></xsl:value-of>
 
 				</xsl:when>
 
-				<xsl:when test="$key='technical.format.video/flv'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/video/flv'">
 
 
 					<xsl:value-of select="'/technical/format/video%20flv.png'"></xsl:value-of>
 
 				</xsl:when>
-				<xsl:when test="$key='technical.format.video/mpeg'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/video/mpeg'">
 
 
 					<xsl:value-of select="'/technical/format/video%20mpeg.png'"></xsl:value-of>
 
 				</xsl:when>
-				<xsl:when test="$key='technical.format.video/x-ms-asf'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/video/x-ms-asf'">
 
 
 					<xsl:value-of select="'/technical/format/video%20x-ms-asf.png'"></xsl:value-of>
 
 				</xsl:when>
 
-				<xsl:when test="$key='technical.format.video/avi'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/video/avi'">
 
 
 					<xsl:value-of select="'/technical/format/video%20avi.png'"></xsl:value-of>
 
 				</xsl:when>
 
-				<xsl:when test="$key='technical.format.video/ogv'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/video/ogv'">
 
 
 					<xsl:value-of select="'/technical/format/video%20ogv.png'"></xsl:value-of>
 
 				</xsl:when>
 
-				<xsl:when test="$key='technical.format.video/mp4'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/video/mp4'">
 
 					<xsl:value-of select="'/technical/format/video%20mp4.png'"></xsl:value-of>
 
 				</xsl:when>
-				<xsl:when test="$key='technical.format.application/x-shockwave-flash'">
+				<xsl:when test="$key='technical.format.http://purl.org/NET/mediatypes/application/x-shockwave-flash'">
 					<xsl:value-of
 						select="'/technical/format/application%20x-shockwave-flash.png'"></xsl:value-of>
 				</xsl:when>

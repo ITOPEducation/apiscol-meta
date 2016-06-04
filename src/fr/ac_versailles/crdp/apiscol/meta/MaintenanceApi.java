@@ -123,6 +123,7 @@ public class MaintenanceApi extends ApiscolApi {
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
+		rb.setSkosVocabulary(skosVocabulary);
 		searchEngineQueryHandler.processOptimizationQuery();
 		return Response.ok(
 				rb.getSuccessfullOptimizationReport(requestedFormat,
@@ -165,6 +166,7 @@ public class MaintenanceApi extends ApiscolApi {
 		}
 		rb = EntitiesRepresentationBuilderFactory.getRepresentationBuilder(
 				MediaType.APPLICATION_ATOM_XML, context);
+		rb.setSkosVocabulary(skosVocabulary);
 		return Response.ok().entity(rb.getSuccessfulGlobalDeletionReport())
 				.build();
 	}
@@ -193,6 +195,7 @@ public class MaintenanceApi extends ApiscolApi {
 				rb = EntitiesRepresentationBuilderFactory
 						.getRepresentationBuilder(
 								MediaType.APPLICATION_ATOM_XML, context);
+				rb.setSkosVocabulary(skosVocabulary);
 
 				if (maintenanceRegistry.hasRunningWorker())
 					maintenanceRecoveryId = maintenanceRegistry
@@ -230,6 +233,7 @@ public class MaintenanceApi extends ApiscolApi {
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(MediaType.APPLICATION_ATOM_XML,
 						context);
+		rb.setSkosVocabulary(skosVocabulary);
 		return Response
 				.ok()
 				.entity(rb.getMaintenanceRecoveryRepresentation(urlParsingId,

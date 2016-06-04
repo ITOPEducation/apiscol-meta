@@ -12,7 +12,7 @@
 	<xsl:param name="device" select="'auto'" />
 	<xsl:output method="html" omit-xml-declaration="yes"
 		encoding="UTF-8" indent="yes" />
-	<xsl:variable name="cdn" select="'http://apiscol.cdn.local/cdn/'" />
+	<xsl:variable name="cdn" select="'https://rawgit.com/ITOPEducation/apiscol-cdn/master/'" />
 	<xsl:variable name="a_pour_aperçu_relation"
 		select="'http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-009-num-023'"></xsl:variable>
 	<xsl:variable name="a_pour_vignette_relation"
@@ -583,7 +583,7 @@
 		match="*[local-name()='educational']/*[local-name()='learningResourceType']">
 		<xsl:param name="mode"></xsl:param>
 		<xsl:variable name="learningresourcetype">
-			<xsl:value-of select="*[local-name()='value']"></xsl:value-of>
+			<xsl:value-of select="*[local-name()='label']"></xsl:value-of>
 		</xsl:variable>
 		<xsl:variable name="key">
 			<xsl:value-of
@@ -685,7 +685,7 @@
 		match="*[local-name()='educational']/*[local-name()='intendedEndUserRole']">
 		<xsl:param name="mode"></xsl:param>
 		<xsl:variable name="intendedenduserrole">
-			<xsl:value-of select="*[local-name()='value']"></xsl:value-of>
+			<xsl:value-of select="*[local-name()='label']"></xsl:value-of>
 		</xsl:variable>
 		<xsl:variable name="key">
 			<xsl:value-of
@@ -1172,7 +1172,7 @@
 			<xsl:when test="$key='educational.intendedEndUserRole.teacher'">
 				<xsl:text disable-output-escaping="yes"><![CDATA[Ressource pour l&rsquo;enseignant]]></xsl:text>
 			</xsl:when>
-			<xsl:when test="$key='educational.intendedEndUserRole.learner'">
+			<xsl:when test="$key='educational.intendedEndUserRole.apprenant'">
 				<xsl:text disable-output-escaping="yes"><![CDATA[Ressource pour l&rsquo;élève]]></xsl:text>
 			</xsl:when>
 			<xsl:when test="$key='educational.typicallearningtime.duration'">
@@ -1338,9 +1338,9 @@
 
 
 				</xsl:when>
-				<xsl:when test="$key='educational.intendedEndUserRole.learner'">
+				<xsl:when test="$key='educational.intendedEndUserRole.apprenant'">
 
-					<xsl:value-of select="'/educational/intendedenduserrole/learner.png
+					<xsl:value-of select="'/educational/intendedenduserrole/apprenant.png
 			'"></xsl:value-of>
 
 				</xsl:when>

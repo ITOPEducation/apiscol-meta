@@ -814,12 +814,12 @@ public class XMLRepresentationBuilder extends
 		feedElement.appendChild(linkElement);
 		Element logoElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "logo");
-		logoElement.setTextContent("http://apiscol.cdn.local/cdn/" + version
+		logoElement.setTextContent("https://rawgit.com/ITOPEducation/apiscol-cdn/master/" + version
 				+ "/img/logo-api.png");
 		feedElement.appendChild(logoElement);
 		Element iconElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "icon");
-		iconElement.setTextContent("http://apiscol.cdn.local/cdn/" + version
+		iconElement.setTextContent("https://rawgit.com/ITOPEducation/apiscol-cdn/master/" + version
 				+ "/img/logo-api.png");
 
 		feedElement.appendChild(iconElement);

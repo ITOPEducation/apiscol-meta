@@ -41,7 +41,8 @@
 		<dependency org="com.sun.jersey" name="jersey-json" rev="1.17.1">
 			<exclude org="org.eclipse.persistence"></exclude>
 		</dependency>
-		<dependency org="net.sourceforge.cardme" name="cardme" rev="0.3.6.03" />
+		<!-- http://mvnrepository.com/artifact/net.sourceforge.cardme/cardme -->
+		<dependency org="net.sourceforge.cardme" name="cardme" rev="0.4.0"/>
 		<dependency org="commons-logging" name="commons-logging"
 			rev="1.1.2" />
 		<dependency org="net.sf.ezmorph" name="ezmorph" rev="1.0.6" />

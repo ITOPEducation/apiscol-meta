@@ -20,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import net.sourceforge.cardme.engine.VCardEngine;
 import net.sourceforge.cardme.vcard.VCard;
+import net.sourceforge.cardme.vcard.exceptions.VCardParseException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.common.util.Pair;
@@ -401,17 +402,26 @@ public class XMLRepresentationBuilder extends
 						VCard vcardParsed = parseVCard(inlineVcard);
 
 						if (vcardParsed != null) {
-							if (vcardParsed.getName() != null) {
+							String name = null;
+							if (vcardParsed.getFN() != null) {
+								name = vcardParsed.getFN().getFormattedName();
+							} else if (vcardParsed.getN() != null) {
+								name = (vcardParsed.getN().getFamilyName() == null ? vcardParsed
+										.getN().getFamilyName() : "")
+										+ " "
+										+ (vcardParsed.getN().getGivenName() == null ? vcardParsed
+												.getN().getGivenName() : "");
+
+							}
+							if (null != name) {
 								Element nameElement = XMLDocument
 										.createElement("name");
 								authorElement.appendChild(nameElement);
-								nameElement.setTextContent(vcardParsed
-										.getName().getFamilyName());
-
+								nameElement.setTextContent(name);
 							}
-							if (vcardParsed.getOrganizations() != null) {
+							if (vcardParsed.getOrg() != null) {
 								Iterator<String> organizations = vcardParsed
-										.getOrganizations().getOrganizations();
+										.getOrg().getOrgUnits().iterator();
 
 								if (organizations.hasNext()) {
 									Element organizationElement = XMLDocument
@@ -460,12 +470,12 @@ public class XMLRepresentationBuilder extends
 					roleElement.setAttribute("title", roleLabel);
 					try {
 						VCard vcardParsed = parseVCard(inlineVcard);
-
+						// TODO factoriser
 						if (vcardParsed != null) {
 
-							if (vcardParsed.getOrganizations() != null) {
+							if (vcardParsed.getOrg() != null) {
 								Iterator<String> organizations = vcardParsed
-										.getOrganizations().getOrganizations();
+										.getOrg().getOrgUnits().iterator();
 
 								if (organizations.hasNext()) {
 									Element organizationElement = XMLDocument
@@ -477,14 +487,22 @@ public class XMLRepresentationBuilder extends
 													.next().toString());
 								}
 							}
-							if (vcardParsed.getName() != null) {
-								Element contributorNameElement = XMLDocument
+							String name = null;
+							if (vcardParsed.getFN() != null) {
+								name = vcardParsed.getFN().getFormattedName();
+							} else if (vcardParsed.getN() != null) {
+								name = (vcardParsed.getN().getFamilyName() == null ? vcardParsed
+										.getN().getFamilyName() : "")
+										+ " "
+										+ (vcardParsed.getN().getGivenName() == null ? vcardParsed
+												.getN().getGivenName() : "");
+
+							}
+							if (null != name) {
+								Element nameElement = XMLDocument
 										.createElement("name");
-								contributorElement
-										.appendChild(contributorNameElement);
-								String name = vcardParsed.getName()
-										.getFamilyName();
-								contributorNameElement.setTextContent(name);
+								contributorElement.appendChild(nameElement);
+								nameElement.setTextContent(name);
 							}
 
 						}
@@ -565,10 +583,14 @@ public class XMLRepresentationBuilder extends
 	private VCard parseVCard(String inlineVcard) throws IOException {
 		String multilineVcard = "";
 		if (StringUtils.isNotEmpty(inlineVcard))
-			multilineVcard = inlineVcard.replaceAll("([A-Z]+:)", "\n$1")
-					.replaceAll("VCARDVERSION", "VCARD\nVERSION");
+			multilineVcard = inlineVcard.replaceAll("§", "\n");
 		if (StringUtils.isNotEmpty(multilineVcard))
-			return vcardengine.parse(multilineVcard);
+			try {
+				return vcardengine.parse(multilineVcard);
+			} catch (VCardParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		return null;
 	}
 

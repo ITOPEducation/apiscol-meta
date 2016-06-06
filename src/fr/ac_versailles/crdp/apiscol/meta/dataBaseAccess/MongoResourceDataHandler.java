@@ -10,6 +10,8 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.common.util.Pair;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -88,10 +90,21 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 	@Override
 	public void createMetadataEntry(String metadataId, Document document)
 			throws DBAccessException {
+		convertVcardsLines(document);
 		String jsonSource = JSonUtils.convertXMLToJson(document);
 		DBObject dbObject = (DBObject) JSON.parse(jsonSource);
 		dbObject.put(DBKeys.id.toString(), metadataId);
 		metadataCollection.insert(dbObject);
+	}
+
+	private void convertVcardsLines(Document document) {
+		NodeList entities = document.getElementsByTagName("entity");
+		for (int i = 0; i < entities.getLength(); i++) {
+			Element entity = (Element) entities.item(i);
+			String vcardText = entity.getTextContent();
+			vcardText=vcardText.replaceAll("(\r\n|\r|\n)", "§");
+			entity.setTextContent(vcardText);
+		}
 	}
 
 	@Override
@@ -660,6 +673,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 	@Override
 	public void updateMetadataEntry(String metadataId, Document document)
 			throws DBAccessException {
+		convertVcardsLines(document);
 		String jsonSource = JSonUtils.convertXMLToJson(document);
 		DBObject newMetadata = (DBObject) JSON.parse(jsonSource);
 		newMetadata.put(DBKeys.id.toString(), metadataId);

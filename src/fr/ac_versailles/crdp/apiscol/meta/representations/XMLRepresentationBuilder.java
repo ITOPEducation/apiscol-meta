@@ -345,8 +345,11 @@ public class XMLRepresentationBuilder extends
 							.createElement("content");
 					contentElement.setAttribute("src", mdProperties
 							.get(MetadataProperties.contentUrl.toString()));
-					contentElement.setAttribute("type", mdProperties
-							.get(MetadataProperties.contentMime.toString()));
+					String mimeType = mdProperties
+							.get(MetadataProperties.contentMime.toString());
+					mimeType = mimeType.replace(
+							"http://purl.org/NET/mediatypes/", "");
+					contentElement.setAttribute("type", mimeType);
 					rootElement.appendChild(contentElement);
 				}
 

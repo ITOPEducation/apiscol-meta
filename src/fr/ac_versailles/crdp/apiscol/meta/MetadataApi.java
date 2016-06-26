@@ -228,6 +228,7 @@ public class MetadataApi extends ApiscolApi {
 			SearchEngineCommunicationException, SearchEngineErrorException,
 			DBAccessException, MetadataNotFoundException {
 		takeAndReleaseGlobalLock();
+		// Affectation d'un nouvel identifiant unique
 		String metadataId = UUID.randomUUID().toString();
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory

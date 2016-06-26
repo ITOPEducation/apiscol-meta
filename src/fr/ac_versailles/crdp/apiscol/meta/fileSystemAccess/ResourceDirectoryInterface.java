@@ -423,7 +423,7 @@ public class ResourceDirectoryInterface {
 			Document doc = (Document) builder.build(xmlFile);
 			Element rootNode = doc.getRootElement();
 			Element metaMeta = getOrCreateChild(rootNode, "metaMetadata", lomNs);
-			Element identifier = getOrCreateChild(metaMeta, "identifier", lomNs);
+			Element identifier = getOrCreateIdentifier(metaMeta, "URI", lomNs);
 			Element catalog = getOrCreateChild(identifier, "catalog", lomNs);
 			Element entry = getOrCreateChild(identifier, "entry", lomNs);
 			catalog.setText("URI");
@@ -574,6 +574,30 @@ public class ResourceDirectoryInterface {
 		} else
 			e = l.get(0);
 		return e;
+	}
+
+	private static Element getOrCreateIdentifier(Element parent,
+			String requiredCatalogName, Namespace ns) {
+		List<Element> identifiers = parent.getChildren("identifier", ns);
+		Element identifierElement;
+		if (identifiers.size() > 0) {
+			for (Element identifier : identifiers) {
+				Element catalog = identifier.getChild("catalog", ns);
+				if (catalog != null) {
+					String catalogName = catalog.getTextTrim();
+					if (catalogName.equals(requiredCatalogName)) {
+						return identifier;
+					}
+				}
+			}
+		}
+		logger.info(String
+				.format("The %s element was not found in this metadata file, it had to be added to its parent %s",
+						"identifier", parent.getName()));
+		identifierElement = new Element("identifier", ns);
+		parent.addContent(identifierElement);
+
+		return identifierElement;
 	}
 
 	public static boolean deleteMetadataFile(String metadataId)
@@ -754,14 +778,14 @@ public class ResourceDirectoryInterface {
 	private static void setLomIdentifier(Element rootNode, String catalog,
 			String identifier) {
 		Element general = getOrCreateChild(rootNode, "general", lomNs);
-		Element identifierElement = getOrCreateChild(general, "identifier",
-				lomNs);
+		Element identifierElement = getOrCreateIdentifier(general, "URI", lomNs);
 		Element catalogElement = getOrCreateChild(identifierElement, "catalog",
 				lomNs);
 		Element entry = getOrCreateChild(identifierElement, "entry", lomNs);
 		catalogElement.setText(catalog);
-		if (StringUtils.isNotEmpty(identifier))
+		if (StringUtils.isNotEmpty(identifier)) {
 			entry.setText(identifier);
+		}
 
 	}
 

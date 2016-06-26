@@ -585,9 +585,12 @@ public class ResourceDirectoryInterface {
 				Element catalog = identifier.getChild("catalog", ns);
 				if (catalog != null) {
 					String catalogName = catalog.getTextTrim();
-					if (catalogName.equals(requiredCatalogName)) {
+					if (StringUtils.isEmpty(catalogName)
+							|| catalogName.equals(requiredCatalogName)) {
 						return identifier;
 					}
+				} else {
+					return identifier;
 				}
 			}
 		}

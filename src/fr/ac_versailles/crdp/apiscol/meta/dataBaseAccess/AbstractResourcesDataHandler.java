@@ -20,7 +20,8 @@ public abstract class AbstractResourcesDataHandler implements
 				"contributor"), aggregationLevel("agregation-level"), aggregationLevelLabel(
 				"agregation-level-label"), educationalResourceType(
 				"educational_resource_type"), educationalResourceTypeTitle(
-				"educational_resource_type_title"), separator("::::");
+				"educational_resource_type_title"), parentUri("parent_uri"), parentTitle(
+				"parent_title"), separator("::::");
 		private String value;
 
 		private MetadataProperties(String value) {

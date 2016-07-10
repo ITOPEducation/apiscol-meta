@@ -25,6 +25,7 @@ import com.mongodb.util.JSON;
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.database.InexistentResourceInDatabaseException;
 import fr.ac_versailles.crdp.apiscol.database.MongoUtils;
+import fr.ac_versailles.crdp.apiscol.meta.MetadataKeySyntax;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser.Differencies;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
@@ -102,7 +103,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		for (int i = 0; i < entities.getLength(); i++) {
 			Element entity = (Element) entities.item(i);
 			String vcardText = entity.getTextContent();
-			vcardText=vcardText.replaceAll("(\r\n|\r|\n)", "§");
+			vcardText = vcardText.replaceAll("(\r\n|\r|\n)", "§");
 			entity.setTextContent(vcardText);
 		}
 	}
@@ -475,6 +476,73 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 					contentUrl = (String) contentUrls.get(0);
 				}
 			}
+		}
+		if (metadataObject != null && metadataObject.containsField("relation")) {
+			ArrayList<BasicDBObject> relationsObject;
+			try {
+				relationsObject = (ArrayList<BasicDBObject>) metadataObject
+						.get("relation");
+			} catch (ClassCastException e) {
+				relationsObject = new ArrayList<BasicDBObject>();
+				BasicDBObject relationObject = (BasicDBObject) metadataObject
+						.get("relation");
+				relationsObject.add(relationObject);
+			}
+			if (relationsObject != null)
+				for (BasicDBObject relationObject : relationsObject) {
+					if (relationObject != null
+							&& relationObject.containsField("kind")) {
+						DBObject kindObject = (DBObject) relationObject
+								.get("kind");
+						if (kindObject.containsField("value")) {
+							String value = (String) kindObject.get("value");
+							if (StringUtils.equals(value,
+									RelationKinds.FAIT_PARTIE_DE.toString())) {
+								if (relationObject.containsField("resource")) {
+									DBObject resourceObject = (DBObject) relationObject
+											.get("resource");
+									if (resourceObject
+											.containsField("identifier")) {
+										DBObject identifierObject = (DBObject) resourceObject
+												.get("identifier");
+										if (identifierObject
+												.containsField("entry")) {
+											String parentUri = (String) identifierObject
+													.get("entry");
+											mdProperties
+													.put(MetadataProperties.parentUri
+															.toString(),
+															parentUri);
+											String parentId = MetadataKeySyntax
+													.extractMetadataIdFromUrl(parentUri);
+											DBObject parentObject = getMetadataById(parentId);
+											if (parentObject != null
+													&& parentObject
+															.containsField("general")) {
+												DBObject parentGeneralObject = (DBObject) parentObject
+														.get("general");
+												if (parentGeneralObject != null
+														&& parentGeneralObject
+																.containsField("title")) {
+													DBObject parentTitleObject = (DBObject) parentGeneralObject
+															.get("title");
+													String parentTitle = getStringInUserLanguage(parentTitleObject);
+													mdProperties
+															.put(MetadataProperties.parentTitle
+																	.toString(),
+																	parentTitle);
+												}
+											}
+										}
+									}
+
+								}
+							}
+
+						}
+					}
+				}
+
 		}
 		mdProperties.put(MetadataProperties.title.toString(), title);
 		mdProperties

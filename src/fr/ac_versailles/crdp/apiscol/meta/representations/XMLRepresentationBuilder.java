@@ -316,6 +316,27 @@ public class XMLRepresentationBuilder extends
 									"\\?format=.*$", ""));
 					rootElement.appendChild(contentRestHtmlLinkElement);
 				}
+				if (!StringUtils.isBlank(mdProperties
+						.get(MetadataProperties.parentUri.toString()))) {
+					Element parentRestAtomLinkElement = XMLDocument
+							.createElement("link");
+					parentRestAtomLinkElement.setAttribute("rel", "collection");
+					parentRestAtomLinkElement.setAttribute("type",
+							"application/atom+xml");
+					parentRestAtomLinkElement.setAttribute(
+							"href",
+							mdProperties.get(MetadataProperties.parentUri
+									.toString()) + "?format=xml");
+					if (!StringUtils.isBlank(mdProperties
+							.get(MetadataProperties.parentTitle.toString()))) {
+						parentRestAtomLinkElement.setAttribute("title",
+								mdProperties.get(MetadataProperties.parentTitle
+										.toString()));
+					}
+
+					rootElement.appendChild(parentRestAtomLinkElement);
+
+				}
 
 				String iconUrl = mdProperties.get(MetadataProperties.icon
 						.toString());

@@ -626,12 +626,15 @@ public class XMLRepresentationBuilder extends
 					facetElement.setAttribute("taxon", segments.get(1));
 					facetElement.setTextContent(segments.get(2));
 				} else {
+					String facetTitle = "";
 					if (null != skosVocabulary) {
-						String prefLabel = skosVocabulary
-								.getPrefLabelForUri(facet);
+						facetTitle = skosVocabulary.getPrefLabelForUri(facet);
 
-						facetElement.setAttribute("title", prefLabel);
 					}
+					if (StringUtils.isEmpty(facetTitle)) {
+						facetTitle = facet;
+					}
+					facetElement.setAttribute("title", facetTitle);
 
 					facetElement.setTextContent(facet);
 

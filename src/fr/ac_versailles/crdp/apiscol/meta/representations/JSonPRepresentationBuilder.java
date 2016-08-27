@@ -16,6 +16,7 @@ import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundExcep
 import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRegistry;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineResultHandler;
 import fr.ac_versailles.crdp.apiscol.utils.JSonUtils;
+import fr.apiscol.metadata.scolomfr3utils.Scolomfr3Utils;
 
 public class JSonPRepresentationBuilder extends
 		AbstractRepresentationBuilder<JSONWithPadding> {
@@ -101,5 +102,11 @@ public class JSonPRepresentationBuilder extends
 			Integer maintenanceRecoveryId, URI baseUri,
 			MaintenanceRegistry maintenanceRegistry, Integer nbLines) {
 		return null;
+	}
+
+	@Override
+	public void setScolomfrUtils(Scolomfr3Utils scolomfrUtils) {
+		// TODO Auto-generated method stub
+		
 	}
 }

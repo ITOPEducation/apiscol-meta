@@ -60,6 +60,7 @@ import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node;
 import fr.ac_versailles.crdp.apiscol.meta.representations.EntitiesRepresentationBuilderFactory;
 import fr.ac_versailles.crdp.apiscol.meta.representations.IEntitiesRepresentationBuilder;
 import fr.ac_versailles.crdp.apiscol.meta.representations.XHTMLRepresentationBuilder;
+import fr.ac_versailles.crdp.apiscol.meta.scolomfr.ScolomfrUtilsInitializer;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.AbstractSearchEngineFactory;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineFactory;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineQueryHandler;
@@ -69,6 +70,7 @@ import fr.ac_versailles.crdp.apiscol.meta.searchEngine.SearchEngineErrorExceptio
 import fr.ac_versailles.crdp.apiscol.transactions.KeyLock;
 import fr.ac_versailles.crdp.apiscol.transactions.KeyLockManager;
 import fr.ac_versailles.crdp.apiscol.utils.TimeUtils;
+import fr.apiscol.metadata.scolomfr3utils.Scolomfr3Utils;
 
 @Path("/")
 public class MetadataApi extends ApiscolApi {
@@ -78,6 +80,7 @@ public class MetadataApi extends ApiscolApi {
 	UriInfo uriInfo;
 	@Context
 	ServletContext context;
+	private static Scolomfr3Utils scolomfrUtils;
 	private static boolean staticInitialization = false;
 	private static String apiscolInstanceName;
 	private static String apiscolInstanceLabel;
@@ -89,7 +92,7 @@ public class MetadataApi extends ApiscolApi {
 			throws FileSystemAccessException {
 		super(context);
 		if (!staticInitialization) {
-			fetchSkosVocabulary(context);
+			fetchScolomfrUtils(context);
 			initializeResourceDirectoryInterface(context);
 			initializeStaticParameters();
 			createSearchEngineQueryHandler(context);
@@ -107,7 +110,7 @@ public class MetadataApi extends ApiscolApi {
 					getProperty(ParametersKeys.systemDefaultLanguage, context),
 					getProperty(ParametersKeys.scolomfrXsdRepoPath, context),
 					getProperty(ParametersKeys.temporaryFilesPrefix, context),
-					skosVocabulary);
+					scolomfrUtils);
 			if (!success)
 				throw new FileSystemAccessException(
 						"File System access initialization failure : check log files.");
@@ -233,7 +236,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		rb.setSkosVocabulary(skosVocabulary);
+		rb.setScolomfrUtils(scolomfrUtils);
 		String url = rb.getMetadataUri(getExternalUri(), metadataId);
 		if (!StringUtils.isEmpty(editUri))
 			MetadataApi.editUri = editUri;
@@ -310,8 +313,7 @@ public class MetadataApi extends ApiscolApi {
 
 		try {
 			IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-					.setSkosVocabulary(skosVocabulary)
-					.setDbType(DBTypes.mongoDB)
+					.setScolomfrUtils(scolomfrUtils).setDbType(DBTypes.mongoDB)
 					.setParameters(getDbConnexionParameters()).build();
 			return Response
 					.ok()
@@ -342,7 +344,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		rb.setSkosVocabulary(skosVocabulary);
+		rb.setScolomfrUtils(scolomfrUtils);
 		takeAndReleaseGlobalLock();
 		ResponseBuilder response = null;
 		KeyLock keyLock = null;
@@ -409,7 +411,7 @@ public class MetadataApi extends ApiscolApi {
 
 				try {
 					IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-							.setSkosVocabulary(skosVocabulary)
+							.setScolomfrUtils(scolomfrUtils)
 							.setDbType(DBTypes.mongoDB)
 							.setParameters(getDbConnexionParameters()).build();
 					response = Response
@@ -460,7 +462,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		rb.setSkosVocabulary(skosVocabulary);
+		rb.setScolomfrUtils(scolomfrUtils);
 		StringBuilder warnings = new StringBuilder();
 		takeAndReleaseGlobalLock();
 		ResponseBuilder response = null;
@@ -620,7 +622,7 @@ public class MetadataApi extends ApiscolApi {
 				}
 				try {
 					IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-							.setSkosVocabulary(skosVocabulary)
+							.setScolomfrUtils(scolomfrUtils)
 							.setDbType(DBTypes.mongoDB)
 							.setParameters(getDbConnexionParameters()).build();
 					response = Response
@@ -657,7 +659,7 @@ public class MetadataApi extends ApiscolApi {
 	private void updateMetadataEntryInDataBase(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-				.setSkosVocabulary(skosVocabulary).setDbType(DBTypes.mongoDB)
+				.setScolomfrUtils(scolomfrUtils).setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		Document metadata = ResourceDirectoryInterface
 				.getMetadataAsDocument(metadataId);
@@ -668,7 +670,7 @@ public class MetadataApi extends ApiscolApi {
 	private Node getMetadataHierarchyFromRoot(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-				.setSkosVocabulary(skosVocabulary).setDbType(DBTypes.mongoDB)
+				.setScolomfrUtils(scolomfrUtils).setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		return resourceDataHandler.getMetadataHierarchyFromRoot(metadataId,
 				getExternalUri());
@@ -678,7 +680,7 @@ public class MetadataApi extends ApiscolApi {
 	private void createMetadataEntryInDatabase(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-				.setSkosVocabulary(skosVocabulary).setDbType(DBTypes.mongoDB)
+				.setScolomfrUtils(scolomfrUtils).setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		Document metadata = ResourceDirectoryInterface
 				.getMetadataAsDocument(metadataId);
@@ -689,7 +691,7 @@ public class MetadataApi extends ApiscolApi {
 	private void deleteMetadataEntryInDatabase(String metadataId)
 			throws DBAccessException, MetadataNotFoundException {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-				.setSkosVocabulary(skosVocabulary).setDbType(DBTypes.mongoDB)
+				.setScolomfrUtils(scolomfrUtils).setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		resourceDataHandler.deleteMetadataEntry(metadataId);
 
@@ -698,7 +700,7 @@ public class MetadataApi extends ApiscolApi {
 	private HashMap<String, ArrayList<Modification>> getModificationsToApplyToRelatedResources(
 			String url) throws DBAccessException, MetadataNotFoundException {
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-				.setSkosVocabulary(skosVocabulary).setDbType(DBTypes.mongoDB)
+				.setScolomfrUtils(scolomfrUtils).setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		return resourceDataHandler
 				.getModificationsToApplyToRelatedResources(url);
@@ -1007,7 +1009,7 @@ public class MetadataApi extends ApiscolApi {
 
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		rb.setSkosVocabulary(skosVocabulary);
+		rb.setScolomfrUtils(scolomfrUtils);
 		if (rb instanceof XHTMLRepresentationBuilder)
 			includeDescription = true;
 		if (StringUtils.isNotEmpty(forcedMetadataId))
@@ -1107,7 +1109,7 @@ public class MetadataApi extends ApiscolApi {
 		if (includeDescription) {
 			try {
 				resourceDataHandler = new DBAccessBuilder()
-						.setSkosVocabulary(skosVocabulary)
+						.setScolomfrUtils(scolomfrUtils)
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 			} catch (DBAccessException e) {
@@ -1137,7 +1139,7 @@ public class MetadataApi extends ApiscolApi {
 		if (includeDescription) {
 			try {
 				resourceDataHandler = new DBAccessBuilder()
-						.setSkosVocabulary(skosVocabulary)
+						.setScolomfrUtils(scolomfrUtils)
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 			} catch (DBAccessException e) {
@@ -1166,7 +1168,7 @@ public class MetadataApi extends ApiscolApi {
 		if (includeDescription) {
 			try {
 				resourceDataHandler = new DBAccessBuilder()
-						.setSkosVocabulary(skosVocabulary)
+						.setScolomfrUtils(scolomfrUtils)
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 			} catch (DBAccessException e) {
@@ -1217,7 +1219,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		rb.setSkosVocabulary(skosVocabulary);
+		rb.setScolomfrUtils(scolomfrUtils);
 		Map<String, String> params = new HashMap<String, String>();
 		if (StringUtils.isNotEmpty(version))
 			params.put("version", version);
@@ -1228,7 +1230,7 @@ public class MetadataApi extends ApiscolApi {
 		if (StringUtils.isNotEmpty(device))
 			params.put("device", device);
 		IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-				.setSkosVocabulary(skosVocabulary).setDbType(DBTypes.mongoDB)
+				.setScolomfrUtils(scolomfrUtils).setDbType(DBTypes.mongoDB)
 				.setParameters(getDbConnexionParameters()).build();
 		Object response = rb.getMetadataRepresentation(getExternalUri(),
 				apiscolInstanceName, metadataId, includeDescription,
@@ -1285,7 +1287,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		rb.setSkosVocabulary(skosVocabulary);
+		rb.setScolomfrUtils(scolomfrUtils);
 		Object response = rb.getMetadataSnippetRepresentation(getExternalUri(),
 				apiscolInstanceName, metadataId, version);
 
@@ -1309,7 +1311,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		rb.setSkosVocabulary(skosVocabulary);
+		rb.setScolomfrUtils(scolomfrUtils);
 		if (StringUtils.isBlank(query))
 			return Response
 					.status(Status.BAD_REQUEST)
@@ -1343,7 +1345,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		rb.setSkosVocabulary(skosVocabulary);
+		rb.setScolomfrUtils(scolomfrUtils);
 		ResponseBuilder response = null;
 		StringBuilder warnings = new StringBuilder();
 		takeAndReleaseGlobalLock();
@@ -1505,7 +1507,7 @@ public class MetadataApi extends ApiscolApi {
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		rb.setSkosVocabulary(skosVocabulary);
+		rb.setScolomfrUtils(scolomfrUtils);
 		KeyLock keyLock = null;
 		ResponseBuilder response = null;
 		try {
@@ -1534,7 +1536,7 @@ public class MetadataApi extends ApiscolApi {
 				refresModifiedMetadataInDatabase(modifications);
 
 				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-						.setSkosVocabulary(skosVocabulary)
+						.setScolomfrUtils(scolomfrUtils)
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 				Object representation = rb.getMetadataRepresentation(
@@ -1593,6 +1595,17 @@ public class MetadataApi extends ApiscolApi {
 			e.printStackTrace();
 		}
 
+	}
+
+	protected void fetchScolomfrUtils(ServletContext context) {
+		scolomfrUtils = (Scolomfr3Utils) context
+				.getAttribute(ScolomfrUtilsInitializer.ENVIRONMENT_PARAMETER_KEY);
+		if (!(scolomfrUtils instanceof Scolomfr3Utils)) {
+			getLogger()
+					.error("Impossible to fetch instance of SkosVocabulary from servlet context");
+		}
+		getLogger()
+				.info("Successfully fetched instance of SkosVocabulary from servlet context");
 	}
 
 }

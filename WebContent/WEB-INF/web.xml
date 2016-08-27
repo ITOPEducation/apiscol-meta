@@ -5,7 +5,7 @@
 	id="WebApp_ID" version="3.0">
 	<display-name>ApiScol Meta : metadata repository</display-name>
 	<listener>
-		<listener-class>fr.ac_versailles.crdp.apiscol.semantic.SkosVocabularyInitializer</listener-class>
+		<listener-class>fr.ac_versailles.crdp.apiscol.meta.scolomfr.ScolomfrUtilsInitializer</listener-class>
 	</listener>
 	<context-param>
 		<param-name>common_properties_file_path</param-name>

@@ -41,7 +41,7 @@ import fr.ac_versailles.crdp.apiscol.transactions.KeyLockManager;
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
 
 @Path("/maintenance")
-public class MaintenanceApi extends ApiscolApi {
+public class MaintenanceApi extends ApiscolMetaApi {
 
 	private static Logger logger;
 	private static ISearchEngineQueryHandler searchEngineQueryHandler;
@@ -58,7 +58,7 @@ public class MaintenanceApi extends ApiscolApi {
 			throws FileSystemAccessException {
 		super(context);
 		if (!staticInitialization) {
-			fetchSkosVocabulary(context);
+			fetchScolomfrUtils(context);
 			MetadataApi.initializeResourceDirectoryInterface(context);
 			createLogger();
 			createKeyLockManager();
@@ -123,7 +123,7 @@ public class MaintenanceApi extends ApiscolApi {
 		String requestedFormat = guessRequestedFormat(request, format);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
-		rb.setSkosVocabulary(skosVocabulary);
+		rb.setScolomfrUtils(scolomfrUtils);
 		searchEngineQueryHandler.processOptimizationQuery();
 		return Response.ok(
 				rb.getSuccessfullOptimizationReport(requestedFormat,
@@ -147,7 +147,7 @@ public class MaintenanceApi extends ApiscolApi {
 				ResourceDirectoryInterface.deleteAllFiles();
 				searchEngineQueryHandler.deleteIndex();
 				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-						.setSkosVocabulary(skosVocabulary)
+						.setScolomfrUtils(scolomfrUtils)
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 				resourceDataHandler.deleteAllDocuments();
@@ -166,7 +166,7 @@ public class MaintenanceApi extends ApiscolApi {
 		}
 		rb = EntitiesRepresentationBuilderFactory.getRepresentationBuilder(
 				MediaType.APPLICATION_ATOM_XML, context);
-		rb.setSkosVocabulary(skosVocabulary);
+		rb.setScolomfrUtils(scolomfrUtils);
 		return Response.ok().entity(rb.getSuccessfulGlobalDeletionReport())
 				.build();
 	}
@@ -188,14 +188,14 @@ public class MaintenanceApi extends ApiscolApi {
 			keyLock.lock();
 			try {
 				IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
-						.setSkosVocabulary(skosVocabulary)
+						.setScolomfrUtils(scolomfrUtils)
 						.setDbType(DBTypes.mongoDB)
 						.setParameters(getDbConnexionParameters()).build();
 
 				rb = EntitiesRepresentationBuilderFactory
 						.getRepresentationBuilder(
 								MediaType.APPLICATION_ATOM_XML, context);
-				rb.setSkosVocabulary(skosVocabulary);
+				rb.setScolomfrUtils(scolomfrUtils);
 
 				if (maintenanceRegistry.hasRunningWorker())
 					maintenanceRecoveryId = maintenanceRegistry
@@ -233,7 +233,7 @@ public class MaintenanceApi extends ApiscolApi {
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(MediaType.APPLICATION_ATOM_XML,
 						context);
-		rb.setSkosVocabulary(skosVocabulary);
+		rb.setScolomfrUtils(scolomfrUtils);
 		return Response
 				.ok()
 				.entity(rb.getMaintenanceRecoveryRepresentation(urlParsingId,

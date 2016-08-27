@@ -648,8 +648,9 @@ public class XMLRepresentationBuilder extends
 					facetElement.setTextContent(segments.get(2));
 				} else {
 					String facetTitle = "";
-					if (null != skosVocabulary) {
-						facetTitle = skosVocabulary.getPrefLabelForUri(facet);
+					if (null != scolomfrUtils) {
+						facetTitle = scolomfrUtils.getSkosApi()
+								.getPrefLabelForResource(facet);
 
 					}
 					if (StringUtils.isEmpty(facetTitle)) {
@@ -677,9 +678,9 @@ public class XMLRepresentationBuilder extends
 			String facetGroupNameValue = (String) it.next();
 			Element facetGroupElement = response
 					.createElement("apiscol:dynamic-facets");
-			if (null != skosVocabulary) {
-				String prefLabel = skosVocabulary
-						.getPrefLabelForUri(facetGroupNameValue);
+			if (null != scolomfrUtils) {
+				String prefLabel = scolomfrUtils.getSkosApi()
+						.getPrefLabelForResource(facetGroupNameValue);
 
 				facetGroupElement.setAttribute("name", prefLabel);
 			}

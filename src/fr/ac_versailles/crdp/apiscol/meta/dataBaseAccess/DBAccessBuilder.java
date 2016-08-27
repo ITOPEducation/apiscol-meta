@@ -3,14 +3,14 @@ package fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess;
 import java.util.Map;
 
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
-import fr.ac_versailles.crdp.apiscol.semantic.SkosVocabulary;
+import fr.apiscol.metadata.scolomfr3utils.Scolomfr3Utils;
 
 public class DBAccessBuilder {
 
 	private static DBTypes dbType;
 	private static IResourceDataHandler resourceDataHandler;
 	private static Map<String, String> parameters;
-	private SkosVocabulary skosVocabulary;
+	private Scolomfr3Utils scolomfrUtils;
 
 	public enum DBTypes {
 		mongoDB("mongodb");
@@ -37,8 +37,8 @@ public class DBAccessBuilder {
 		switch (dbType) {
 		case mongoDB:
 			resourceDataHandler = new MongoResourceDataHandler(parameters);
-			if (skosVocabulary != null) {
-				resourceDataHandler.setSkosVocabulary(skosVocabulary);
+			if (scolomfrUtils != null) {
+				resourceDataHandler.setScolomfrUtils(scolomfrUtils);
 
 			}
 			return resourceDataHandler;
@@ -64,8 +64,8 @@ public class DBAccessBuilder {
 
 	}
 
-	public DBAccessBuilder setSkosVocabulary(SkosVocabulary skosVocabulary) {
-		this.skosVocabulary = skosVocabulary;
+	public DBAccessBuilder setScolomfrUtils(Scolomfr3Utils scolomfrUtils) {
+		this.scolomfrUtils = scolomfrUtils;
 		return this;
 	}
 }

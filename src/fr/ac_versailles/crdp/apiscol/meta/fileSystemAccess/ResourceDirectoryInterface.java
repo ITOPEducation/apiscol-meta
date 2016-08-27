@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.ws.rs.core.UriInfo;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
@@ -43,9 +42,10 @@ import fr.ac_versailles.crdp.apiscol.meta.hierarchy.Modification;
 import fr.ac_versailles.crdp.apiscol.meta.references.RelationKinds;
 import fr.ac_versailles.crdp.apiscol.meta.references.Source;
 import fr.ac_versailles.crdp.apiscol.meta.representations.SemanticUriProvider;
-import fr.ac_versailles.crdp.apiscol.semantic.SkosVocabulary;
 import fr.ac_versailles.crdp.apiscol.utils.FileUtils;
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
+import fr.apiscol.metadata.scolomfr3utils.IScolomfr3Utils;
+import fr.apiscol.metadata.scolomfr3utils.Scolomfr3Utils;
 
 public class ResourceDirectoryInterface {
 
@@ -66,15 +66,15 @@ public class ResourceDirectoryInterface {
 
 	private static HashMap<String, File> temporaryFiles;
 
-	private static SkosVocabulary skosVocabulary;
+	private static IScolomfr3Utils scolomfrUtils;
 
 	public static boolean initialize(String fileRepoPath,
 			String defaultLanguage, String xsdPath,
-			String temporaryFilesPrefix, SkosVocabulary skosVocabulary) {
+			String temporaryFilesPrefix, Scolomfr3Utils scolomfrUtils) {
 		ResourceDirectoryInterface.fileRepoPath = fileRepoPath;
 		ResourceDirectoryInterface.defaultLanguage = defaultLanguage;
 		ResourceDirectoryInterface.temporaryFilesPrefix = temporaryFilesPrefix;
-		ResourceDirectoryInterface.skosVocabulary = skosVocabulary;
+		ResourceDirectoryInterface.scolomfrUtils = scolomfrUtils;
 		initializeLogger();
 		boolean validatorCreationSuccess = createValidator(xsdPath);
 		if (!validatorCreationSuccess)
@@ -395,19 +395,17 @@ public class ResourceDirectoryInterface {
 	private static void validateFile(File scolomFrXml)
 			throws InvalidProvidedMetadataFileException,
 			FileSystemAccessException {
-		StreamSource source = new StreamSource(scolomFrXml);
-		try {
-			validator.validate(source);
+		
+		scolomfrUtils.setScolomfrFile(scolomFrXml);
+		scolomfrUtils.checkAll();
+		if (scolomfrUtils.isValid()) {
 			logger.info(scolomFrXml + " is valid.");
-		} catch (SAXException ex) {
+		} else {
+			List<String> messages = scolomfrUtils.getMessages();
+			String messagesConcatenation = StringUtils.join(messages, ", ");
 			throw new InvalidProvidedMetadataFileException(String.format(
 					"The file %s is not valid because %s",
-					scolomFrXml.getAbsolutePath(), ex.getMessage()));
-		} catch (IOException e) {
-			throw new FileSystemAccessException(
-					String.format(
-							"Impossible to reach the xml file %s when trying to validate",
-							scolomFrXml.getAbsolutePath()));
+					scolomFrXml.getAbsolutePath(), messagesConcatenation));
 		}
 
 	}
@@ -880,7 +878,8 @@ public class ResourceDirectoryInterface {
 		valueElement.setText(kind.toString());
 		Element labelElement = getOrCreateChild(kindElement, "label", lomNs);
 		labelElement
-				.setText(skosVocabulary.getPrefLabelForUri(kind.toString()));
+				.setText(scolomfrUtils.getSkosApi()
+						.getPrefLabelForResource(kind.toString()));
 		Element resourceElement = getOrCreateChild(relation, "resource", lomNs);
 		Element relIdentifierElement = getOrCreateChild(resourceElement,
 				"identifier", lomNs);

@@ -286,8 +286,8 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 					aggregationLevelUri = (String) aggregationLevelObject
 							.get("value");
 
-					aggregationLevelLabel = skosVocabulary
-							.getPrefLabelForUri(aggregationLevelUri);
+					aggregationLevelLabel = scolomfrUtils.getSkosApi()
+							.getPrefLabelForResource(aggregationLevelUri);
 				}
 			}
 		}
@@ -552,8 +552,8 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 			mdProperties.put(
 					MetadataProperties.educationalResourceType.toString() + i,
 					educationalresourceType);
-			String educationalResourceTypeTiTle = skosVocabulary
-					.getPrefLabelForUri(educationalresourceType);
+			String educationalResourceTypeTiTle = scolomfrUtils.getSkosApi()
+					.getPrefLabelForResource(educationalresourceType);
 			mdProperties.put(
 					MetadataProperties.educationalResourceTypeTitle.toString()
 							+ i, educationalResourceTypeTiTle);
@@ -580,7 +580,8 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		for (int i = 0; i < contributors.size(); i++) {
 			Pair<String, String> contributor = contributors.get(i);
 			String roleUri = contributor.getKey();
-			String roleLabel = skosVocabulary.getPrefLabelForUri(roleUri);
+			String roleLabel = scolomfrUtils.getSkosApi()
+					.getPrefLabelForResource(roleUri);
 			if (StringUtils.isEmpty(roleLabel)) {
 				roleLabel = roleUri;
 			}

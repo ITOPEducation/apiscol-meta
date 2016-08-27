@@ -7,11 +7,13 @@ import org.apache.log4j.Logger;
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
 import fr.ac_versailles.crdp.apiscol.semantic.SkosVocabulary;
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
+import fr.apiscol.metadata.scolomfr3utils.IScolomfr3Utils;
+import fr.apiscol.metadata.scolomfr3utils.Scolomfr3Utils;
 
 public abstract class AbstractResourcesDataHandler implements
 		IResourceDataHandler {
 	protected static Logger logger;
-	protected SkosVocabulary skosVocabulary;
+	protected IScolomfr3Utils scolomfrUtils;
 
 	public enum MetadataProperties {
 		title("title"), description("description"), keyword("keyword"), contentUrl(
@@ -59,7 +61,7 @@ public abstract class AbstractResourcesDataHandler implements
 			throws DBAccessException;
 
 	@Override
-	public void setSkosVocabulary(SkosVocabulary skosVocabulary) {
-		this.skosVocabulary = skosVocabulary;
+	public void setScolomfrUtils(IScolomfr3Utils scolomfrUtils) {
+		this.scolomfrUtils = scolomfrUtils;
 	}
 }

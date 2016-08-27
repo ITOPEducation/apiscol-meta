@@ -18,6 +18,7 @@
 	</property>
 	<property name="ivy.file" value="${ant.dir}/ivy.xml">
 	</property>
+	<ivy:settings file="ivysettings.xml"/>
 	<path id="compilation.path">
 		<fileset dir="${tomcat.home}/bin">
 			<include name="*.jar" />

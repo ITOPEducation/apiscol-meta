@@ -15,12 +15,14 @@
 	xmlns:m="http://ant.apache.org/ivy/maven">
 	<info organisation="crdp_versailles" module="ApiScol_Meta" status="integration">
 	</info>
+	
 	<configurations>
 		<conf name="meta" description="apiscol meta" />
 	</configurations>
 	<dependencies>
 		<dependency org="crdp_versailles" name="apiscol-commons"
 			rev="1.5" conf="meta->commons" />
+        <dependency org="org.apache.commons" name="commons-lang3" rev="3.4"/>
 		<dependency org="com.sun.jersey" name="jersey-client" rev="1.17.1" />
 		<dependency org="com.sun.jersey" name="jersey-server" rev="1.17.1" />
 		<dependency org="com.sun.jersey" name="jersey-servlet" rev="1.17.1" />
@@ -48,6 +50,9 @@
 		<dependency org="net.sf.ezmorph" name="ezmorph" rev="1.0.6" />
 		<dependency org="commons-collections" name="commons-collections"
 			rev="3.2.1" />
-			
+		<dependency org="fr.apiscol.metadata" name="scolomfr3utils" rev="0.0.1-SNAPSHOT" transitive="true"  />
+		<!-- https://mvnrepository.com/artifact/org.apache.jena/jena-core -->
+		<dependency org="org.apache.jena" name="jena-core" rev="2.13.0"/>
+
 	</dependencies>
 </ivy-module>

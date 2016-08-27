@@ -9,15 +9,16 @@ import org.apache.log4j.Logger;
 
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundException;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.ResourceDirectoryInterface;
-import fr.ac_versailles.crdp.apiscol.semantic.SkosVocabulary;
 import fr.ac_versailles.crdp.apiscol.utils.FileUtils;
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
+import fr.apiscol.metadata.scolomfr3utils.IScolomfr3Utils;
+import fr.apiscol.metadata.scolomfr3utils.Scolomfr3Utils;
 
 public abstract class AbstractRepresentationBuilder<T> implements
 		IEntitiesRepresentationBuilder<T> {
 	protected static final String SEARCH_ENGINE_CONCATENED_FIELDS_SEPARATOR = "~";
 	protected static Logger logger;
-	protected SkosVocabulary skosVocabulary;
+	protected IScolomfr3Utils scolomfrUtils;
 
 	public AbstractRepresentationBuilder() {
 		createLogger();
@@ -86,9 +87,9 @@ public abstract class AbstractRepresentationBuilder<T> implements
 				.path(maintenanceRecoveryIdentifier.toString()).build();
 
 	}
-	
-	public void setSkosVocabulary(SkosVocabulary skosVocabulary) {
-		this.skosVocabulary = skosVocabulary;
+
+	public void setScolomfrUtils(Scolomfr3Utils scolomfrUtils) {
+		this.scolomfrUtils = scolomfrUtils;
 	}
 
 }

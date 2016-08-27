@@ -11,6 +11,7 @@ import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundExcep
 import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRegistry;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineResultHandler;
 import fr.ac_versailles.crdp.apiscol.semantic.SkosVocabulary;
+import fr.apiscol.metadata.scolomfr3utils.Scolomfr3Utils;
 
 public interface IEntitiesRepresentationBuilder<T> {
 
@@ -57,6 +58,6 @@ public interface IEntitiesRepresentationBuilder<T> {
 			URI baseUri, MaintenanceRegistry maintenanceRegistry,
 			Integer nbLines);
 
-	void setSkosVocabulary(SkosVocabulary skosVocabulary);
+	void setScolomfrUtils(Scolomfr3Utils scolomfrUtils);
 
 }

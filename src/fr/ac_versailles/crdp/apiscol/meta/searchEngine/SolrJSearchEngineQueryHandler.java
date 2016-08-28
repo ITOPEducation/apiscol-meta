@@ -240,7 +240,8 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 		parameters.setStart(0);
 		parameters.setRows(1);
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("id:\"").append(identifier).append("\"");
+		queryBuilder.append(detectIdentifierField(identifier) + ":\"")
+				.append(identifier).append("\"");
 		parameters.set("q", queryBuilder.toString());
 		parameters.set("qt", solrSearchPath);
 		parameters.set("hl", false);
@@ -271,6 +272,16 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 		return response;
 	}
 
+	private String detectIdentifierField(String identifier) {
+		if (StringUtils.startsWithIgnoreCase(identifier, "ark:")) {
+			return "general.identifier.ark";
+		}
+		if (StringUtils.startsWithIgnoreCase(identifier, "URN:ISBN:")) {
+			return "general.identifier.isbn";
+		}
+		return "id";
+	}
+
 	@Override
 	public Object processSearchQuery(List<String> forcedMetadataIdList)
 			throws SearchEngineErrorException {
@@ -284,9 +295,11 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 		boolean first = true;
 		while (it.hasNext()) {
 			String identifier = (String) it.next();
-			if (!first)
+			if (!first) {
 				queryBuilder.append(" OR ");
-			queryBuilder.append("id:\"").append(identifier).append("\"");
+			}
+			queryBuilder.append(detectIdentifierField(identifier) + ":\"")
+					.append(identifier).append("\"");
 			first = false;
 		}
 

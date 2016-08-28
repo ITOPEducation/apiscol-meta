@@ -1012,9 +1012,10 @@ public class MetadataApi extends ApiscolApi {
 		rb.setScolomfrUtils(scolomfrUtils);
 		if (rb instanceof XHTMLRepresentationBuilder)
 			includeDescription = true;
-		if (StringUtils.isNotEmpty(forcedMetadataId))
+		if (StringUtils.isNotEmpty(forcedMetadataId)) {
 			return forcedMetadataSearch(rb, request, forcedMetadataId,
 					includeDescription);
+		}
 		if (StringUtils.isNotEmpty(forcedMetadataIds)) {
 			List<String> forcedMetadataIdList = null;
 			try {

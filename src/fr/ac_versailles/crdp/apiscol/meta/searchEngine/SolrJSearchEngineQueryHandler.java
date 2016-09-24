@@ -273,7 +273,7 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 	}
 
 	private String detectIdentifierField(String identifier) {
-		if (StringUtils.startsWithIgnoreCase(identifier, "ark:")) {
+		if (StringUtils.containsIgnoreCase(identifier, "ark:")) {
 			return "general.identifier.ark";
 		}
 		if (StringUtils.startsWithIgnoreCase(identifier, "URN:ISBN:")) {

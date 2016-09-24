@@ -18,9 +18,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.ws.rs.core.UriInfo;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -34,7 +31,6 @@ import org.jdom2.Namespace;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.xml.sax.SAXException;
 
 import fr.ac_versailles.crdp.apiscol.UsedNamespaces;
 import fr.ac_versailles.crdp.apiscol.meta.hierarchy.HierarchyAnalyser.Differencies;
@@ -46,6 +42,7 @@ import fr.ac_versailles.crdp.apiscol.utils.FileUtils;
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
 import fr.apiscol.metadata.scolomfr3utils.IScolomfr3Utils;
 import fr.apiscol.metadata.scolomfr3utils.Scolomfr3Utils;
+import fr.apiscol.metadata.scolomfr3utils.command.MessageStatus;
 
 public class ResourceDirectoryInterface {
 
@@ -57,8 +54,6 @@ public class ResourceDirectoryInterface {
 	private static String fileRepoPath;
 
 	private static String defaultLanguage;
-
-	private static Validator validator;
 
 	private static String temporaryFilesPrefix;
 
@@ -76,9 +71,6 @@ public class ResourceDirectoryInterface {
 		ResourceDirectoryInterface.temporaryFilesPrefix = temporaryFilesPrefix;
 		ResourceDirectoryInterface.scolomfrUtils = scolomfrUtils;
 		initializeLogger();
-		boolean validatorCreationSuccess = createValidator(xsdPath);
-		if (!validatorCreationSuccess)
-			return false;
 		return true;
 
 	}
@@ -122,25 +114,6 @@ public class ResourceDirectoryInterface {
 
 		return new StringBuilder().append(id).append('-').append(ext)
 				.toString();
-	}
-
-	private static boolean createValidator(String xsdPath) {
-		SchemaFactory factory = SchemaFactory
-				.newInstance("http://www.w3.org/2001/XMLSchema");
-		File schemaLocation = new File(xsdPath);
-		logger.info("Trying to load xsd validation files from " + xsdPath);
-		Schema schema = null;
-		try {
-			schema = factory.newSchema(schemaLocation);
-			validator = schema.newValidator();
-		} catch (SAXException e1) {
-			logger.error("The scolomfr xsd files seems to be corrupted or not available on "
-					+ xsdPath);
-			e1.printStackTrace();
-			return false;
-		}
-		return true;
-
 	}
 
 	public static boolean isInitialized() {
@@ -339,7 +312,6 @@ public class ResourceDirectoryInterface {
 	}
 
 	public static boolean commitTemporaryMetadataFile(String metadataId) {
-
 		String definitiveFilePath = getFilePath(metadataId);
 		File temporary;
 		temporary = getTemporaryFile(metadataId, "xml");
@@ -395,13 +367,14 @@ public class ResourceDirectoryInterface {
 	private static void validateFile(File scolomFrXml)
 			throws InvalidProvidedMetadataFileException,
 			FileSystemAccessException {
-		
+
 		scolomfrUtils.setScolomfrFile(scolomFrXml);
 		scolomfrUtils.checkAll();
 		if (scolomfrUtils.isValid()) {
 			logger.info(scolomFrXml + " is valid.");
 		} else {
-			List<String> messages = scolomfrUtils.getMessages();
+			List<String> messages = scolomfrUtils
+					.getMessages(MessageStatus.FAILURE);
 			String messagesConcatenation = StringUtils.join(messages, ", ");
 			throw new InvalidProvidedMetadataFileException(String.format(
 					"The file %s is not valid because %s",
@@ -444,9 +417,8 @@ public class ResourceDirectoryInterface {
 					coverageContainerElement, "string", lomNs);
 			Element technicalElement = getOrCreateChild(rootNode, "technical",
 					lomNs);
-			Element locationElement = getOrCreateChild(technicalElement,
-					"location", lomNs);
-			Element sizeElem = getOrCreateChild(technicalElement, "size", lomNs);
+			getOrCreateChild(technicalElement, "location", lomNs);
+			getOrCreateChild(technicalElement, "size", lomNs);
 			setLanguageToDefaultIfNotSpecified(descriptionElement);
 			cleanString(descriptionElement);
 			cleanString(coverageElement);
@@ -877,9 +849,8 @@ public class ResourceDirectoryInterface {
 		Element valueElement = getOrCreateChild(kindElement, "value", lomNs);
 		valueElement.setText(kind.toString());
 		Element labelElement = getOrCreateChild(kindElement, "label", lomNs);
-		labelElement
-				.setText(scolomfrUtils.getSkosApi()
-						.getPrefLabelForResource(kind.toString()));
+		labelElement.setText(scolomfrUtils.getSkosApi()
+				.getPrefLabelForResource(kind.toString()));
 		Element resourceElement = getOrCreateChild(relation, "resource", lomNs);
 		Element relIdentifierElement = getOrCreateChild(resourceElement,
 				"identifier", lomNs);

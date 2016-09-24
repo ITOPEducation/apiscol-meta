@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -20,16 +22,21 @@ import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.util.NamedList;
 
+import com.mongodb.QueryBuilder;
+
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
 
 public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler {
 
+	private static final String GENERAL_IDENTIFIER_ISBN = "general.identifier.isbn";
+	private static final String GENERAL_IDENTIFIER_ARK = "general.identifier.ark";
 	private static final String FILTERS_DECLARATION_SEPARATOR = "::";
 	private final String solrSearchPath;
 	private final String solrUpdatePath;
 	private final String solrSuggestPath;
 
 	private HttpSolrClient solr;
+	private Pattern pattern;
 	private static Logger logger;
 
 	public SolrJSearchEngineQueryHandler(String solrAddress,
@@ -240,8 +247,8 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 		parameters.setStart(0);
 		parameters.setRows(1);
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append(detectIdentifierField(identifier) + ":\"")
-				.append(identifier).append("\"");
+		appendDynamicIdentifierRequestPart(queryBuilder, identifier);
+
 		parameters.set("q", queryBuilder.toString());
 		parameters.set("qt", solrSearchPath);
 		parameters.set("hl", false);
@@ -272,12 +279,23 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 		return response;
 	}
 
+	private String createArkRegexp(String identifier) {
+		if (pattern == null) {
+			pattern = Pattern.compile(".+(ark:/.+)");
+		}
+		Matcher match = pattern.matcher(identifier);
+		if (match.matches()) {
+			identifier = match.group(1);
+		}
+		return identifier.replaceAll("/", "\\\\/");
+	}
+
 	private String detectIdentifierField(String identifier) {
 		if (StringUtils.containsIgnoreCase(identifier, "ark:")) {
-			return "general.identifier.ark";
+			return GENERAL_IDENTIFIER_ARK;
 		}
 		if (StringUtils.startsWithIgnoreCase(identifier, "URN:ISBN:")) {
-			return "general.identifier.isbn";
+			return GENERAL_IDENTIFIER_ISBN;
 		}
 		return "id";
 	}
@@ -298,8 +316,8 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 			if (!first) {
 				queryBuilder.append(" OR ");
 			}
-			queryBuilder.append(detectIdentifierField(identifier) + ":\"")
-					.append(identifier).append("\"");
+			appendDynamicIdentifierRequestPart(queryBuilder, identifier);
+
 			first = false;
 		}
 
@@ -331,6 +349,20 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 			throw new SearchEngineErrorException(error);
 		}
 		return response;
+	}
+
+	private void appendDynamicIdentifierRequestPart(StringBuilder queryBuilder,
+			String identifier) {
+
+		String identifierField = detectIdentifierField(identifier);
+		if (identifierField == GENERAL_IDENTIFIER_ARK) {
+			identifier = createArkRegexp(identifier);
+			queryBuilder.append(identifierField + ":/.*").append(identifier)
+					.append("/");
+		} else {
+			queryBuilder.append(identifierField + ":\"").append(identifier)
+					.append("\"");
+		}
 	}
 
 	@Override

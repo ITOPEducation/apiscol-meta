@@ -653,7 +653,8 @@ public class XMLRepresentationBuilder extends
 								.getPrefLabelForResource(facet);
 
 					}
-					if (StringUtils.isEmpty(facetTitle)) {
+					if (StringUtils.isEmpty(facetTitle)
+							|| facetTitle == "NO_RESULT") {
 						facetTitle = facet;
 					}
 					facetElement.setAttribute("title", facetTitle);

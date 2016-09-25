@@ -50,7 +50,7 @@
 		<dependency org="net.sf.ezmorph" name="ezmorph" rev="1.0.6" />
 		<dependency org="commons-collections" name="commons-collections"
 			rev="3.2.1" />
-		<dependency org="fr.apiscol.metadata" name="scolomfr3utils" rev="0.0.1-SNAPSHOT" transitive="true"  />
+		<dependency org="fr.apiscol.metadata" name="scolomfr3utils" rev="0.0.1" />
 		<!-- https://mvnrepository.com/artifact/org.apache.jena/jena-core -->
 		<dependency org="org.apache.jena" name="jena-core" rev="2.13.0"/>
 

@@ -28,6 +28,7 @@ import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
 
 public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler {
 
+	private static final String TERMS_QUERY_PARSER_SEPARATOR = "§";
 	private static final String GENERAL_IDENTIFIER_ISBN = "general.identifier.isbn";
 	private static final String GENERAL_IDENTIFIER_ARK = "general.identifier.ark";
 	private static final String FILTERS_DECLARATION_SEPARATOR = "::";
@@ -126,14 +127,15 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 				String fieldName = (String) it.next();
 				ArrayList<String> fieldvalues = orderedAdditiveStaticFiltersMap
 						.get(fieldName);
-				String filterQuery = String.format("{!terms f=%s}",
-						fieldName.replace(' ', '_'));
+				String filterQuery = String.format(
+						"{!terms f=%s  separator=\"%s\"}",
+						fieldName.replace(' ', '_'), TERMS_QUERY_PARSER_SEPARATOR);
 				StringBuilder filterQueryBuilder = new StringBuilder()
 						.append(filterQuery);
 				boolean first = true;
 				for (int i = 0; i < fieldvalues.size(); i++) {
 					if (!first) {
-						filterQueryBuilder.append(",");
+						filterQueryBuilder.append(TERMS_QUERY_PARSER_SEPARATOR);
 					}
 					first = false;
 					filterQueryBuilder.append(fieldvalues.get(i));
@@ -183,14 +185,15 @@ public class SolrJSearchEngineQueryHandler implements ISearchEngineQueryHandler 
 				String fieldName = (String) it.next();
 				ArrayList<String> fieldvalues = orderedAdditiveDynamicFiltersMap
 						.get(fieldName);
-				String filterQuery = String.format("{!terms f=%s-taxon}",
-						fieldName.replace(' ', '_'));
+				String filterQuery = String.format(
+						"{!terms f=%s-taxon separator=\"%s\"}",
+						fieldName.replace(' ', '_'), TERMS_QUERY_PARSER_SEPARATOR);
 				StringBuilder filterQueryBuilder = new StringBuilder()
 						.append(filterQuery);
 				boolean first = true;
 				for (int i = 0; i < fieldvalues.size(); i++) {
 					if (!first) {
-						filterQueryBuilder.append(",");
+						filterQueryBuilder.append(TERMS_QUERY_PARSER_SEPARATOR);
 					}
 					first = false;
 					filterQueryBuilder.append(fieldvalues.get(i));

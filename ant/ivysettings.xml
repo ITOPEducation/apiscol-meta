@@ -1,0 +1,7 @@
+<ivysettings>
+    <properties file="ivysettings.properties" />
+    <settings defaultResolver="central"/>
+    <resolvers>
+        <ibiblio name="central" m2compatible="true"/>
+    </resolvers>
+</ivysettings>

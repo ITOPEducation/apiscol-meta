@@ -21,7 +21,9 @@
 	</configurations>
 	<dependencies>
 		<dependency org="crdp_versailles" name="apiscol-commons"
-			rev="1.5" conf="meta->commons" />
+			rev="1.7" conf="meta->commons" />
+	 <dependency org="xml-apis" name="xml-apis" rev="1.4.01"/>
+
         <dependency org="org.apache.commons" name="commons-lang3" rev="3.4"/>
 		<dependency org="com.sun.jersey" name="jersey-client" rev="1.17.1" />
 		<dependency org="com.sun.jersey" name="jersey-server" rev="1.17.1" />
@@ -35,7 +37,7 @@
 			<exclude module="org.slf4j" />
 			<exclude org="org.slf4j" />
 		</dependency>
-		<dependency org="org.jdom" name="jdom2" rev="2.0.4">
+		<dependency org="org.jdom" name="jdom2" rev="2.0.6">
 			<exclude module="maven-cobertura-plugin"></exclude>
 			<exclude module="maven-findbugs-plugin"></exclude>
 			<exclude org="com.ibm.icu"></exclude>
@@ -50,9 +52,18 @@
 		<dependency org="net.sf.ezmorph" name="ezmorph" rev="1.0.6" />
 		<dependency org="commons-collections" name="commons-collections"
 			rev="3.2.1" />
-		<dependency org="fr.apiscol.metadata" name="scolomfr3utils" rev="0.0.1" />
+		<dependency org="fr.apiscol.metadata" name="scolomfr3utils" rev="0.0.1" >
+		 <exclude org="xml-apis" module="xml-apis"/>
+		       <exclude org="xerces" module="xerces"/>
+		 
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.jena/jena-core -->
-		<dependency org="org.apache.jena" name="jena-core" rev="2.13.0"/>
-
+		<dependency org="org.apache.jena" name="jena-core" rev="2.13.0">
+		 <exclude org="xml-apis" module="xml-apis"/>
+		       <exclude org="xerces" module="xerces"/>
+		 
+		</dependency>
+		<dependency org="org.slf4j" name="slf4j-jdk14" rev="1.7.21"/>
+		<dependency org="xom" name="xom" rev="1.2.5" />
 	</dependencies>
 </ivy-module>

@@ -1069,4 +1069,21 @@ public class XMLRepresentationBuilder extends
 		XMLUtils.addNameSpaces(report, UsedNamespaces.ATOM);
 		return report;
 	}
+
+	@Override
+	public void addWarningMessages(Document metadataRepresentation,
+			List<String> warningMessages) {
+		Element rootElement = metadataRepresentation.getDocumentElement();
+		Element warningsElement = metadataRepresentation
+				.createElement("apiscol:warnings");
+		Iterator<String> it = warningMessages.iterator();
+		while (it.hasNext()) {
+			String message = (String) it.next();
+			Element messageElement = metadataRepresentation
+					.createElement("apiscol:message");
+			messageElement.setTextContent(message);
+			warningsElement.appendChild(messageElement);
+		}
+		rootElement.appendChild(warningsElement);
+	}
 }

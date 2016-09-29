@@ -233,6 +233,7 @@ public class MetadataApi extends ApiscolApi {
 		takeAndReleaseGlobalLock();
 		// Affectation d'un nouvel identifiant unique
 		String metadataId = UUID.randomUUID().toString();
+		List<String> warningMessages = Collections.emptyList();
 		String requestedFormat = request.getHeader(HttpHeaders.ACCEPT);
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
@@ -241,8 +242,8 @@ public class MetadataApi extends ApiscolApi {
 		if (!StringUtils.isEmpty(editUri))
 			MetadataApi.editUri = editUri;
 		try {
-			ResourceDirectoryInterface.registerMetadataFile(metadataId,
-					uploadedInputStream, url, apiscolInstanceName);
+			warningMessages = ResourceDirectoryInterface.registerMetadataFile(
+					metadataId, uploadedInputStream, url, apiscolInstanceName);
 		} catch (FileSystemAccessException e) {
 			getLogger()
 					.error(String
@@ -315,12 +316,17 @@ public class MetadataApi extends ApiscolApi {
 			IResourceDataHandler resourceDataHandler = new DBAccessBuilder()
 					.setScolomfrUtils(scolomfrUtils).setDbType(DBTypes.mongoDB)
 					.setParameters(getDbConnexionParameters()).build();
-			return Response
-					.ok()
-					.entity(rb.getMetadataRepresentation(getExternalUri(),
+			Document metadataRepresentation = (Document) rb
+					.getMetadataRepresentation(getExternalUri(),
 							apiscolInstanceName, metadataId, true, false, -1,
 							Collections.<String, String> emptyMap(),
-							resourceDataHandler, editUri))
+							resourceDataHandler, editUri);
+			if (warningMessages.size() > 0) {
+				((IEntitiesRepresentationBuilder<Document>) rb)
+						.addWarningMessages(metadataRepresentation,
+								warningMessages);
+			}
+			return Response.ok().entity(metadataRepresentation)
 					.type(rb.getMediaType()).build();
 		} catch (MetadataNotFoundException e) {
 			String message = String
@@ -468,6 +474,7 @@ public class MetadataApi extends ApiscolApi {
 		ResponseBuilder response = null;
 		boolean continueProcessing = true;
 		KeyLock keyLock = null;
+		List<String> warningMessages = Collections.emptyList();
 		try {
 			keyLock = keyLockManager.getLock(metadataId);
 			keyLock.lock();
@@ -484,8 +491,10 @@ public class MetadataApi extends ApiscolApi {
 				String url = rb.getMetadataUri(getExternalUri(), metadataId);
 				boolean solrIsWaitingForCommit = false;
 				try {
-					ResourceDirectoryInterface.registerMetadataFile(metadataId,
-							uploadedInputStream, url, apiscolInstanceName);
+					warningMessages = ResourceDirectoryInterface
+							.registerMetadataFile(metadataId,
+									uploadedInputStream, url,
+									apiscolInstanceName);
 				} catch (FileSystemAccessException e) {
 					getLogger()
 							.error(String
@@ -625,14 +634,19 @@ public class MetadataApi extends ApiscolApi {
 							.setScolomfrUtils(scolomfrUtils)
 							.setDbType(DBTypes.mongoDB)
 							.setParameters(getDbConnexionParameters()).build();
-					response = Response
-							.ok()
-							.entity(rb.getMetadataRepresentation(
-									getExternalUri(), apiscolInstanceName,
-									metadataId, true, false, -1,
+					Document metadataRepresentation = (Document) rb
+							.getMetadataRepresentation(getExternalUri(),
+									apiscolInstanceName, metadataId, true,
+									false, -1,
 									Collections.<String, String> emptyMap(),
-									resourceDataHandler, editUri))
+									resourceDataHandler, editUri);
+					response = Response.ok().entity(metadataRepresentation)
 							.type(rb.getMediaType());
+					if (warningMessages.size() > 0) {
+						((IEntitiesRepresentationBuilder<Document>) rb)
+								.addWarningMessages(metadataRepresentation,
+										warningMessages);
+					}
 				} catch (MetadataNotFoundException e) {
 					String message = String
 							.format("The metadata %s has just been registred, but it was impossible to find the file",

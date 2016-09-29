@@ -1,6 +1,7 @@
 package fr.ac_versailles.crdp.apiscol.meta.representations;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -34,14 +35,15 @@ public class JSonPRepresentationBuilder extends
 	@Override
 	public JSONWithPadding getMetadataRepresentation(URI baseUri,
 			String apiscolInstanceName, String resourceId,
-			boolean includeDescription, boolean includeHierarchy,
-			int maxDepth, Map<String, String> params,
+			boolean includeDescription, boolean includeHierarchy, int maxDepth,
+			Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
 
 		Document xmlRepresentation = innerBuilder.getMetadataRepresentation(
 				baseUri, apiscolInstanceName, resourceId, includeDescription,
-				includeHierarchy, maxDepth, params, resourceDataHandler, editUri);
+				includeHierarchy, maxDepth, params, resourceDataHandler,
+				editUri);
 		String jsonSource = JSonUtils.convertXMLToJson(xmlRepresentation);
 		JSONWithPadding metadataResponseJson = new JSONWithPadding(jsonSource,
 				"callback");
@@ -107,6 +109,13 @@ public class JSonPRepresentationBuilder extends
 	@Override
 	public void setScolomfrUtils(Scolomfr3Utils scolomfrUtils) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public void addWarningMessages(JSONWithPadding metadataRepresentation,
+			List<String> warningMessages) {
+		// TODO Auto-generated method stub
+
 	}
 }

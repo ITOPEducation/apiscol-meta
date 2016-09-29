@@ -5,10 +5,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import fr.ac_versailles.crdp.apiscol.database.DBAccessException;
-import fr.ac_versailles.crdp.apiscol.semantic.SkosVocabulary;
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
 import fr.apiscol.metadata.scolomfr3utils.IScolomfr3Utils;
-import fr.apiscol.metadata.scolomfr3utils.Scolomfr3Utils;
 
 public abstract class AbstractResourcesDataHandler implements
 		IResourceDataHandler {

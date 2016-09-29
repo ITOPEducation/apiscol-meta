@@ -1,6 +1,7 @@
 package fr.ac_versailles.crdp.apiscol.meta.representations;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -10,7 +11,6 @@ import fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess.IResourceDataHandler;
 import fr.ac_versailles.crdp.apiscol.meta.fileSystemAccess.MetadataNotFoundException;
 import fr.ac_versailles.crdp.apiscol.meta.maintenance.MaintenanceRegistry;
 import fr.ac_versailles.crdp.apiscol.meta.searchEngine.ISearchEngineResultHandler;
-import fr.ac_versailles.crdp.apiscol.semantic.SkosVocabulary;
 import fr.apiscol.metadata.scolomfr3utils.Scolomfr3Utils;
 
 public interface IEntitiesRepresentationBuilder<T> {
@@ -59,5 +59,8 @@ public interface IEntitiesRepresentationBuilder<T> {
 			Integer nbLines);
 
 	void setScolomfrUtils(Scolomfr3Utils scolomfrUtils);
+
+	void addWarningMessages(T metadataRepresentation,
+			List<String> warningMessages);
 
 }

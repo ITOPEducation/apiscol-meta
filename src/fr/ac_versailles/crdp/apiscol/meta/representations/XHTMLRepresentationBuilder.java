@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -146,5 +147,12 @@ public class XHTMLRepresentationBuilder extends
 			Integer maintenanceRecoveryId, URI baseUri,
 			MaintenanceRegistry maintenanceRegistry, Integer nbLines) {
 		return null;
+	}
+
+	@Override
+	public void addWarningMessages(String metadataRepresentation,
+			List<String> warningMessages) {
+		// TODO Auto-generated method stub
+		
 	}
 }

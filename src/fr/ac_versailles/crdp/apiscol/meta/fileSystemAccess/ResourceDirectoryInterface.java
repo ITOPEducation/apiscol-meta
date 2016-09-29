@@ -235,24 +235,27 @@ public class ResourceDirectoryInterface {
 
 	}
 
-	public static void registerMetadataFile(String metadataId,
+	public static List<String> registerMetadataFile(String metadataId,
 			InputStream uploadedInputStream, String url,
 			String apiscolInstanceName) throws FileSystemAccessException,
 			InvalidProvidedMetadataFileException {
 		File newXMLFile = null;
+		List<String> warningMessages = Collections.emptyList();
 		try {
 			newXMLFile = getOrCreateTemporaryFile(metadataId, "xml");
 			logger.info(String.format("Fichier provisoire créé en %s",
 					newXMLFile.getAbsolutePath()));
 			FileUtils.writeStreamToFile(uploadedInputStream, newXMLFile);
-			validateFile(newXMLFile);
+			warningMessages = validateFile(newXMLFile);
 			updateMetadata(newXMLFile, url, apiscolInstanceName);
 			serializeIntoJSon(newXMLFile, metadataId);
+
 		} catch (IOException e1) {
 			// TODO relancer une exception
 			logger.error(e1.getMessage());
 			e1.printStackTrace();
 		}
+		return warningMessages;
 
 	}
 
@@ -364,14 +367,19 @@ public class ResourceDirectoryInterface {
 		return true;
 	}
 
-	private static void validateFile(File scolomFrXml)
+	private static List<String> validateFile(File scolomFrXml)
 			throws InvalidProvidedMetadataFileException,
 			FileSystemAccessException {
 
 		scolomfrUtils.setScolomfrFile(scolomFrXml);
-		scolomfrUtils.checkAll();
+		scolomfrUtils.checkXsd();
 		if (scolomfrUtils.isValid()) {
-			logger.info(scolomFrXml + " is valid.");
+			scolomfrUtils.checkXsd().checkLabels().checkClassifications()
+					.checkVcards();
+			List<String> messages = scolomfrUtils
+					.getMessages(MessageStatus.FAILURE);
+			messages.addAll(scolomfrUtils.getMessages(MessageStatus.WARNING));
+			return messages;
 		} else {
 			List<String> messages = scolomfrUtils
 					.getMessages(MessageStatus.FAILURE);
@@ -962,7 +970,7 @@ public class ResourceDirectoryInterface {
 			Modification modification;
 			URI targetMetadataUri;
 			while (modificationsIterator.hasNext()) {
-				modification = (Modification) modificationsIterator.next();
+				modification = modificationsIterator.next();
 				targetMetadataUri = new URI(modification.getTarget());
 				if (modification.getDifferency().toString()
 						.equals(Differencies.removed.toString())) {
@@ -984,7 +992,7 @@ public class ResourceDirectoryInterface {
 		xmlOutput.setFormat(Format.getPrettyFormat());
 		FileWriter out;
 		while (fileIterators.hasNext()) {
-			String mdid = (String) fileIterators.next();
+			String mdid = fileIterators.next();
 			Pair<File, Document> content = memoryBuffer.get(mdid);
 
 			out = new FileWriter(content.getKey());

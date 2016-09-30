@@ -373,6 +373,16 @@ public class XMLRepresentationBuilder extends
 					contentElement.setAttribute("type", mimeType);
 					rootElement.appendChild(contentElement);
 				}
+				if (!StringUtils.isBlank(mdProperties
+						.get(MetadataProperties.arkIdentifier.toString()))) {
+					Element archiveLinkElement = XMLDocument
+							.createElement("link");
+					archiveLinkElement.setAttribute("rel", "archive");
+					archiveLinkElement.setAttribute("type", "*/*");
+					archiveLinkElement.setAttribute("href", mdProperties
+							.get(MetadataProperties.arkIdentifier.toString()));
+					rootElement.appendChild(archiveLinkElement);
+				}
 
 				int educationalResourceTypeNumber = 0;
 

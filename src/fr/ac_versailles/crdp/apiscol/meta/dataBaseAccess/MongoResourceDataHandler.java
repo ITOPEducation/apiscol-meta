@@ -211,6 +211,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		DBObject metadataObject = getMetadataById(metadataId);
 		String title = "";
 		String description = "";
+		String arkIdentifier = "";
 		String icon = "";
 		String aggregationLevelLabel = "";
 		String aggregationLevelUri = "";
@@ -256,6 +257,33 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 					String catalog = (String) identifierObject.get("catalog");
 					if (catalog != null && catalog.equals("URI")) {
 						contentRestUrl = (String) identifierObject.get("entry");
+					}
+
+				}
+			}
+			if (generalObject != null
+					&& generalObject.containsField("identifier")) {
+				DBObject identifierObject = (DBObject) generalObject
+						.get("identifier");
+				if (identifierObject instanceof BasicDBList) {
+					BasicDBList identifierList = (BasicDBList) identifierObject;
+					identifierObject = null;
+					Iterator<Object> iterator = identifierList.iterator();
+					while (iterator.hasNext()) {
+						identifierObject = (BasicDBObject) iterator.next();
+						String catalog = (String) identifierObject
+								.get("catalog");
+						if (catalog != null && catalog.equals("ARK")) {
+							break;
+						}
+					}
+
+				}
+				if (identifierObject != null
+						&& identifierObject.containsField("entry")) {
+					String catalog = (String) identifierObject.get("catalog");
+					if (catalog != null && catalog.equals("ARK")) {
+						arkIdentifier = (String) identifierObject.get("entry");
 					}
 
 				}
@@ -568,6 +596,8 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 				.put(MetadataProperties.contentMime.toString(), contentMime);
 		mdProperties.put(MetadataProperties.contentRestUrl.toString(),
 				contentRestUrl);
+		mdProperties.put(MetadataProperties.arkIdentifier.toString(),
+				arkIdentifier);
 		mdProperties.put(MetadataProperties.aggregationLevel.toString(),
 				aggregationLevelUri);
 

@@ -14,7 +14,7 @@ public abstract class AbstractResourcesDataHandler implements
 	protected IScolomfr3Utils scolomfrUtils;
 
 	public enum MetadataProperties {
-		title("title"), description("description"), keyword("keyword"), contentUrl(
+		title("title"), description("description"), arkIdentifier("ark_identifier"), keyword("keyword"), contentUrl(
 				"content-url"), contentRestUrl("content-rest-url"), contentMime(
 				"content-mime"), icon("icon"), author("author"), contributor(
 				"contributor"), aggregationLevel("agregation-level"), aggregationLevelLabel(

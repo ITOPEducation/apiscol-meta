@@ -428,22 +428,6 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 
 						if (roleObject.containsField("value")) {
 							String value = (String) roleObject.get("value");
-							// No need to publish date of contributions at this
-							// time
-							// String date = "";
-							// if (contributeObject.containsField("date")) {
-							// try {
-							// DBObject dateObject = (DBObject) contributeObject
-							// .get("date");
-							// if (dateObject.containsField("dateTime")) {
-							// date = (String) dateObject
-							// .get("dateTime");
-							// }
-							// } catch (ClassCastException e) {
-							// // nothing to do : unable to parse date
-							// // informations
-							// }
-							// }
 							ArrayList<BasicDBObject> entitiesObjects = new ArrayList<BasicDBObject>();
 							ArrayList<String> entities = new ArrayList<String>();
 							if (contributeObject.containsField("entity")) {

@@ -1562,9 +1562,16 @@
 
 		<xsl:param name="vcard" />
 		<xsl:param name="paramname" />
+		<xsl:variable name="vcardWithoutLanguage">
+			<xsl:call-template name="replace-string">
+				<xsl:with-param name="text" select="$vcard" />
+				<xsl:with-param name="replace" select="';LANGUAGE=fr-FR'" />
+				<xsl:with-param name="with" select="''" />
+			</xsl:call-template>
+		</xsl:variable>
 
 		<xsl:variable name="vcardUP"
-			select="translate($vcard,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')" />
+			select="translate($vcardWithoutLanguage,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')" />
 		<xsl:variable name="paramnameUP"
 			select="translate($paramname,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')" />
 
@@ -1577,7 +1584,7 @@
 		<xsl:variable name="indexAfterParam" select="$indexParam+$lengthParam+1" />
 
 		<xsl:variable name="aftername"
-			select="normalize-space(substring($vcard,$indexAfterParam))" />
+			select="normalize-space(substring($vcardWithoutLanguage,$indexAfterParam))" />
 		<xsl:variable name="aftername0">
 			<xsl:choose>
 				<xsl:when test="contains($aftername, 'VERSION:3.0') ">
@@ -1688,8 +1695,8 @@
 		<xsl:variable name="temp9" select="$aftername8" />
 		<xsl:variable name="aftername9">
 			<xsl:choose>
-				<xsl:when test="contains($temp9, 'EMAIL:')">
-					<xsl:value-of select="substring-before($temp9, 'EMAIL:')" />
+				<xsl:when test="contains($temp9, 'X-NEC-ID:')">
+					<xsl:value-of select="substring-before($temp9, 'X-NEC-ID:')" />
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="$temp9" />
@@ -1700,8 +1707,8 @@
 		<xsl:variable name="temp10" select="$aftername9" />
 		<xsl:variable name="aftername10">
 			<xsl:choose>
-				<xsl:when test="contains($temp10, 'email:')">
-					<xsl:value-of select="substring-before($temp10, 'email:')" />
+				<xsl:when test="contains($temp10, 'x-nec-id:')">
+					<xsl:value-of select="substring-before($temp10, 'x-nec-id:')" />
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="$temp10" />
@@ -1857,6 +1864,26 @@
 				</xsl:call-template>
 			</xsl:if>
 		</xsl:if>
+	</xsl:template>
+	<xsl:template name="replace-string">
+		<xsl:param name="text" />
+		<xsl:param name="replace" />
+		<xsl:param name="with" />
+		<xsl:choose>
+			<xsl:when test="contains($text,$replace)">
+				<xsl:value-of select="substring-before($text,$replace)" />
+				<xsl:value-of select="$with" />
+				<xsl:call-template name="replace-string">
+					<xsl:with-param name="text"
+						select="substring-after($text,$replace)" />
+					<xsl:with-param name="replace" select="$replace" />
+					<xsl:with-param name="with" select="$with" />
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$text" />
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 </xsl:stylesheet>

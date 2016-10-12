@@ -446,17 +446,21 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 							}
 
 							for (String entity : entities) {
+								// Remove labels, keep URI
 								if (StringUtils.equals(value, "author")
-										|| StringUtils.equals(value, "auteur")) {
+										|| StringUtils.equals(value, "auteur")
+										|| StringUtils
+												.equals(value,
+														"http://data.education.fr/voc/scolomfr/concept/author")) {
 									authors.add(entity);
 
-								} else {
-
-									Pair<String, String> contributor = new Pair<String, String>(
-											value, entity);
-									contributors.add(contributor);
-
 								}
+								// TODO add an else/if here to avoir author
+								// duplication
+								Pair<String, String> contributor = new Pair<String, String>(
+										value, entity);
+								contributors.add(contributor);
+
 							}
 
 						}

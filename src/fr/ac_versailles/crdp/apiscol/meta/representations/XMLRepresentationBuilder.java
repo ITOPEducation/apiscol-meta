@@ -156,6 +156,10 @@ public class XMLRepresentationBuilder extends
 		Iterator<String> it = metadatasList.iterator();
 		int counter = -1;
 		Long maxUpdated = 0L;
+		if (includeDescription && resourceDataHandler != null) {
+			//ask database to load all documents once
+			resourceDataHandler.loadMetadata(metadatasList);
+		}
 		while (it.hasNext()) {
 			String metadataId = it.next();
 			counter++;
@@ -216,7 +220,6 @@ public class XMLRepresentationBuilder extends
 		fr.ac_versailles.crdp.apiscol.meta.hierarchy.Node node;
 		while (it.hasNext()) {
 			node = it.next();
-
 			String mdid = node.getMdid();
 			if (mdid.contains(baseUri.toString())) {
 				mdid = mdid.replace(baseUri.toString(), "").substring(1);
@@ -236,7 +239,7 @@ public class XMLRepresentationBuilder extends
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
 		if (StringUtils.isEmpty(metadataId)) {
-			logger.error("Atom XML subtree request bt metadata identifier is void");
+			logger.error("Atom XML subtree request but metadata identifier is void");
 			return null;
 		}
 		Element rootElement = XMLDocument.createElement("entry");
@@ -817,35 +820,47 @@ public class XMLRepresentationBuilder extends
 		lengthElement.setTextContent(String.valueOf(handler
 				.getTotalResultsFound()));
 		feedElement.appendChild(lengthElement);
-		String resultId, score;
+		String metadataId, score, url;
 		List<String> snippets;
 		int counter = -1;
 		long maxUpdated = 0;
-
+		Map<String, String> metadataIds = new HashMap<String, String>();
+		// Compute all metadata ids from url
 		while (it.hasNext()) {
-			String url = it.next();
-			resultId = MetadataKeySyntax.extractMetadataIdFromUrl(url);
-			if (StringUtils.isEmpty(resultId)) {
+			url = it.next();
+			metadataId = MetadataKeySyntax.extractMetadataIdFromUrl(url);
+			if (StringUtils.isEmpty(metadataId)) {
 				logger.error("Impossible to extract metadata id from provided URI : "
 						+ url);
 				continue;
 			}
+			metadataIds.put(metadataId, url);
 			counter++;
 			if (counter >= rows)
 				break;
-
+		}
+		// Ask database to fetch them all
+		if (includeDescription && resourceDataHandler != null) {
+			List<String> metadataIdList = new ArrayList<>();
+			metadataIdList.addAll(metadataIds.keySet());
+			resourceDataHandler.loadMetadata(metadataIdList);
+		}
+		Iterator<String> it2 = metadataIds.keySet().iterator();
+		// Build representation
+		while (it2.hasNext()) {
+			metadataId = it2.next();
+			url = metadataIds.get(metadataId);
 			score = handler.getResultScoresById().get(url);
 			snippets = handler.getResultSnippetsById().get(url);
-
 			try {
 				maxUpdated = Math.max(
 						addXMLSubTreeForMetadata(response, feedElement,
-								baseUri, apiscolInstanceName, resultId,
+								baseUri, apiscolInstanceName, metadataId,
 								includeDescription, false,
 								Float.parseFloat(score), resourceDataHandler,
 								editUri), maxUpdated);
-				addXMLSubTreeForResult(response, hitsElement, resultId, score,
-						snippets, apiscolInstanceName);
+				addXMLSubTreeForResult(response, hitsElement, metadataId,
+						score, snippets, apiscolInstanceName);
 			} catch (MetadataNotFoundException e) {
 				e.printStackTrace();
 			}

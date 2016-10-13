@@ -34,6 +34,8 @@ import fr.ac_versailles.crdp.apiscol.utils.JSonUtils;
 
 public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 
+	Map<String, DBObject> metadataRepository = new HashMap<String, DBObject>();
+
 	public MongoResourceDataHandler(Map<String, String> dbParams)
 			throws DBAccessException {
 		super(dbParams);
@@ -531,24 +533,32 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 															parentUri);
 											String parentId = MetadataKeySyntax
 													.extractMetadataIdFromUrl(parentUri);
-											DBObject parentObject = getMetadataById(parentId);
-											if (parentObject != null
-													&& parentObject
-															.containsField("general")) {
-												DBObject parentGeneralObject = (DBObject) parentObject
-														.get("general");
-												if (parentGeneralObject != null
-														&& parentGeneralObject
-																.containsField("title")) {
-													DBObject parentTitleObject = (DBObject) parentGeneralObject
-															.get("title");
-													String parentTitle = getStringInUserLanguage(parentTitleObject);
-													mdProperties
-															.put(MetadataProperties.parentTitle
-																	.toString(),
-																	parentTitle);
+											if (StringUtils
+													.isNotEmpty(parentId)) {
+												DBObject parentObject = getMetadataById(parentId);
+												if (parentObject != null
+														&& parentObject
+																.containsField("general")) {
+													DBObject parentGeneralObject = (DBObject) parentObject
+															.get("general");
+													if (parentGeneralObject != null
+															&& parentGeneralObject
+																	.containsField("title")) {
+														DBObject parentTitleObject = (DBObject) parentGeneralObject
+																.get("title");
+														String parentTitle = getStringInUserLanguage(parentTitleObject);
+														mdProperties
+																.put(MetadataProperties.parentTitle
+																		.toString(),
+																		parentTitle);
+													}
 												}
+											} else {
+												logger.error("The URI "
+														+ parentUri
+														+ " is not the URI of a metadata handled by this repository.");
 											}
+
 										}
 									}
 
@@ -640,10 +650,43 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 
 	private DBObject getMetadataById(String metadataId)
 			throws DBAccessException {
+		if (metadataRepository.containsKey(metadataId)) {
+			return metadataRepository.get(metadataId);
+		}
 		BasicDBObject query = new BasicDBObject();
 		query.put(DBKeys.id.toString(), metadataId);
 		try {
-			return metadataCollection.findOne(query);
+
+			DBObject metadata = metadataCollection.findOne(query);
+			metadataRepository.put(metadataId, metadata);
+			return metadata;
+		} catch (MongoException e) {
+			String message = "Error while trying to read in metadata collection "
+					+ e.getMessage();
+			logger.error(message);
+			throw new DBAccessException(message);
+		}
+
+	}
+
+	@Override
+	public void loadMetadata(List<String> metadataList)
+			throws DBAccessException {
+		BasicDBObject query = new BasicDBObject();
+		BasicDBList docIds = new BasicDBList();
+		docIds.addAll(metadataList);
+		DBObject inClause = new BasicDBObject("$in", docIds);
+		query.put(DBKeys.id.toString(), inClause);
+		try {
+
+			DBCursor metadataCursor = metadataCollection.find(query);
+			if (metadataCursor != null) {
+				while (metadataCursor.hasNext()) {
+					DBObject object = metadataCursor.next();
+					metadataRepository
+							.put(object.get("_id").toString(), object);
+				}
+			}
 		} catch (MongoException e) {
 			String message = "Error while trying to read in metadata collection "
 					+ e.getMessage();

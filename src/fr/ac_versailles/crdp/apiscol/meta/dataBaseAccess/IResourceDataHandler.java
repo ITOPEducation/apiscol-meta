@@ -3,6 +3,7 @@ package fr.ac_versailles.crdp.apiscol.meta.dataBaseAccess;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.w3c.dom.Document;
 
@@ -39,5 +40,7 @@ public interface IResourceDataHandler {
 			String url) throws DBAccessException;
 
 	void setScolomfrUtils(IScolomfr3Utils skosVocabulary);
+
+	void loadMetadata(List<String> metadataList) throws DBAccessException;
 
 }

@@ -318,8 +318,8 @@ public class MetadataApi extends ApiscolApi {
 					.setParameters(getDbConnexionParameters()).build();
 			Document metadataRepresentation = (Document) rb
 					.getMetadataRepresentation(getExternalUri(),
-							apiscolInstanceName, metadataId, true, false, -1,
-							Collections.<String, String> emptyMap(),
+							apiscolInstanceName, metadataId, true, false, true,
+							-1, Collections.<String, String> emptyMap(),
 							resourceDataHandler, editUri);
 			if (warningMessages.size() > 0) {
 				((IEntitiesRepresentationBuilder<Document>) rb)
@@ -424,7 +424,7 @@ public class MetadataApi extends ApiscolApi {
 							.ok()
 							.entity(rb.getMetadataRepresentation(
 									getExternalUri(), apiscolInstanceName,
-									metadataId, true, false, -1,
+									metadataId, true, false, true, -1,
 									Collections.<String, String> emptyMap(),
 									resourceDataHandler, editUri))
 							.type(rb.getMediaType());
@@ -637,7 +637,7 @@ public class MetadataApi extends ApiscolApi {
 					Document metadataRepresentation = (Document) rb
 							.getMetadataRepresentation(getExternalUri(),
 									apiscolInstanceName, metadataId, true,
-									false, -1,
+									false, true, -1,
 									Collections.<String, String> emptyMap(),
 									resourceDataHandler, editUri);
 					response = Response.ok().entity(metadataRepresentation)
@@ -1012,7 +1012,8 @@ public class MetadataApi extends ApiscolApi {
 			@DefaultValue("0") @QueryParam(value = "start") final int start,
 			@DefaultValue("10") @QueryParam(value = "rows") final int rows,
 			@DefaultValue("score") @QueryParam(value = "sort") final String sort,
-			@DefaultValue("false") @QueryParam(value = "desc") boolean includeDescription)
+			@DefaultValue("false") @QueryParam(value = "desc") boolean includeDescription,
+			@DefaultValue("true") @QueryParam(value = "timestamp") boolean includeTimestamp)
 			throws SearchEngineErrorException, NumberFormatException,
 			DBAccessException, InvalidFilterListException,
 			InvalidMetadataListException {
@@ -1024,11 +1025,13 @@ public class MetadataApi extends ApiscolApi {
 		IEntitiesRepresentationBuilder<?> rb = EntitiesRepresentationBuilderFactory
 				.getRepresentationBuilder(requestedFormat, context);
 		rb.setScolomfrUtils(scolomfrUtils);
-		if (rb instanceof XHTMLRepresentationBuilder)
+		if (rb instanceof XHTMLRepresentationBuilder) {
 			includeDescription = true;
+			includeTimestamp = false;
+		}
 		if (StringUtils.isNotEmpty(forcedMetadataId)) {
 			return forcedMetadataSearch(rb, request, forcedMetadataId,
-					includeDescription);
+					includeDescription, includeTimestamp);
 		}
 		if (StringUtils.isNotEmpty(forcedMetadataIds)) {
 			List<String> forcedMetadataIdList = null;
@@ -1043,7 +1046,7 @@ public class MetadataApi extends ApiscolApi {
 				throw new InvalidMetadataListException(message);
 			}
 			return forcedMetadataListSearch(rb, request, forcedMetadataIdList,
-					includeDescription);
+					includeDescription, includeTimestamp);
 		}
 		for (int i = 0; i < supplementsIds.length; i++) {
 			String metadataId = MetadataKeySyntax
@@ -1131,20 +1134,23 @@ public class MetadataApi extends ApiscolApi {
 				e.printStackTrace();
 			}
 		}
-		return Response
+		Response response = Response
 				.ok(rb.selectMetadataFollowingCriterium(getExternalUri(),
 						uriInfo.getPath(), apiscolInstanceName,
 						apiscolInstanceLabel, handler, start, rows,
-						includeDescription, resourceDataHandler, editUri,
-						version), rb.getMediaType())
+						includeDescription, includeTimestamp,
+						resourceDataHandler, editUri, version),
+						rb.getMediaType())
 				.header("Access-Control-Allow-Origin", "*").build();
+		return response;
 
 	}
 
 	private Response forcedMetadataSearch(IEntitiesRepresentationBuilder<?> rb,
 			HttpServletRequest request, String forcedMetadataId,
-			boolean includeDescription) throws NumberFormatException,
-			DBAccessException, SearchEngineErrorException {
+			boolean includeDescription, boolean includeTimestamp)
+			throws NumberFormatException, DBAccessException,
+			SearchEngineErrorException {
 		Object result = searchEngineQueryHandler
 				.processSearchQuery(forcedMetadataId);
 		ISearchEngineResultHandler handler = searchEngineFactory
@@ -1165,15 +1171,16 @@ public class MetadataApi extends ApiscolApi {
 				rb.selectMetadataFollowingCriterium(getExternalUri(),
 						uriInfo.getPath(), apiscolInstanceName,
 						apiscolInstanceLabel, handler, 0, 1,
-						includeDescription, resourceDataHandler, editUri,
-						version), rb.getMediaType()).build();
+						includeDescription, includeTimestamp,
+						resourceDataHandler, editUri, version),
+				rb.getMediaType()).build();
 	}
 
 	private Response forcedMetadataListSearch(
 			IEntitiesRepresentationBuilder<?> rb, HttpServletRequest request,
-			List<String> forcedMetadataIdList, boolean includeDescription)
-			throws SearchEngineErrorException, NumberFormatException,
-			DBAccessException {
+			List<String> forcedMetadataIdList, boolean includeDescription,
+			boolean includeTimestamp) throws SearchEngineErrorException,
+			NumberFormatException, DBAccessException {
 		Object result = searchEngineQueryHandler
 				.processSearchQuery(forcedMetadataIdList);
 		ISearchEngineResultHandler handler = searchEngineFactory
@@ -1190,13 +1197,13 @@ public class MetadataApi extends ApiscolApi {
 				e.printStackTrace();
 			}
 		}
-		return Response.ok(
-				rb.selectMetadataFollowingCriterium(getExternalUri(),
+		return Response
+				.ok(rb.selectMetadataFollowingCriterium(getExternalUri(),
 						uriInfo.getPath(), apiscolInstanceName,
 						apiscolInstanceLabel, handler, 0,
 						forcedMetadataIdList.size(), includeDescription,
-						resourceDataHandler, editUri, version),
-				rb.getMediaType()).build();
+						includeTimestamp, resourceDataHandler, editUri, version),
+						rb.getMediaType()).build();
 	}
 
 	public enum GetModalities {
@@ -1226,7 +1233,8 @@ public class MetadataApi extends ApiscolApi {
 	private Response getMetadataRepresentation(HttpServletRequest request,
 			HttpServletResponse httpServletResponse, String metadataId,
 			String format, String style, String device, GetModalities modality,
-			boolean includeDescription, boolean includeHierarchy, int maxDepth)
+			boolean includeDescription, boolean includeHierarchy,
+			boolean includeTimestamp, int maxDepth)
 			throws MetadataNotFoundException,
 			IncorrectMetadataKeySyntaxException, DBAccessException {
 		checkMdidSyntax(metadataId);
@@ -1249,8 +1257,8 @@ public class MetadataApi extends ApiscolApi {
 				.setParameters(getDbConnexionParameters()).build();
 		Object response = rb.getMetadataRepresentation(getExternalUri(),
 				apiscolInstanceName, metadataId, includeDescription,
-				includeHierarchy, maxDepth, params, resourceDataHandler,
-				editUri);
+				includeHierarchy, includeTimestamp, maxDepth, params,
+				resourceDataHandler, editUri);
 
 		String mediaType = rb.getMediaType().toString();
 		return Response
@@ -1275,6 +1283,7 @@ public class MetadataApi extends ApiscolApi {
 			@DefaultValue("") @QueryParam(value = "device") final String device,
 			@DefaultValue("false") @QueryParam(value = "desc") final boolean includeDescription,
 			@DefaultValue("false") @QueryParam(value = "tree") boolean includeHierarchy,
+			@DefaultValue("true") @QueryParam(value = "timestamp") boolean includeTimestamp,
 			@DefaultValue("-1") @QueryParam(value = "maxdepth") int maxDepth,
 			@QueryParam(value = "format") final String format
 
@@ -1283,7 +1292,7 @@ public class MetadataApi extends ApiscolApi {
 		return getMetadataRepresentation(request, httpServletResponse,
 				metadataId, format, style, device,
 				GetModalities.fromString(mode), includeDescription,
-				includeHierarchy, maxDepth);
+				includeHierarchy, includeTimestamp, maxDepth);
 
 	}
 
@@ -1341,8 +1350,8 @@ public class MetadataApi extends ApiscolApi {
 			return Response.ok(
 					rb.selectMetadataFollowingCriterium(getExternalUri(),
 							uriInfo.getPath(), apiscolInstanceName,
-							apiscolInstanceLabel, handler, 0, 10, false, null,
-							editUri, version), rb.getMediaType()).build();
+							apiscolInstanceLabel, handler, 0, 10, false, false,
+							null, editUri, version), rb.getMediaType()).build();
 		}
 	}
 
@@ -1556,7 +1565,7 @@ public class MetadataApi extends ApiscolApi {
 						.setParameters(getDbConnexionParameters()).build();
 				Object representation = rb.getMetadataRepresentation(
 						getExternalUri(), apiscolInstanceName, metadataId,
-						false, true, -1,
+						false, true, false, -1,
 						Collections.<String, String> emptyMap(),
 						resourceDataHandler, requestedFormat);
 				response = Response.status(Status.OK).entity(representation);

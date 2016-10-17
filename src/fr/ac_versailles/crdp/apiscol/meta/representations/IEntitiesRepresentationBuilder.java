@@ -38,19 +38,19 @@ public interface IEntitiesRepresentationBuilder<T> {
 	T selectMetadataFollowingCriterium(URI baseUri, String requestPath,
 			String apiscolInstanceName, String apiscolInstanceLabel,
 			ISearchEngineResultHandler handler, int start, int rows,
-			boolean includeDescription,
+			boolean includeDescription, boolean includeTimestamp,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws NumberFormatException, DBAccessException;
 
 	T getMetadataRepresentation(URI baseUri, String apiscolInstanceName,
 			String resourceId, boolean includeDescription,
-			boolean includeHierarchy, int maxDepth, Map<String, String> params,
+			boolean includeHierarchy, boolean includeTimestamp, int maxDepth, Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException;
 
 	T getCompleteMetadataListRepresentation(URI baseUri, String requestPath,
 			String apiscolInstanceName, String apiscolInstanceLabel, int start,
-			int rows, boolean includeDescription,
+			int rows, boolean includeDescription, boolean includeTimestamp,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws DBAccessException;
 

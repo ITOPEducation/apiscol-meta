@@ -35,14 +35,14 @@ public class JSonPRepresentationBuilder extends
 	@Override
 	public JSONWithPadding getMetadataRepresentation(URI baseUri,
 			String apiscolInstanceName, String resourceId,
-			boolean includeDescription, boolean includeHierarchy, int maxDepth,
+			boolean includeDescription, boolean includeHierarchy, boolean includeTimestamp, int maxDepth,
 			Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
 
 		Document xmlRepresentation = innerBuilder.getMetadataRepresentation(
 				baseUri, apiscolInstanceName, resourceId, includeDescription,
-				includeHierarchy, maxDepth, params, resourceDataHandler,
+				includeHierarchy, includeTimestamp, maxDepth, params, resourceDataHandler,
 				editUri);
 		String jsonSource = JSonUtils.convertXMLToJson(xmlRepresentation);
 		JSONWithPadding metadataResponseJson = new JSONWithPadding(jsonSource,
@@ -83,7 +83,7 @@ public class JSonPRepresentationBuilder extends
 	public JSONWithPadding selectMetadataFollowingCriterium(URI baseUri,
 			String requestPath, String apiscolInstanceName,
 			String apiscolInstanceLabel, ISearchEngineResultHandler handler,
-			int start, int rows, boolean includeDescription,
+			int start, int rows, boolean includeDescription, boolean includeHierarchy,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws NumberFormatException, DBAccessException {
 		return null;
@@ -93,7 +93,7 @@ public class JSonPRepresentationBuilder extends
 	public JSONWithPadding getCompleteMetadataListRepresentation(URI baseUri,
 			String requestPath, String apiscolInstanceName,
 			String apiscolInstanceLabel, int start, int rows,
-			boolean includeDescription,
+			boolean includeDescription, boolean includeHierarchy,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws DBAccessException {
 		return null;

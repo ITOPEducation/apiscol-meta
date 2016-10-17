@@ -56,8 +56,7 @@ public class XHTMLRepresentationBuilder extends
 	public String getMetadataRepresentation(URI baseUri,
 			String apiscolInstanceName, String metadataId,
 			boolean includeDescription, boolean includeHierarchy,
-			int maxDepth,
-			Map<String, String> params,
+			boolean includeTimestamp, int maxDepth, Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException {
 
@@ -110,14 +109,14 @@ public class XHTMLRepresentationBuilder extends
 	public String getCompleteMetadataListRepresentation(URI baseUri,
 			String requestPath, String apiscolInstanceLabel,
 			String apiscolInstanceName, int start, int rows,
-			boolean includeDescription,
+			boolean includeDescription, boolean includeTimestamp,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws DBAccessException {
 		return XMLUtils.XMLToString(innerBuilder
 				.getCompleteMetadataListRepresentation(baseUri, requestPath,
 						apiscolInstanceName, apiscolInstanceLabel, start, rows,
-						includeDescription, resourceDataHandler, editUri,
-						version));
+						includeDescription, includeTimestamp,
+						resourceDataHandler, editUri, version));
 	}
 
 	@Override
@@ -125,12 +124,13 @@ public class XHTMLRepresentationBuilder extends
 			String requestPath, String apiscolInstanceLabel,
 			String apiscolInstanceName, ISearchEngineResultHandler handler,
 			int start, int rows, boolean includeDescription,
-			IResourceDataHandler resourceDataHandler, String editUri,
-			String version) throws NumberFormatException, DBAccessException {
+			boolean includeTimestamp, IResourceDataHandler resourceDataHandler,
+			String editUri, String version) throws NumberFormatException,
+			DBAccessException {
 		Document xmlResponse = innerBuilder.selectMetadataFollowingCriterium(
 				baseUri, requestPath, apiscolInstanceName,
-				apiscolInstanceLabel, handler, start, rows, true,
-				resourceDataHandler, editUri, version);
+				apiscolInstanceLabel, handler, start, rows, includeDescription,
+				includeTimestamp, resourceDataHandler, editUri, version);
 		InputStream xslStream = ResourcesLoader
 				.loadResource("xsl/metadataListXMLToHTMLTransformer.xsl");
 		if (xslStream == null) {
@@ -153,6 +153,6 @@ public class XHTMLRepresentationBuilder extends
 	public void addWarningMessages(String metadataRepresentation,
 			List<String> warningMessages) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

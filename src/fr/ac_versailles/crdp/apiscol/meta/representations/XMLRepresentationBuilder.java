@@ -63,8 +63,8 @@ public class XMLRepresentationBuilder extends
 	@Override
 	public Document getMetadataRepresentation(URI baseUri,
 			String apiscolInstanceName, String resourceId,
-			boolean includeDescription, boolean includeHierarchy, int maxDepth,
-			Map<String, String> params,
+			boolean includeDescription, boolean includeHierarchy,
+			boolean includeTimestamp, int maxDepth, Map<String, String> params,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
 		Document XMLRepresentation = createXMLDocument();
@@ -73,7 +73,8 @@ public class XMLRepresentationBuilder extends
 		}
 		addXMLSubTreeForMetadata(XMLRepresentation, XMLRepresentation, baseUri,
 				apiscolInstanceName, resourceId, includeDescription,
-				includeHierarchy, -1, resourceDataHandler, editUri);
+				includeHierarchy, includeTimestamp, -1, resourceDataHandler,
+				editUri);
 
 		addNameSpaces(XMLRepresentation);
 		return XMLRepresentation;
@@ -143,7 +144,7 @@ public class XMLRepresentationBuilder extends
 	public Document getCompleteMetadataListRepresentation(URI baseUri,
 			String requestPath, final String apiscolInstanceName,
 			final String apiscolInstanceLabel, int start, int rows,
-			boolean includeDescription,
+			boolean includeDescription, boolean includeTimestamp,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws DBAccessException {
 		ArrayList<String> metadatasList = getMetadataList();
@@ -157,7 +158,7 @@ public class XMLRepresentationBuilder extends
 		int counter = -1;
 		Long maxUpdated = 0L;
 		if (includeDescription && resourceDataHandler != null) {
-			//ask database to load all documents once
+			// ask database to load all documents once
 			resourceDataHandler.loadMetadata(metadatasList);
 		}
 		while (it.hasNext()) {
@@ -171,8 +172,8 @@ public class XMLRepresentationBuilder extends
 				maxUpdated = Math.max(
 						addXMLSubTreeForMetadata(response, feedElement,
 								baseUri, apiscolInstanceName, metadataId,
-								includeDescription, false, -1,
-								resourceDataHandler, editUri), maxUpdated);
+								includeDescription, false, includeTimestamp,
+								-1, resourceDataHandler, editUri), maxUpdated);
 			} catch (MetadataNotFoundException e) {
 				logger.error(String
 						.format("The metadata %s was not found while trying to build xml representation",
@@ -225,8 +226,8 @@ public class XMLRepresentationBuilder extends
 				mdid = mdid.replace(baseUri.toString(), "").substring(1);
 			}
 			addXMLSubTreeForMetadata(XMLDocument, childrenElement, baseUri,
-					apiscolInstanceName, mdid, includeDescription, true, -1,
-					resourceDataHandler, editUri);
+					apiscolInstanceName, mdid, includeDescription, true, true,
+					-1, resourceDataHandler, editUri);
 
 		}
 
@@ -235,7 +236,8 @@ public class XMLRepresentationBuilder extends
 	private Long addXMLSubTreeForMetadata(Document XMLDocument,
 			Node insertionElement, URI baseUri,
 			final String apiscolInstanceName, final String metadataId,
-			boolean includeDescription, boolean includeHierarchy, float score,
+			boolean includeDescription, boolean includeHierarchy,
+			boolean includeTimestamp, float score,
 			IResourceDataHandler resourceDataHandler, String editUri)
 			throws MetadataNotFoundException, DBAccessException {
 		if (StringUtils.isEmpty(metadataId)) {
@@ -244,8 +246,10 @@ public class XMLRepresentationBuilder extends
 		}
 		Element rootElement = XMLDocument.createElement("entry");
 		Element updatedElement = XMLDocument.createElement("updated");
-		long utcTime = Long.parseLong(getEtagForMetadata(metadataId));
-
+		long utcTime = 0;
+		if (includeTimestamp) {
+			utcTime = Long.parseLong(getEtagForMetadata(metadataId));
+		}
 		updatedElement.setTextContent(TimeUtils.toRFC3339(utcTime));
 		rootElement.appendChild(updatedElement);
 		if (score != -1) {
@@ -796,10 +800,9 @@ public class XMLRepresentationBuilder extends
 			String requestPath, final String apiscolInstanceName,
 			final String apiscolInstanceLabel,
 			ISearchEngineResultHandler handler, int start, int rows,
-			boolean includeDescription,
+			boolean includeDescription, boolean includeTimestamp,
 			IResourceDataHandler resourceDataHandler, String editUri,
 			String version) throws NumberFormatException, DBAccessException {
-
 		Document response = createXMLDocument();
 		Element feedElement = response.createElementNS(
 				UsedNamespaces.ATOM.getUri(), "feed");
@@ -827,6 +830,12 @@ public class XMLRepresentationBuilder extends
 		Map<String, String> metadataIds = new HashMap<String, String>();
 		// Compute all metadata ids from url
 		while (it.hasNext()) {
+			counter++;
+			if (counter < start)
+				continue;
+			if (counter >= (start + rows))
+				break;
+
 			url = it.next();
 			metadataId = MetadataKeySyntax.extractMetadataIdFromUrl(url);
 			if (StringUtils.isEmpty(metadataId)) {
@@ -835,9 +844,7 @@ public class XMLRepresentationBuilder extends
 				continue;
 			}
 			metadataIds.put(metadataId, url);
-			counter++;
-			if (counter >= rows)
-				break;
+
 		}
 		// Ask database to fetch them all
 		if (includeDescription && resourceDataHandler != null) {
@@ -846,6 +853,7 @@ public class XMLRepresentationBuilder extends
 			resourceDataHandler.loadMetadata(metadataIdList);
 		}
 		Iterator<String> it2 = metadataIds.keySet().iterator();
+
 		// Build representation
 		while (it2.hasNext()) {
 			metadataId = it2.next();
@@ -856,7 +864,7 @@ public class XMLRepresentationBuilder extends
 				maxUpdated = Math.max(
 						addXMLSubTreeForMetadata(response, feedElement,
 								baseUri, apiscolInstanceName, metadataId,
-								includeDescription, false,
+								includeDescription, false, includeTimestamp,
 								Float.parseFloat(score), resourceDataHandler,
 								editUri), maxUpdated);
 				addXMLSubTreeForResult(response, hitsElement, metadataId,
@@ -866,6 +874,7 @@ public class XMLRepresentationBuilder extends
 			}
 
 		}
+
 		updatedElement.setTextContent(TimeUtils.toRFC3339(maxUpdated));
 		HashMap<String, HashMap<String, String>> staticFacetsGroups = handler
 				.getStaticFacetGroups();

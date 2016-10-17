@@ -275,7 +275,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 						identifierObject = (BasicDBObject) iterator.next();
 						String catalog = (String) identifierObject
 								.get("catalog");
-						if (catalog != null && catalog.equals("ARK")) {
+						if (catalog != null && catalog.equalsIgnoreCase("ARK")) {
 							break;
 						}
 					}
@@ -284,7 +284,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 				if (identifierObject != null
 						&& identifierObject.containsField("entry")) {
 					String catalog = (String) identifierObject.get("catalog");
-					if (catalog != null && catalog.equals("ARK")) {
+					if (catalog != null && catalog.equalsIgnoreCase("ARK")) {
 						arkIdentifier = (String) identifierObject.get("entry");
 					}
 

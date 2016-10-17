@@ -323,8 +323,9 @@ public class XMLRepresentationBuilder extends
 									"\\?format=.*$", ""));
 					rootElement.appendChild(contentRestHtmlLinkElement);
 				}
-				if (!StringUtils.isBlank(mdProperties
-						.get(MetadataProperties.parentUri.toString()))) {
+				int parentCount = 0;
+				while (!StringUtils.isBlank(mdProperties
+						.get(MetadataProperties.parentUri.toString()+parentCount))) {
 					Element parentRestAtomLinkElement = XMLDocument
 							.createElement("link");
 					parentRestAtomLinkElement.setAttribute("rel", "collection");
@@ -333,16 +334,17 @@ public class XMLRepresentationBuilder extends
 					parentRestAtomLinkElement.setAttribute(
 							"href",
 							mdProperties.get(MetadataProperties.parentUri
-									.toString()) + "?format=xml");
+									.toString()+parentCount) + "?format=xml");
+
 					if (!StringUtils.isBlank(mdProperties
-							.get(MetadataProperties.parentTitle.toString()))) {
+							.get(MetadataProperties.parentTitle.toString()+parentCount))) {
 						parentRestAtomLinkElement.setAttribute("title",
 								mdProperties.get(MetadataProperties.parentTitle
-										.toString()));
+										.toString()+parentCount));
 					}
 
 					rootElement.appendChild(parentRestAtomLinkElement);
-
+					parentCount++;
 				}
 
 				String iconUrl = mdProperties.get(MetadataProperties.icon

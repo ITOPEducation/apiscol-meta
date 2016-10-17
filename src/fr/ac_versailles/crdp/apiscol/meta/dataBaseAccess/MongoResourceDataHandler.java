@@ -220,6 +220,7 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 		String contentUrl = "";
 		String contentRestUrl = "";
 		String contentMime = "";
+		int parentCount = 0;
 		List<String> educationalResourceTypes = new ArrayList<String>();
 		List<String> keywords = new ArrayList<String>();
 		List<String> authors = new ArrayList<String>();
@@ -529,7 +530,8 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 													.get("entry");
 											mdProperties
 													.put(MetadataProperties.parentUri
-															.toString(),
+															.toString()
+															+ parentCount,
 															parentUri);
 											String parentId = MetadataKeySyntax
 													.extractMetadataIdFromUrl(parentUri);
@@ -549,10 +551,13 @@ public class MongoResourceDataHandler extends AbstractResourcesDataHandler {
 														String parentTitle = getStringInUserLanguage(parentTitleObject);
 														mdProperties
 																.put(MetadataProperties.parentTitle
-																		.toString(),
+																		.toString()
+																		+ parentCount,
 																		parentTitle);
+
 													}
 												}
+												parentCount++;
 											} else {
 												logger.error("The URI "
 														+ parentUri
